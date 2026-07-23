@@ -10,6 +10,7 @@ import SwiftData
 
 @main
 struct EmpireClientApp: App {
+    var game = Game()
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,7 +26,10 @@ struct EmpireClientApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(game: game)
+        }
+        Settings {
+       //     SettingsView()
         }
         .modelContainer(sharedModelContainer)
     }

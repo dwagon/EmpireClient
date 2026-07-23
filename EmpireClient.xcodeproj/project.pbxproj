@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3820BECD30106BF200E16EDD /* HexGrid in Frameworks */ = {isa = PBXBuildFile; productRef = 3820BECC30106BF200E16EDD /* HexGrid */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		3820BEA63010555300E16EDD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3820BECD30106BF200E16EDD /* HexGrid in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 				3820BE983010555200E16EDD /* EmpireClient */,
 				3820BEA83010555300E16EDD /* EmpireClientTests */,
 				3820BEB23010555300E16EDD /* EmpireClientUITests */,
+				3820BECB30106BF200E16EDD /* Frameworks */,
 				3820BE973010555200E16EDD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +96,13 @@
 				3820BEAF3010555300E16EDD /* EmpireClientUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		3820BECB30106BF200E16EDD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,6 +125,7 @@
 			);
 			name = EmpireClient;
 			packageProductDependencies = (
+				3820BECC30106BF200E16EDD /* HexGrid */,
 			);
 			productName = EmpireClient;
 			productReference = 3820BE963010555200E16EDD /* EmpireClient.app */;
@@ -195,6 +209,9 @@
 			);
 			mainGroup = 3820BE8D3010555200E16EDD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3820BEC6301059EB00E16EDD /* XCRemoteSwiftPackageReference "hex-grid" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3820BE973010555200E16EDD /* Products */;
 			projectDirPath = "";
@@ -573,6 +590,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3820BEC6301059EB00E16EDD /* XCRemoteSwiftPackageReference "hex-grid" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/fananek/hex-grid";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.11;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3820BECC30106BF200E16EDD /* HexGrid */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3820BEC6301059EB00E16EDD /* XCRemoteSwiftPackageReference "hex-grid" */;
+			productName = HexGrid;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3820BE8E3010555200E16EDD /* Project object */;
 }

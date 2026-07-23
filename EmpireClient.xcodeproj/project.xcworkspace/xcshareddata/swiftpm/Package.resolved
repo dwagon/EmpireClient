@@ -1,0 +1,15 @@
+{
+  "originHash" : "275c475fa4941792b8589080d673d45156b16b7a8d4f8e58031b1f35d6a4db67",
+  "pins" : [
+    {
+      "identity" : "hex-grid",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fananek/hex-grid",
+      "state" : {
+        "revision" : "d021778edfc8775197b6922569cd274a984661df",
+        "version" : "0.4.11"
+      }
+    }
+  ],
+  "version" : 3
+}
