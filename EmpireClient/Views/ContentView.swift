@@ -21,6 +21,11 @@ struct ContentView: View {
                 .navigationTitle("Map")
         } detail: {
             Text("Detail")
+            Button("Login") {
+                Task {
+                    await game.login(country: "1", password: "1")
+                }
+            }
         }
     }
 

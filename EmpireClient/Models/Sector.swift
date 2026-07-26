@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct Sector {
+    
+}
+
 enum Desig {
     case sea
     case mountain

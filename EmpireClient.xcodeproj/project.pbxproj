@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3820BECD30106BF200E16EDD /* HexGrid in Frameworks */ = {isa = PBXBuildFile; productRef = 3820BECC30106BF200E16EDD /* HexGrid */; };
+		3820BEE23012F50800E16EDD /* BlueSocketTestCommonLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 3820BEE13012F50800E16EDD /* BlueSocketTestCommonLibrary */; };
+		3820BEE43012F50C00E16EDD /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 3820BEE33012F50C00E16EDD /* Socket */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3820BEE43012F50C00E16EDD /* Socket in Frameworks */,
+				3820BEE23012F50800E16EDD /* BlueSocketTestCommonLibrary in Frameworks */,
 				3820BECD30106BF200E16EDD /* HexGrid in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -126,6 +130,8 @@
 			name = EmpireClient;
 			packageProductDependencies = (
 				3820BECC30106BF200E16EDD /* HexGrid */,
+				3820BEE13012F50800E16EDD /* BlueSocketTestCommonLibrary */,
+				3820BEE33012F50C00E16EDD /* Socket */,
 			);
 			productName = EmpireClient;
 			productReference = 3820BE963010555200E16EDD /* EmpireClient.app */;
@@ -211,6 +217,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				3820BEC6301059EB00E16EDD /* XCRemoteSwiftPackageReference "hex-grid" */,
+				3820BEE03012F4F000E16EDD /* XCRemoteSwiftPackageReference "BlueSocket" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3820BE973010555200E16EDD /* Products */;
@@ -411,13 +418,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7C9QNPKVJU;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -443,13 +461,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7C9QNPKVJU;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -600,6 +629,14 @@
 				minimumVersion = 0.4.11;
 			};
 		};
+		3820BEE03012F4F000E16EDD /* XCRemoteSwiftPackageReference "BlueSocket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Kitura/BlueSocket.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -607,6 +644,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3820BEC6301059EB00E16EDD /* XCRemoteSwiftPackageReference "hex-grid" */;
 			productName = HexGrid;
+		};
+		3820BEE13012F50800E16EDD /* BlueSocketTestCommonLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3820BEE03012F4F000E16EDD /* XCRemoteSwiftPackageReference "BlueSocket" */;
+			productName = BlueSocketTestCommonLibrary;
+		};
+		3820BEE33012F50C00E16EDD /* Socket */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3820BEE03012F4F000E16EDD /* XCRemoteSwiftPackageReference "BlueSocket" */;
+			productName = Socket;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
