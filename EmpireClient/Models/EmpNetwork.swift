@@ -8,6 +8,11 @@
 import Foundation
 import Network
 
+struct Payload: nonisolated Codable {
+    var command: String
+    var result: [String]
+}
+
 class TCPClient {
     private let host: NWEndpoint.Host
     private let port: NWEndpoint.Port
@@ -15,8 +20,7 @@ class TCPClient {
     private var commsQueue: DispatchQueue
     private var buffer = Data()
 
-
-    init(host: String = "127.0.0.1", port: Int = 6665) {
+    init(host: String = "127.0.0.1", port: Int = 6666) {
         self.host = NWEndpoint.Host(host)
         self.port = NWEndpoint.Port(rawValue: UInt16(port))!
         commsQueue = DispatchQueue(label: "Comms")
@@ -36,78 +40,58 @@ class TCPClient {
         connection?.cancel()
     }
 
-    func send_message(
-        message: String,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        let data = message.data(using: .utf8)!
-        connect()
-        connection?.send(
-            content: data,
-            completion: .contentProcessed({ error in
-                if let error = error {
-                    completion(.failure(error))
-                } else {
-                    completion(.success(()))
-                }
-            })
-        )
+//    /// Send a command to the proxy
+//    func run_cmd(_ cmd: String) -> [String] {
+//        var payload: Payload = Payload(command: "", result: [])
+//        connect()
+//        
+//        let cmd_str = cmd.addingPercentEncoding(
+//            withAllowedCharacters: .urlHostAllowed
+//        )
+//        if let url = URL(string: "http://127.0.0.1:6666/cmd/\(cmd_str!)") {
+//            print("url=\(url)")
+//            let task = URLSession.shared.data(with: url) {
+//                (data, response, error) in
+//                if let error {
+//                    print("cmd=\(cmd) error=\(error.localizedDescription)")
+//                    return
+//                }
+//                print("response=\(response, default: "nil")")   // Debug
+//                if let data {
+//                    print("data=\(data, default: "nil")")   // Debug
+//                    do {
+//                        payload = try JSONDecoder().decode(Payload.self, from: data)
+//                    }
+//                    catch {
+//                        print("Failure on \(cmd)")
+//                    }
+//                }
+//            }
+//            task.resume()
+//        }
+//        return payload.result
+//    }
+    
+    func fetchData(from url: URL) async throws -> Data {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        return data
     }
-
-    func receive_message() {
-        connect()
-        buffer = Data()
-        connection?.receive(minimumIncompleteLength: 1, maximumLength: 1024 * 8) {
-            data,
-            _,
-            isComplete,
-            error in
-
-            if let error {
-                print("receive: Error \(error)")
-                return
-            }
-
-            if let data, !data.isEmpty {
-                self.buffer.append(data)
-            }
-
-            if isComplete {
-                print("isComplete")
-            } else {
-                self.receive_message()
-            }
-        }
-    }
-
+    
     func run_cmd(_ cmd: String) async -> [String] {
-        let send_msg = "\(cmd)\n"
-        var recv_msg: [String] = []
-
-        self.send_message(message: send_msg) { result in
-            switch result {
-            case .failure(let error):
-                print("Failed with \(error.localizedDescription)")
-            default:
-                break  // Success - do nothing
-            }
-        }
-        self.receive_message()
-        
-        while (recv_msg == []) {
-            let messages = String(data: self.buffer, encoding: .utf8) ?? "Unknown"
-            for line in messages.split(whereSeparator: \.isNewline) {
+        var response = [String]()
+        let cmd_str = cmd.addingPercentEncoding(
+            withAllowedCharacters: .urlHostAllowed
+        )
+        Task {
+        let url = URL(string: "http://127.0.0.1:6666/cmd/\(cmd_str!)")!
+            for try await line in url.lines {
                 print("line=\(line)")
-                let elements = line.split(maxSplits: 1, whereSeparator: { $0 == " "})
-                let status = String(elements[0])
-                let result = String(elements[1])
-                recv_msg.append(result)
+                response.append(line)
             }
         }
-
-        return recv_msg
+        return response
     }
-}
+ }
 
 // MARK: -
 enum EmpCommsProtocol: String {
