@@ -10,7 +10,7 @@ import Network
 
 struct Payload: nonisolated Codable {
     var command: String
-    var result: [String]
+    var response: [String]
 }
 
 class TCPClient {
@@ -40,58 +40,31 @@ class TCPClient {
         connection?.cancel()
     }
 
-//    /// Send a command to the proxy
-//    func run_cmd(_ cmd: String) -> [String] {
-//        var payload: Payload = Payload(command: "", result: [])
-//        connect()
-//        
-//        let cmd_str = cmd.addingPercentEncoding(
-//            withAllowedCharacters: .urlHostAllowed
-//        )
-//        if let url = URL(string: "http://127.0.0.1:6666/cmd/\(cmd_str!)") {
-//            print("url=\(url)")
-//            let task = URLSession.shared.data(with: url) {
-//                (data, response, error) in
-//                if let error {
-//                    print("cmd=\(cmd) error=\(error.localizedDescription)")
-//                    return
-//                }
-//                print("response=\(response, default: "nil")")   // Debug
-//                if let data {
-//                    print("data=\(data, default: "nil")")   // Debug
-//                    do {
-//                        payload = try JSONDecoder().decode(Payload.self, from: data)
-//                    }
-//                    catch {
-//                        print("Failure on \(cmd)")
-//                    }
-//                }
-//            }
-//            task.resume()
-//        }
-//        return payload.result
-//    }
-    
     func fetchData(from url: URL) async throws -> Data {
         let (data, _) = try await URLSession.shared.data(from: url)
         return data
     }
-    
-    func run_cmd(_ cmd: String) async -> [String] {
-        var response = [String]()
+
+    func run_cmd(_ cmd: String) async -> [String]{
         let cmd_str = cmd.addingPercentEncoding(
             withAllowedCharacters: .urlHostAllowed
         )
-        Task {
         let url = URL(string: "http://127.0.0.1:6666/cmd/\(cmd_str!)")!
-            for try await line in url.lines {
-                print("line=\(line)")
-                response.append(line)
+        let task = Task {
+            do {
+                let data = try await fetchData(from: url)
+                let payload = try JSONDecoder().decode(Payload.self, from: data)
+                return payload
+            } catch {
+                print(error)
+                return Payload(command: cmd, response: [])
             }
         }
-        return response
+        let result = await task.result
+        return result.get().response
     }
- }
+
+}
 
 // MARK: -
 enum EmpCommsProtocol: String {
