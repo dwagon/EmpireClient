@@ -8,7 +8,13 @@
 import Foundation
 
 struct Sector {
+    var coords: MapCoord
+    var desig: Desig
     
+    init(coords: MapCoord) {
+        self.coords = coords
+        desig = Desig.unknown
+    }
 }
 
 enum Desig {

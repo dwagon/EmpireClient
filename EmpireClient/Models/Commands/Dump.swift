@@ -19,7 +19,9 @@ extension Game {
     func cmd_dump() async {
         let result = await client.run_cmd("dump #")
         print("result='\(result)'")
-        for line in result[3 ..< result.count] {
+        guard result != [] else { return }
+        for line in result[3..<result.count-1] {
+            print("line=\(line)")
             let bits = line.split(separator: " ")
             let coord = MapCoord(x: Int(bits[0])!, y: Int(bits[1])!)
             let cell = game_map.grid.cellAt(coord)
