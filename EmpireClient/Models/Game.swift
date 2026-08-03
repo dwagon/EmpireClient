@@ -9,19 +9,16 @@ import Foundation
 import HexGrid
 
 // MARK: -
+@Observable
 class Game {
-    private var _map: Map
+    var game_map: Map
     var coord: MapCoord  // Coord we are focussing on
     var client = TCPClient()
     var loggedIn: Bool = false
 
     init() {
-        _map = Map(x_size: 64, y_size: 64)
-        coord = MapCoord(x: 0, y: 0)
-    }
-
-    var game_map: Map {
-        return _map
+        game_map = Map(x_size: MapConfig.map_width, y_size: MapConfig.map_height)
+        coord = MapCoord(x: 6, y: 0)
     }
     
     func sector(coord: MapCoord) -> Cell?
@@ -49,8 +46,8 @@ struct MapCoord {
         _coords = OffsetCoordinates(
             column: x,
             row: y,
-            orientation: .flatOnTop,
-            offsetLayout: .even
+            orientation: MapConfig.orientation,
+            offsetLayout: MapConfig.offsetLayout
         )
     }
     

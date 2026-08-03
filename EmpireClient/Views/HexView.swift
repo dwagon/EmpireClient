@@ -18,7 +18,8 @@ struct HexView: View {
                 Text("Map: \(coord.x), \(coord.y)")
             }
             Section("Sector Details") {
-                Text("a")
+                let desig = sector.attributes["desig"]?.description
+                Text("Desig: \(desig ?? "X")")
             }
         }
     }

@@ -9,55 +9,81 @@ import HexGrid
 import SwiftUI
 
 struct MapView: View {
-    var game_map: Map
-    @State var map_coord: MapCoord
+    let game_map: Map
+    @Binding var center_cell: Cell
+    var hexmap = HexGrid(
+        shape: .hexagon(MapConfig.mapRadius),
+        orientation: MapConfig.orientation,
+        offsetLayout: MapConfig.offsetLayout,
+        hexSize: MapConfig.hexSize
+    )
 
     var body: some View {
         VStack {
-            ScrollView([.horizontal, .vertical]) {
-                Canvas { context, size in
-                    var cellColor: Color
-                    game_map.grid.origin = Point(x: 0, y: 0)
-                    for cell in game_map.grid.cells {
-                        let path = CellPath(
-                            cell: cell,
-                            corners: game_map.grid.polygonCorners(for: cell)
-                        )
-                        context.stroke(
-                            path,
-                            with: .color(red: 0.65, green: 0.9, blue: 1.0),
-                            lineWidth: 3
-                        )
-                        
-                        if cell.attributes["isHighlighted"] == true {
-                            cellColor = Color(red: 0.0, green: 1.0, blue: 1.0)
-                        } else if cell.isBlocked {
-                            cellColor = Color(red: 0.5, green: 0.5, blue: 0.5)
-                        } else {
-                            cellColor = Color(.lightGray)
-                        }
-                        context.fill(path, with: .color(cellColor))
-                    }
-                }
-                .scaledToFill()
-                .frame(width: 500, height: 500)   // TODO Fill space
+            drawCanvas
+                .border(Color.blue)
+                .padding()
                 .onTapGesture { location in
                     hexGesture(location: location)
                 }
+        }
+    }
+
+    /// Move origin so map hex is centered in view
+    func origin(canvas_size: CGSize, focus: Cell) -> Point {
+        let center = hexmap.pixelCoordinates(for: focus)
+
+        return Point(x: canvas_size.width / 2 - center.x, y: canvas_size.height / 2 - center.y )
+    }
+
+    var drawCanvas: some View {
+        var focus: Cell
+
+        do {
+            focus = hexmap.cellAt(try CubeCoordinates(x: 0, y: 0, z: 0))!
+        } catch {
+            return Canvas { context, size in
+                context.draw(
+                    Text("Couldn't find center of grid: \(error.localizedDescription)"),
+                    at: CGPoint(x: size.width/2, y: size.height/2))
+            }
+        }
+
+        return Canvas { context, size in
+            hexmap.origin = origin(canvas_size: size, focus: focus)
+            for cell in hexmap.cells {
+                var colour = Color.gray
+                let center = hexmap.pixelCoordinates(for: cell)
+                let offset_coord = cell.coordinates.toOffset(
+                    orientation: MapConfig.orientation,
+                    offsetLayout: MapConfig.offsetLayout
+                )
+                let path = CellPath(
+                    cell: cell,
+                    corners: hexmap.polygonCorners(for: cell)
+                )
+                context.stroke(
+                    path,
+                    with: .color(red: 0.65, green: 0.9, blue: 1.0),
+                    lineWidth: 2
+                )
+                if cell == focus {
+                    colour = Color.red
+                }
+                context.fill(path, with: .color(colour))
+                context.draw(
+                    Text("\(offset_coord.column),\(offset_coord.row)").font(
+                        .caption2
+                    ),
+                    at: center.cgPoint
+                )
             }
         }
     }
 
     func hexGesture(location: CGPoint) {
-        if let cell = try? game_map.grid.cellAt(location.hexPoint) {
-            let coords = cell.coordinates.toOffset(
-                orientation: .flatOnTop,
-                offsetLayout: .even
-            )
-            map_coord = MapCoord(x: coords.row - 32, y: coords.column - 32)
-            cell.toggleHighlight()
-        } else {
-            map_coord = MapCoord(x: 0, y: 0)
+        if let cell = try? hexmap.cellAt(location.hexPoint) {
+            center_cell = cell
         }
     }
 
@@ -72,18 +98,6 @@ struct MapView: View {
         return path
     }
 
-}
-
-extension Point {
-    public var cgPoint: CGPoint {
-        return CGPoint(x: x, y: y)
-    }
-}
-
-extension CGPoint {
-    public var hexPoint: Point {
-        return Point(x: x, y: y)
-    }
 }
 
 struct OnTap: ViewModifier {
@@ -108,25 +122,9 @@ extension View {
     }
 }
 
-extension Cell {
-    var isHighlighted: Bool {
-        return (self.attributes["isHighlighted"] == true)
-    }
-
-    func toggleHighlight() {
-        if !self.isBlocked {
-            if self.attributes["isHighlighted"] == true {
-                self.attributes["isHighlighted"] = false
-            } else {
-                self.attributes["isHighlighted"] = true
-            }
-        }
-    }
-}
-
 // MARK: -
-#Preview {
-    @Previewable @State var game_map = Map(x_size: 64, y_size: 64)
-    @Previewable @State var map_coord = MapCoord(x: 0, y:0)
-    MapView(game_map: game_map, map_coord: map_coord)
-}
+//#Preview {
+//    @Previewable var game = Game()
+//    @Previewable @State var center_cell = game.game_map.cellAt(MapCoord(x: 10, y:10))!
+//    MapView(game_map: game.game_map, center_cell: $center_cell)
+//}
