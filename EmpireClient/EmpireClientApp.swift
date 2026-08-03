@@ -26,7 +26,7 @@ struct EmpireClientApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(game: game)
+            ContentView(game: game, center_coord: MapCoord(x: 0, y: 0))
         }
         Settings {
        //     SettingsView()

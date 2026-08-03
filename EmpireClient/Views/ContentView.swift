@@ -11,28 +11,21 @@ import HexGrid
 
 struct ContentView: View {
     var game: Game
-    @State var map_coord: MapCoord
-    @State var center_cell: Cell
+    @State var center_coord: MapCoord
     @State private var columnVisibility = NavigationSplitViewVisibility
         .doubleColumn
-    
-    init(game: Game, map_coord: MapCoord = MapCoord(x: 10, y: 10)) {
-        self.game = game
-        self.map_coord = map_coord
-        center_cell = game.game_map.grid.cellAt(map_coord)!
-    }
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             Text("Sidebar")
         } content: {
-            MapView(game_map: game.game_map, center_cell: $center_cell)
+            MapView(game_map: game.game_map, center_coord: $center_coord)
                 .navigationTitle("Map")
                 .navigationSplitViewColumnWidth(min: 200, ideal: 300, max: 300)
         } detail: {
-            Text("\(map_coord.x), \(map_coord.y)").font(.title)
+            Text("\(center_coord.x), \(center_coord.y)").font(.title)
             if let sector = game.sector(coord: game.coord) {
-                HexView(coord: game.coord, sector: sector)
+                HexView(coord: center_coord, sector: sector)
             }
             if !game.loggedIn {
                 Button("Login") {
@@ -49,6 +42,6 @@ struct ContentView: View {
 #Preview {
     @Previewable @State var game = Game()
 
-    ContentView(game: game)
+    ContentView(game: game, center_coord: MapCoord(x: 0, y: 0))
     //     .modelContainer(for: Item.self, inMemory: true)
 }

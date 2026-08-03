@@ -10,7 +10,8 @@ import SwiftUI
 
 struct MapView: View {
     let game_map: Map
-    @Binding var center_cell: Cell
+    @Binding var center_coord: MapCoord
+    
     var hexmap = HexGrid(
         shape: .hexagon(MapConfig.mapRadius),
         orientation: MapConfig.orientation,
@@ -83,8 +84,15 @@ struct MapView: View {
 
     func hexGesture(location: CGPoint) {
         if let cell = try? hexmap.cellAt(location.hexPoint) {
-            center_cell = cell
+            center_coord = adjust_map_coord(cell.coordinates)
         }
+    }
+
+    func adjust_map_coord(_ coordinate: CubeCoordinates) -> MapCoord {
+        let offset = coordinate.toOffset(orientation: MapConfig.orientation, offsetLayout: MapConfig.offsetLayout)
+        center_coord = MapCoord(x: center_coord.x + offset.row, y: center_coord.y + offset.column)
+
+        return center_coord
     }
 
     func CellPath(cell: Cell, corners: [Point]) -> Path {
@@ -123,8 +131,8 @@ extension View {
 }
 
 // MARK: -
-//#Preview {
-//    @Previewable var game = Game()
-//    @Previewable @State var center_cell = game.game_map.cellAt(MapCoord(x: 10, y:10))!
-//    MapView(game_map: game.game_map, center_cell: $center_cell)
-//}
+#Preview {
+    @Previewable var game = Game()
+    @Previewable @State var center_coord = MapCoord(x: 10, y:10)
+    MapView(game_map: game.game_map, center_coord: $center_coord)
+}

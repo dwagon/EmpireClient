@@ -58,4 +58,8 @@ struct MapCoord {
     var y: Int {
         return _coords.row
     }
+
+    func description() -> String {
+        return "MapCoords(\(self.x), \(self.y))"
+    }
 }
