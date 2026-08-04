@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import HexGrid
 
 // MARK: -
 @Observable
@@ -21,9 +20,9 @@ class Game {
         coord = MapCoord(x: 6, y: 0)
     }
     
-    func sector(coord: MapCoord) -> Cell?
+    func sector(_ coord: MapCoord) -> Sector?
     {
-        return game_map.grid.cellAt(coord)
+        return game_map.map_data[coord]
     }
 
     // MARK: -
@@ -36,30 +35,5 @@ class Game {
         result = await client.run_cmd("play")
         print("play = '\(result)'")
         await cmd_dump()
-    }
-}
-
-// MARK: -
-struct MapCoord {
-    let _coords: OffsetCoordinates
-    init(x: Int, y: Int) {
-        _coords = OffsetCoordinates(
-            column: x,
-            row: y,
-            orientation: MapConfig.orientation,
-            offsetLayout: MapConfig.offsetLayout
-        )
-    }
-    
-    var x: Int {
-        return _coords.column
-    }
-    
-    var y: Int {
-        return _coords.row
-    }
-
-    func description() -> String {
-        return "MapCoords(\(self.x), \(self.y))"
     }
 }

@@ -10,16 +10,16 @@ import HexGrid
 
 struct HexView: View {
     var coord: MapCoord
-    var sector: Cell
-    
+    var sector: Sector
+
     var body: some View {
         List {
             Section {
                 Text("Map: \(coord.x), \(coord.y)")
             }
             Section("Sector Details") {
-                let desig = sector.attributes["desig"]?.description
-                Text("Desig: \(desig ?? "X")")
+                let desig = sector[.desig]
+                Text("Desig: \(desig ?? "?")")
             }
         }
     }
