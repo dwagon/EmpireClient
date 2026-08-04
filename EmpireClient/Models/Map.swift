@@ -6,63 +6,39 @@
 //
 
 import Foundation
-import HexGrid
 
 struct Map {
+    var map_data: [MapCoord:Sector] = [:]
     var x_size: Int
     var y_size: Int
-    var grid: HexGrid
 
     init(x_size: Int = 64, y_size: Int = 32) {
         self.x_size = x_size
         self.y_size = y_size
-        self.grid = HexGrid(
-            shape: GridShape.rectangle(x_size, y_size),
-            orientation: MapConfig.orientation,
-            offsetLayout: MapConfig.offsetLayout,
-            hexSize: HexSize(
-                width: MapConfig.cellSize,
-                height: MapConfig.cellSize
-            ),
-        )
-    }
-
-    func set_attr(
-        _ coordinates: OffsetCoordinates,
-        key: String,
-        newValue: Attribute
-    ) {
-        if let cell = grid.cellAt(coordinates) {
-            cell.attributes[key] = newValue
+        for i in -x_size/2...x_size/2 {
+            for j in -y_size/2...y_size/2 {
+                let coord = MapCoord(x: i, y: j)
+                map_data[coord] = Sector(coords: coord)
+            }
         }
     }
 
-    func set_attr(_ coordinates: MapCoord, key: String, newValue: Attribute)
-        throws
-    {
-        if let cell = try grid.cellAt(coordinates._coords.toCube()) {
-            cell.attributes[key] = newValue
+    func sector(_ coordinates: MapCoord) throws -> Sector {
+        if validCoord(coordinates) {
+            return map_data[coordinates]!
         }
+        throw InvalidCoordinate(message: "Can't use \(coordinates) in sector() call")
     }
-    
-    func cellAt(_ coordinates: MapCoord) -> Cell? {
-        return grid.cellAt(coordinates)
+
+    func validCoord(_ coordinates: MapCoord) -> Bool {
+        return map_data.contains { $0.key == coordinates }
     }
 }
 
-extension HexGrid {
-    func cellAt(_ coordinates: OffsetCoordinates) -> Cell? {
-        guard let cube_coords = try? coordinates.toCube() else { return nil }
-        return self.cells.first(where: { $0.coordinates == cube_coords })
 
-    }
-
-    func cellAt(_ coordinates: MapCoord) -> Cell? {
-        guard let cube_coords = try? coordinates._coords.toCube() else {
-            return nil
-        }
-        return self.cells.first(where: { $0.coordinates == cube_coords })
-    }
+// MARK: -
+struct InvalidCoordinate: Error {
+    var message: String
 }
 
 

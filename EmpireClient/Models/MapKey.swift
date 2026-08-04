@@ -1,0 +1,89 @@
+//
+//  MapKeys.swift
+//  EmpireClient
+//
+//  Created by Dougal Scott on 4/8/2026.
+//
+
+import Foundation
+
+enum MapKey: String {
+    case desig
+    case sdes
+    case eff
+    case mob
+    case min
+    case gold
+    case fert
+    case ocontent
+    case uran
+    case work
+    case avail
+    case terr
+    case civ
+    case mil
+    case uw
+    case food
+    case shell
+    case gun
+    case pet
+    case iron
+    case dust
+    case bar
+    case oil
+    case lcm
+    case hcm
+    case rad
+    case u_del
+    case f_del
+    case s_del
+    case g_del
+    case p_del
+    case i_del
+    case d_del
+    case b_del
+    case o_del
+    case l_del
+    case h_del
+    case r_del
+    case u_cut
+    case f_cut
+    case s_cut
+    case g_cut
+    case p_cut
+    case i_cut
+    case d_cut
+    case b_cut
+    case o_cut
+    case l_cut
+    case h_cut
+    case r_cut
+    case dist_x
+    case dist_y
+    case c_dist
+    case m_dist
+    case u_dist
+    case f_dist
+    case s_dist
+    case g_dist
+    case p_dist
+    case i_dist
+    case d_dist
+    case b_dist
+    case o_dist
+    case l_dist
+    case h_dist
+    case r_dist
+    case road
+    case rail
+    case defence
+    case fallout
+    case coast
+    case c_del
+    case m_del
+    case c_cut
+    case m_cut
+    case terr1
+    case terr2
+    case terr3
+}

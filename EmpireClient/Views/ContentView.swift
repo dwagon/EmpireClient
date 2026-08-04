@@ -24,7 +24,7 @@ struct ContentView: View {
                 .navigationSplitViewColumnWidth(min: 200, ideal: 300, max: 300)
         } detail: {
             Text("\(center_coord.x), \(center_coord.y)").font(.title)
-            if let sector = game.sector(coord: game.coord) {
+            if let sector = game.sector(game.coord) {
                 HexView(coord: center_coord, sector: sector)
             }
             if !game.loggedIn {
