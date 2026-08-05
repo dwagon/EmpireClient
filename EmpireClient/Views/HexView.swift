@@ -18,8 +18,21 @@ struct HexView: View {
                 Text("Map: \(coord.x), \(coord.y)")
             }
             Section("Sector Details") {
-                let desig = sector[.desig]
-                Text("Desig: \(desig ?? "?")")
+                Text("Desig: \(sector.desig)")
+                Grid {
+                    GridRow{
+                        Text("Civilians")
+                        Text("Military")
+                        Text("Uncomp Workers")
+                    }
+                    Divider()
+                    GridRow{
+                        Text("\(String(describing: sector[.civ]))")
+                        Text("\(sector[.mil])")
+                        Text("\(sector[.uw])")
+
+                    }
+                }
             }
         }
     }
