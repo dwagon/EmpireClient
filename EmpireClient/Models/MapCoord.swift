@@ -4,13 +4,52 @@
 //
 //  Created by Dougal Scott on 4/8/2026.
 //
+import HexGrid
 
-
-struct MapCoord: Hashable {
+struct MapCoord: Hashable, Equatable {
     var x: Int
     var y: Int
+
+    init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+
+    init(_ offset: OffsetCoordinates) {
+        self.x = offset.column * 2
+        self.y = offset.row
+    }
+
+    init(_ cube: CubeCoordinates) {
+        let offset = cubeToDoubleWidth(from: cube, orientation: MapConfig.orientation, offsetLayout: MapConfig.offsetLayout)
+        self.init(x: offset.column, y:offset.row)
+    }
 
     func description() -> String {
         return "MapCoords(\(self.x), \(self.y))"
     }
+}
+
+func doubleWidthToCube(from: OffsetCoordinates) throws
+    -> CubeCoordinates
+{
+    let q: Int = (from.column - from.row) / 2
+    let r: Int = from.row
+    let s: Int = -q - r
+    return try CubeCoordinates(x: q, y: r, z: s)
+}
+
+func cubeToDoubleWidth(
+    from: CubeCoordinates,
+    orientation: Orientation,
+    offsetLayout: OffsetLayout
+) -> OffsetCoordinates {
+    let col: Int = 2 * from.x + from.z
+    let row: Int = from.z
+    return OffsetCoordinates(
+        column: col,
+        row: row,
+        orientation: orientation,
+        offsetLayout: offsetLayout
+    )
 }
