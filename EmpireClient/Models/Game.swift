@@ -11,18 +11,21 @@ import Foundation
 @Observable
 class Game {
     var game_map: Map
-    var coord: MapCoord  // Coord we are focussing on
     var client = TCPClient()
     var loggedIn: Bool = false
 
     init() {
         game_map = Map(x_size: MapConfig.map_width, y_size: MapConfig.map_height)
-        coord = MapCoord(x: 6, y: 0)
     }
-    
-    func sector(_ coord: MapCoord) -> Sector?
+
+    subscript(key: MapCoord) -> Sector?
     {
-        return game_map.map_data[coord]
+        get {
+            return game_map[key]
+        }
+        set {
+            game_map[key] = newValue
+        }
     }
 
     // MARK: -
@@ -34,6 +37,5 @@ class Game {
         print("pass = '\(result)'")
         result = await client.run_cmd("play")
         print("play = '\(result)'")
-        await cmd_dump()
     }
 }

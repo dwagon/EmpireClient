@@ -10,7 +10,7 @@ import SwiftUI
 import HexGrid
 
 struct ContentView: View {
-    var game: Game
+    @State var game: Game
     @State var center_coord: MapCoord
     @State private var columnVisibility = NavigationSplitViewVisibility
         .doubleColumn
@@ -24,7 +24,7 @@ struct ContentView: View {
                 .navigationSplitViewColumnWidth(min: 200, ideal: 300, max: 300)
         } detail: {
             Text("\(center_coord.x), \(center_coord.y)").font(.title)
-            if let sector = game.sector(game.coord) {
+            if let sector = game[center_coord] {
                 HexView(coord: center_coord, sector: sector)
             }
             if !game.loggedIn {
@@ -34,6 +34,11 @@ struct ContentView: View {
                     }
                 }
             }
+            Button("Dump") {
+                Task {
+                    await game.cmd_dump()
+                }
+            }
         }.navigationSplitViewStyle(.balanced)
     }
 
@@ -41,7 +46,10 @@ struct ContentView: View {
 
 #Preview {
     @Previewable @State var game = Game()
+    let mc = MapCoord(x: 0, y: 0)
+//    let s = Sector(coords: mc)
+//    game.game_map[mc] = s
 
-    ContentView(game: game, center_coord: MapCoord(x: 0, y: 0))
-    //     .modelContainer(for: Item.self, inMemory: true)
+    ContentView(game: game, center_coord: mc)
+         .modelContainer(for: Item.self, inMemory: true)
 }

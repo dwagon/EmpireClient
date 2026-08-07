@@ -7,14 +7,16 @@
 
 import Foundation
 
-struct Sector {
+class Sector {
     var coords: MapCoord
     var desig: Desig
+    var sdes: Desig
     var data: [MapKey: MapKeyValue] = [:]
 
     init(coords: MapCoord) {
         self.coords = coords
         desig = Desig.unknown
+        sdes = Desig.unknown
     }
 
     subscript(index: MapKey) -> MapKeyValue? {
@@ -22,8 +24,13 @@ struct Sector {
             return data[index]
         }
         set {
-            print("\(coords) set \(index) to \(newValue, default: "nil")")
+            // print("\(coords) set \(index) to \(newValue, default: "nil")")
             data[index] = newValue
         }
+    }
+
+    var repr: String {
+        print("Sector(\(coords.x), \(coords.y)): \(desig.rawValue) = \(String(describing: desig))")
+        return String(describing:desig)
     }
 }

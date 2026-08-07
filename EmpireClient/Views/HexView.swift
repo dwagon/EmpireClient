@@ -18,7 +18,7 @@ struct HexView: View {
                 Text("Map: \(coord.x), \(coord.y)")
             }
             Section("Sector Details") {
-                Text("Desig: \(sector.desig)")
+                Text("Desig: \(String(describing: sector.desig))")
                 Grid {
                     GridRow{
                         Text("Civilians")
@@ -28,8 +28,8 @@ struct HexView: View {
                     Divider()
                     GridRow{
                         Text("\(String(describing: sector[.civ]))")
-                        Text("\(sector[.mil])")
-                        Text("\(sector[.uw])")
+                        Text("\(String(describing: sector[.mil]))")
+                        Text("\(String(describing: sector[.uw]))")
 
                     }
                 }

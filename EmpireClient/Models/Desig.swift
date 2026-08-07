@@ -11,6 +11,8 @@ enum Desig: String {
         switch rawValue {
         case "c":
             self = .capital
+        case "_":
+            self = .unknown
         default:
             print("Unhandled Desig init value \(rawValue)")
             self = .unknown

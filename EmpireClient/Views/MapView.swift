@@ -11,7 +11,7 @@ import SwiftUI
 struct MapView: View {
     let game_map: Map
     @Binding var center_coord: MapCoord
-    
+
     var hexmap = HexGrid(
         shape: .hexagon(MapConfig.mapRadius),
         orientation: MapConfig.orientation,
@@ -34,7 +34,10 @@ struct MapView: View {
     func origin(canvas_size: CGSize, focus: Cell) -> Point {
         let center = hexmap.pixelCoordinates(for: focus)
 
-        return Point(x: canvas_size.width / 2 - center.x, y: canvas_size.height / 2 - center.y )
+        return Point(
+            x: canvas_size.width / 2 - center.x,
+            y: canvas_size.height / 2 - center.y
+        )
     }
 
     var drawCanvas: some View {
@@ -45,20 +48,18 @@ struct MapView: View {
         } catch {
             return Canvas { context, size in
                 context.draw(
-                    Text("Couldn't find center of grid: \(error.localizedDescription)"),
-                    at: CGPoint(x: size.width/2, y: size.height/2))
+                    Text(
+                        "Couldn't find center of grid: \(error.localizedDescription)"
+                    ),
+                    at: CGPoint(x: size.width / 2, y: size.height / 2)
+                )
             }
         }
 
         return Canvas { context, size in
             hexmap.origin = origin(canvas_size: size, focus: focus)
             for cell in hexmap.cells {
-                var colour = Color.gray
                 let center = hexmap.pixelCoordinates(for: cell)
-                let offset_coord = cell.coordinates.toOffset(
-                    orientation: MapConfig.orientation,
-                    offsetLayout: MapConfig.offsetLayout
-                )
                 let path = CellPath(
                     cell: cell,
                     corners: hexmap.polygonCorners(for: cell)
@@ -68,17 +69,28 @@ struct MapView: View {
                     with: .color(red: 0.65, green: 0.9, blue: 1.0),
                     lineWidth: 2
                 )
-                if cell == focus {
-                    colour = Color.red
-                }
-                context.fill(path, with: .color(colour))
+                context.fill(path, with: cellColour(cell))
                 context.draw(
-                    Text("\(offset_coord.column),\(offset_coord.row)").font(
-                        .caption2
-                    ),
+                    Text(cellText(cell)).font(.caption2),
                     at: center.cgPoint
                 )
             }
+        }
+
+        func cellText(_ cell: Cell) -> String {
+            let map_coord = MapCoord(cell.coordinates)
+            if let sector = game_map.sector(map_coord) {
+                return sector.repr
+            } else {
+                return "\(cell.coordinates.x),\(cell.coordinates.y),\(cell.coordinates.z)\n  \(map_coord.x),\(map_coord.y)"
+            }
+        }
+
+        func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
+            if cell == focus {
+                return .color(Color.red)
+            }
+            return .color(Color.gray)
         }
     }
 
@@ -89,10 +101,16 @@ struct MapView: View {
     }
 
     func adjust_map_coord(_ coordinate: CubeCoordinates) -> MapCoord {
-        let offset = coordinate.toOffset(orientation: MapConfig.orientation, offsetLayout: MapConfig.offsetLayout)
-        center_coord = MapCoord(x: center_coord.x + offset.row, y: center_coord.y + offset.column)
+        let offset = coordinate.toOffset(
+            orientation: MapConfig.orientation,
+            offsetLayout: MapConfig.offsetLayout
+        )
+        let new_coord = MapCoord(
+            x: center_coord.x + offset.row,
+            y: center_coord.y + offset.column
+        )
 
-        return center_coord
+        return new_coord
     }
 
     func CellPath(cell: Cell, corners: [Point]) -> Path {
@@ -133,6 +151,6 @@ extension View {
 // MARK: -
 #Preview {
     @Previewable var game = Game()
-    @Previewable @State var center_coord = MapCoord(x: 10, y:10)
+    @Previewable @State var center_coord = MapCoord(x: 0, y: 0)
     MapView(game_map: game.game_map, center_coord: $center_coord)
 }
