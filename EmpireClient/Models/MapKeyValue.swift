@@ -23,7 +23,7 @@ enum MapKeyValue: CustomStringConvertible, Equatable {
         case .str(let string):
             return string
         case .int(let int):
-            return String(int)
+            return "\(String(int))"
         }
     }
     

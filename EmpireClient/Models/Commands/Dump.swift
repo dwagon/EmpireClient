@@ -20,18 +20,16 @@ extension Game {
         let result = await client.run_cmd("dump #")
         guard result != [] else { return }
         var sector: Sector
+        print("result=\(result)")
 
         for line in result[3..<result.count-1] {
             let bits = line.split(separator: " ")
-            print("bits[0] = \(bits[0]); bits[1] = \(bits[1])")
             let coord = MapCoord(x: Int(bits[0])!, y: Int(bits[1])!)
             if self[coord] == nil {
-                print("cmd_dump() Creating cell \(coord)")
                 self[coord] = Sector(coords: coord)
             }
             sector = self[coord]!
             sector.desig = Desig(String(bits[2]))
-            print("Setting \(coord) desig to \(String(bits[2]))")
             sector.sdes = Desig(String(bits[3]))
             sector[.eff] = MapKeyValue(bits[4])
             sector[.mob] = MapKeyValue(bits[5])
@@ -109,9 +107,6 @@ extension Game {
             sector[.terr1] = MapKeyValue(bits[79])
             sector[.terr2] = MapKeyValue(bits[80])
             sector[.terr3] = MapKeyValue(bits[81])
-
-            let s = MapCoord(x: 0, y: 0)
-            print("mil=\(self[s]![.mil], default: "WTF")")
         }
     }
 }
