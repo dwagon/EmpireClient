@@ -5,6 +5,8 @@
 //  Created by Dougal Scott on 5/8/2026.
 //
 
+import Foundation
+
 
 enum Desig: String {
     init(_ rawValue: String) {
@@ -17,6 +19,10 @@ enum Desig: String {
             print("Unhandled Desig init value \(rawValue)")
             self = .unknown
         }
+    }
+
+    var description : String {
+        return self.rawValue.capitalized
     }
 
     case sea = "Sea"
