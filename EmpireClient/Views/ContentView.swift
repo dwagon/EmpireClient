@@ -14,6 +14,7 @@ struct ContentView: View {
     @State var center_coord: MapCoord
     @State private var columnVisibility = NavigationSplitViewVisibility
         .doubleColumn
+    @State private var isLoggedIn: Bool = false
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
@@ -27,11 +28,12 @@ struct ContentView: View {
             if let sector = game[center_coord] {
                 HexView(coord: center_coord, sector: sector)
             }
-            if !game.loggedIn {
+            if !isLoggedIn {
                 Button("Login") {
                     Task {
                         await game.login(country: "1", password: "1")
                     }
+                    isLoggedIn = true
                 }
             }
             Button("Dump") {

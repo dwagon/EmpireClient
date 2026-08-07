@@ -12,7 +12,6 @@ import Foundation
 class Game {
     var game_map: Map
     var client = TCPClient()
-    var loggedIn: Bool = false
 
     init() {
         game_map = Map(x_size: MapConfig.map_width, y_size: MapConfig.map_height)
@@ -33,7 +32,6 @@ class Game {
         var result = await client.run_cmd("coun \(country)")
         print("coun = '\(result)'")
         result = await client.run_cmd("pass \(password)")
-        loggedIn=true
         print("pass = '\(result)'")
         result = await client.run_cmd("play")
         print("play = '\(result)'")
