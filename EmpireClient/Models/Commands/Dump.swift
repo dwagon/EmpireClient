@@ -18,11 +18,18 @@ import HexGrid
 extension Game {
     func cmd_dump() async {
         let result = await client.run_cmd("dump #")
-        guard result != [] else { return }
+        guard result != [] else {
+            print("dump returned empty")
+            return
+        }
         var sector: Sector
         print("result=\(result)")
+        if result.contains("Command dump not found") {
+            print("Need to login")
+            return
+        }
 
-        for line in result[3..<result.count-1] {
+        for line in result[3..<result.count - 1] {
             let bits = line.split(separator: " ")
             let coord = MapCoord(x: Int(bits[0])!, y: Int(bits[1])!)
             if self[coord] == nil {

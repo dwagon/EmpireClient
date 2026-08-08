@@ -3,6 +3,7 @@
 //  EmpireClient
 //
 //  Created by Dougal Scott on 5/8/2026.
+//  See https://www.empire.cx/infopages/Sector-types.html
 //
 
 import Foundation
@@ -13,6 +14,10 @@ enum Desig: String {
         switch rawValue {
         case "c":
             self = .capital
+        case ".":
+            self = .sea
+        case "-":
+            self = .wilderness
         case "_":
             self = .unknown
         default:

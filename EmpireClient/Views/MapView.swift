@@ -79,7 +79,7 @@ struct MapView: View {
 
         func cellText(_ cell: Cell) -> String {
             let map_coord = MapCoord(cell.coordinates)
-            if let sector = game_map.sector(map_coord) {
+            if let sector = game_map[map_coord] {
                 return sector.repr
             } else {
                 return "\(cell.coordinates.x),\(cell.coordinates.y),\(cell.coordinates.z)\n  \(map_coord.x),\(map_coord.y)"

@@ -41,6 +41,11 @@ struct ContentView: View {
                     await game.cmd_dump()
                 }
             }
+            Button("Map") {
+                Task {
+                    await game.cmd_bmap()
+                }
+            }
         }.navigationSplitViewStyle(.balanced)
     }
 
