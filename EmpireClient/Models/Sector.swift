@@ -30,7 +30,6 @@ class Sector {
     }
 
     var repr: String {
-        print("Sector(\(coords.x), \(coords.y)): \(desig.rawValue) = \(String(describing: desig))")
         return String(describing:desig)
     }
 }

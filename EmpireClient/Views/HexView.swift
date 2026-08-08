@@ -17,14 +17,13 @@ struct HexView: View {
     @State var populationCollapse: Bool = false
 
     var desig_str: String {
-        var des_str = "Desig: \(sector.desig) (Eff: \(sector[.eff]!)%)"
+        var des_str =
+            "Desig: \(sector.desig) (Eff: \(sector[.eff], default: "??")%)"
         if sector.sdes != .unknown {
             des_str += " SDesig: \(sector.sdes)"
         }
         return des_str
     }
-
-    
 
     var naturalResourceSection: some View {
         Grid {
@@ -37,11 +36,11 @@ struct HexView: View {
             }
             Divider()
             GridRow {
-                Text(verbatim: "\(sector[.min]!)")
-                Text(verbatim: "\(sector[.gold]!)")
-                Text(verbatim: "\(sector[.fert]!)")
-                Text(verbatim: "\(sector[.ocontent]!)")
-                Text(verbatim: "\(sector[.uran]!)")
+                Text(verbatim: "\(sector[.min], default: "?")")
+                Text(verbatim: "\(sector[.gold], default: "?")")
+                Text(verbatim: "\(sector[.fert], default: "?")")
+                Text(verbatim: "\(sector[.ocontent], default: "?")")
+                Text(verbatim: "\(sector[.uran], default: "?")")
             }
         }
     }
@@ -57,23 +56,23 @@ struct HexView: View {
             Divider()
             GridRow {
                 Text("Amount").bold()
-                Text(verbatim: "\(sector[.civ]!)")
-                Text(verbatim: "\(sector[.mil]!)")
-                Text(verbatim: "\(sector[.uw]!)")
+                Text(verbatim: "\(sector[.civ], default: "?")")
+                Text(verbatim: "\(sector[.mil], default: "?")")
+                Text(verbatim: "\(sector[.uw], default: "?")")
             }
             Divider()
             GridRow {
                 Text(verbatim: "Delivery").bold()
-                Text(verbatim: "\(sector[.c_del]!)")
-                Text(verbatim: "\(sector[.m_del]!)")
-                Text(verbatim: "\(sector[.u_del]!)")
+                Text(verbatim: "\(sector[.c_del], default: "?")")
+                Text(verbatim: "\(sector[.m_del], default: "?")")
+                Text(verbatim: "\(sector[.u_del], default: "?")")
             }
             Divider()
             GridRow {
                 Text(verbatim: "Cutoff").bold()
-                Text(verbatim: "\(sector[.c_cut]!)")
-                Text(verbatim: "\(sector[.m_cut]!)")
-                Text(verbatim: "\(sector[.u_cut]!)")
+                Text(verbatim: "\(sector[.c_cut], default: "?")")
+                Text(verbatim: "\(sector[.m_cut], default: "?")")
+                Text(verbatim: "\(sector[.u_cut], default: "?")")
             }
         }
     }
@@ -97,59 +96,59 @@ struct HexView: View {
             Divider()
             GridRow {
                 Text("Amount").bold()
-                Text(verbatim: "\(sector[.food]!)")
-                Text(verbatim: "\(sector[.shell]!)")
-                Text(verbatim: "\(sector[.gun]!)")
-                Text(verbatim: "\(sector[.pet]!)")
-                Text(verbatim: "\(sector[.iron]!)")
-                Text(verbatim: "\(sector[.dust]!)")
-                Text(verbatim: "\(sector[.bar]!)")
-                Text(verbatim: "\(sector[.oil]!)")
-                Text(verbatim: "\(sector[.lcm]!)")
-                Text(verbatim: "\(sector[.hcm]!)")
-                Text(verbatim: "\(sector[.rad]!)")
+                Text(verbatim: "\(sector[.food], default: "?")")
+                Text(verbatim: "\(sector[.shell], default: "?")")
+                Text(verbatim: "\(sector[.gun], default: "?")")
+                Text(verbatim: "\(sector[.pet], default: "?")")
+                Text(verbatim: "\(sector[.iron], default: "?")")
+                Text(verbatim: "\(sector[.dust], default: "?")")
+                Text(verbatim: "\(sector[.bar], default: "?")")
+                Text(verbatim: "\(sector[.oil], default: "?")")
+                Text(verbatim: "\(sector[.lcm], default: "?")")
+                Text(verbatim: "\(sector[.hcm], default: "?")")
+                Text(verbatim: "\(sector[.rad], default: "?")")
             }
             GridRow {
                 Text("Deliver").bold()
-                Text(verbatim: "\(sector[.f_del]!)")
-                Text(verbatim: "\(sector[.s_del]!)")
-                Text(verbatim: "\(sector[.g_del]!)")
-                Text(verbatim: "\(sector[.p_del]!)")
-                Text(verbatim: "\(sector[.i_del]!)")
-                Text(verbatim: "\(sector[.d_del]!)")
-                Text(verbatim: "\(sector[.b_del]!)")
-                Text(verbatim: "\(sector[.o_del]!)")
-                Text(verbatim: "\(sector[.l_del]!)")
-                Text(verbatim: "\(sector[.h_del]!)")
-                Text(verbatim: "\(sector[.r_del]!)")
+                Text(verbatim: "\(sector[.f_del], default: "?")")
+                Text(verbatim: "\(sector[.s_del], default: "?")")
+                Text(verbatim: "\(sector[.g_del], default: "?")")
+                Text(verbatim: "\(sector[.p_del], default: "?")")
+                Text(verbatim: "\(sector[.i_del], default: "?")")
+                Text(verbatim: "\(sector[.d_del], default: "?")")
+                Text(verbatim: "\(sector[.b_del], default: "?")")
+                Text(verbatim: "\(sector[.o_del], default: "?")")
+                Text(verbatim: "\(sector[.l_del], default: "?")")
+                Text(verbatim: "\(sector[.h_del], default: "?")")
+                Text(verbatim: "\(sector[.r_del], default: "?")")
             }
             GridRow {
                 Text("Distribute").bold()
-                Text(verbatim: "\(sector[.f_dist]!)")
-                Text(verbatim: "\(sector[.s_dist]!)")
-                Text(verbatim: "\(sector[.g_dist]!)")
-                Text(verbatim: "\(sector[.p_dist]!)")
-                Text(verbatim: "\(sector[.i_dist]!)")
-                Text(verbatim: "\(sector[.d_dist]!)")
-                Text(verbatim: "\(sector[.b_dist]!)")
-                Text(verbatim: "\(sector[.o_dist]!)")
-                Text(verbatim: "\(sector[.l_dist]!)")
-                Text(verbatim: "\(sector[.h_dist]!)")
-                Text(verbatim: "\(sector[.r_dist]!)")
+                Text(verbatim: "\(sector[.f_dist], default: "?")")
+                Text(verbatim: "\(sector[.s_dist], default: "?")")
+                Text(verbatim: "\(sector[.g_dist], default: "?")")
+                Text(verbatim: "\(sector[.p_dist], default: "?")")
+                Text(verbatim: "\(sector[.i_dist], default: "?")")
+                Text(verbatim: "\(sector[.d_dist], default: "?")")
+                Text(verbatim: "\(sector[.b_dist], default: "?")")
+                Text(verbatim: "\(sector[.o_dist], default: "?")")
+                Text(verbatim: "\(sector[.l_dist], default: "?")")
+                Text(verbatim: "\(sector[.h_dist], default: "?")")
+                Text(verbatim: "\(sector[.r_dist], default: "?")")
             }
             GridRow {
                 Text(verbatim: "Cutoff").bold()
-                Text(verbatim: "\(sector[.f_cut]!)")
-                Text(verbatim: "\(sector[.s_cut]!)")
-                Text(verbatim: "\(sector[.g_cut]!)")
-                Text(verbatim: "\(sector[.p_cut]!)")
-                Text(verbatim: "\(sector[.i_cut]!)")
-                Text(verbatim: "\(sector[.d_cut]!)")
-                Text(verbatim: "\(sector[.b_cut]!)")
-                Text(verbatim: "\(sector[.o_cut]!)")
-                Text(verbatim: "\(sector[.l_cut]!)")
-                Text(verbatim: "\(sector[.h_cut]!)")
-                Text(verbatim: "\(sector[.r_cut]!)")
+                Text(verbatim: "\(sector[.f_cut], default: "?")")
+                Text(verbatim: "\(sector[.s_cut], default: "?")")
+                Text(verbatim: "\(sector[.g_cut], default: "?")")
+                Text(verbatim: "\(sector[.p_cut], default: "?")")
+                Text(verbatim: "\(sector[.i_cut], default: "?")")
+                Text(verbatim: "\(sector[.d_cut], default: "?")")
+                Text(verbatim: "\(sector[.b_cut], default: "?")")
+                Text(verbatim: "\(sector[.o_cut], default: "?")")
+                Text(verbatim: "\(sector[.l_cut], default: "?")")
+                Text(verbatim: "\(sector[.h_cut], default: "?")")
+                Text(verbatim: "\(sector[.r_cut], default: "?")")
             }
         }
     }
@@ -166,8 +165,7 @@ struct HexView: View {
             //
             Section(isExpanded: $populationCollapse) {
                 populationSection
-            }
-            header: {
+            } header: {
                 HStack {
                     Text("Population")
                     Spacer()
@@ -178,8 +176,7 @@ struct HexView: View {
             //
             Section(isExpanded: $naturalResourceCollapse) {
                 naturalResourceSection
-            }
-            header: {
+            } header: {
                 HStack {
                     Text("Natural Resources")
                     Spacer()
@@ -190,8 +187,7 @@ struct HexView: View {
             //
             Section(isExpanded: $resourceCollapse) {
                 resourceSection
-            }
-            header: {
+            } header: {
                 HStack {
                     Text("Resources")
                     Spacer()
