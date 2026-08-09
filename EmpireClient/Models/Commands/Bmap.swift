@@ -68,7 +68,6 @@ extension Game {
         } else {
             game_map[coord] = Sector(coords: coord)
             game_map[coord]!.desig = Desig(to)
-            print("BMAP: Setting \(coord.x), \(coord.y) to \(to)")
         }
     }
 }
@@ -99,10 +98,7 @@ func get_lower_x(_ msg: [String]) -> Int {
 }
 
 func is_valid_coord(x: Int, y: Int) -> Bool {
-    if (x % 2 == 1) && (y % 2 == 1) {
-        return true
-    }
-    if (x % 2 == 0) && (y % 2) == 0 {
+    if (abs(x) % 2 == abs(y) % 2) {
         return true
     }
     return false
