@@ -21,8 +21,7 @@ struct MapCoord: Hashable, Equatable {
     }
 
     init(_ cube: CubeCoordinates) {
-        let offset = cubeToDoubleWidth(from: cube, orientation: MapConfig.orientation, offsetLayout: MapConfig.offsetLayout)
-        self.init(x: offset.column, y:offset.row)
+        self = cubeToDoubleWidth(from: cube, orientation: MapConfig.orientation, offsetLayout: MapConfig.offsetLayout)
     }
 
     func description() -> String {
@@ -52,13 +51,14 @@ func cubeToDoubleWidth(
     from: CubeCoordinates,
     orientation: Orientation,
     offsetLayout: OffsetLayout
-) -> OffsetCoordinates {
+) -> MapCoord {
     let col: Int = 2 * from.x + from.z
     let row: Int = from.z
-    return OffsetCoordinates(
+    let offset = OffsetCoordinates(
         column: col,
         row: row,
         orientation: orientation,
         offsetLayout: offsetLayout
     )
+    return MapCoord(x: offset.column, y: offset.row)
 }

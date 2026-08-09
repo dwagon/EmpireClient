@@ -81,11 +81,9 @@ struct MapView: View {
             if let sector = game_map[map_coord] {
                 return sector.repr
             } else {
-                return
-                    "\(cell.coordinates.x),\(cell.coordinates.y),\(cell.coordinates.z)\n  \(map_coord.x),\(map_coord.y)"
+                return "\(map_coord.x),\(map_coord.y)"
             }
         }
-
 
         func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
             if cell == focus {
@@ -106,7 +104,6 @@ struct MapView: View {
         }
     }
 
-
     /// Adjust screen coordinates to map coordinates
     func screenToMapCoord(_ coord: CubeCoordinates) -> MapCoord {
         var adjusted = MapCoord(coord)
@@ -117,21 +114,17 @@ struct MapView: View {
 
     func hexGesture(location: CGPoint) {
         if let cell = try? hexmap.cellAt(location.hexPoint) {
-            center_coord = adjust_map_coord(cell.coordinates)
+            let new_coord = cubeToDoubleWidth(
+                from: cell.coordinates,
+                orientation: MapConfig.orientation,
+                offsetLayout: MapConfig.offsetLayout
+            )
+            print(
+                "cell=\(cell.coordinates) new=\(new_coord) center=\(center_coord)"
+            )
+            center_coord.x += new_coord.x
+            center_coord.y += new_coord.y
         }
-    }
-
-    func adjust_map_coord(_ coordinate: CubeCoordinates) -> MapCoord {
-        let offset = coordinate.toOffset(
-            orientation: MapConfig.orientation,
-            offsetLayout: MapConfig.offsetLayout
-        )
-        let new_coord = MapCoord(
-            x: center_coord.x + offset.row,
-            y: center_coord.y + offset.column
-        )
-
-        return new_coord
     }
 
     func CellPath(cell: Cell, corners: [Point]) -> Path {
