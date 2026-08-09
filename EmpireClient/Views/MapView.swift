@@ -90,7 +90,18 @@ struct MapView: View {
             if cell == focus {
                 return .color(Color.red)
             }
-            return .color(Color.gray)
+            let map_coord = MapCoord(cell.coordinates)
+            if let sector = game_map[map_coord] {
+                switch sector.desig {
+                case .sea:
+                    return .color(Color.blue)
+                case .wilderness:
+                    return .color(Color.green)
+                default:
+                    return .color(Color.gray)
+                }
+            }
+            return .color(Color.clear)
         }
     }
 
