@@ -68,6 +68,7 @@ extension Game {
         } else {
             game_map[coord] = Sector(coords: coord)
             game_map[coord]!.desig = Desig(to)
+            print("BMAP: Setting \(coord.x), \(coord.y) to \(to)")
         }
     }
 }

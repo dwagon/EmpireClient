@@ -33,7 +33,7 @@ struct MapView: View {
     /// Move origin so map hex is centered in view
     func origin(canvas_size: CGSize, focus: Cell) -> Point {
         let center = hexmap.pixelCoordinates(for: focus)
-
+        print("center=\(center) canvas_size=\(canvas_size)")
         return Point(
             x: canvas_size.width / 2 - center.x,
             y: canvas_size.height / 2 - center.y
@@ -82,7 +82,8 @@ struct MapView: View {
             if let sector = game_map[map_coord] {
                 return sector.repr
             } else {
-                return "\(cell.coordinates.x),\(cell.coordinates.y),\(cell.coordinates.z)\n  \(map_coord.x),\(map_coord.y)"
+                return
+                    "\(cell.coordinates.x),\(cell.coordinates.y),\(cell.coordinates.z)\n  \(map_coord.x),\(map_coord.y)"
             }
         }
 
