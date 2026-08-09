@@ -30,11 +30,20 @@ struct MapCoord: Hashable, Equatable {
     }
 }
 
-func doubleWidthToCube(from: OffsetCoordinates) throws
+//func doubleWidthToCube(from: OffsetCoordinates) throws
+//    -> CubeCoordinates
+//{
+//    let q: Int = (from.column - from.row) / 2
+//    let r: Int = from.row
+//    let s: Int = -q - r
+//    return try CubeCoordinates(x: q, y: r, z: s)
+//}
+
+func doubleWidthToCube(from: MapCoord) throws
     -> CubeCoordinates
 {
-    let q: Int = (from.column - from.row) / 2
-    let r: Int = from.row
+    let q: Int = (from.x - from.y) / 2
+    let r: Int = from.y
     let s: Int = -q - r
     return try CubeCoordinates(x: q, y: r, z: s)
 }

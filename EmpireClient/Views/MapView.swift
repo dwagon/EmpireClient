@@ -30,10 +30,9 @@ struct MapView: View {
         }
     }
 
-    /// Move origin so map hex is centered in view
+    /// Move pixel origin so map hex is centered in view
     func origin(canvas_size: CGSize, focus: Cell) -> Point {
         let center = hexmap.pixelCoordinates(for: focus)
-        print("center=\(center) canvas_size=\(canvas_size)")
         return Point(
             x: canvas_size.width / 2 - center.x,
             y: canvas_size.height / 2 - center.y
@@ -78,7 +77,7 @@ struct MapView: View {
         }
 
         func cellText(_ cell: Cell) -> String {
-            let map_coord = MapCoord(cell.coordinates)
+            let map_coord = screenToMapCoord(cell.coordinates)
             if let sector = game_map[map_coord] {
                 return sector.repr
             } else {
@@ -87,11 +86,12 @@ struct MapView: View {
             }
         }
 
+
         func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
             if cell == focus {
                 return .color(Color.red)
             }
-            let map_coord = MapCoord(cell.coordinates)
+            let map_coord = screenToMapCoord(cell.coordinates)
             if let sector = game_map[map_coord] {
                 switch sector.desig {
                 case .sea:
@@ -104,6 +104,15 @@ struct MapView: View {
             }
             return .color(Color.clear)
         }
+    }
+
+
+    /// Adjust screen coordinates to map coordinates
+    func screenToMapCoord(_ coord: CubeCoordinates) -> MapCoord {
+        var adjusted = MapCoord(coord)
+        adjusted.x += center_coord.x
+        adjusted.y += center_coord.y
+        return adjusted
     }
 
     func hexGesture(location: CGPoint) {
