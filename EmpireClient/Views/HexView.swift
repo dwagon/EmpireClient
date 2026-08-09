@@ -12,9 +12,9 @@ struct HexView: View {
     var coord: MapCoord
     var sector: Sector
 
-    @State var resourceCollapse: Bool = false
-    @State var naturalResourceCollapse: Bool = false
-    @State var populationCollapse: Bool = false
+    @State var resourceCollapse: Bool = true
+    @State var naturalResourceCollapse: Bool = true
+    @State var populationCollapse: Bool = true
 
     var desig_str: String {
         var des_str =
