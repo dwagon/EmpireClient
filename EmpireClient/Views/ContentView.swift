@@ -26,7 +26,7 @@ struct ContentView: View {
                 .navigationSplitViewColumnWidth(min: 200, ideal: 300, max: 300)
         } detail: {
             if let sector = game[center_coord] {
-                Text("\(center_coord.x), \(center_coord.y): \(sector.repr)")
+                Text("\(center_coord.x), \(center_coord.y): \(sector.description)")
                     .font(.title)
                 HexView(coord: center_coord, sector: sector)
                     .focusable(true)

@@ -15,8 +15,8 @@ class Sector {
 
     init(coords: MapCoord) {
         self.coords = coords
-        desig = Desig.unknown
-        sdes = Desig.unknown
+        desig = Desig("?")
+        sdes = Desig("?")
     }
 
     subscript(index: MapKey) -> MapKeyValue? {
@@ -29,7 +29,11 @@ class Sector {
         }
     }
 
-    var repr: String {
-        return String(describing:desig)
+    var symbol: String {
+        return desig.abbrev
+    }
+
+    var description: String {
+        return desig.name
     }
 }
