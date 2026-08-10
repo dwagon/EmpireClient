@@ -18,8 +18,8 @@ struct HexView: View {
 
     var desig_str: String {
         var des_str =
-            "Desig: \(sector.desig) (Eff: \(sector[.eff], default: "??")%)"
-        if sector.sdes != .unknown {
+            "Desig: \(sector.description) (Eff: \(sector[.eff], default: "??")%)"
+        if sector.sdes.desig != .unknown {
             des_str += " SDesig: \(sector.sdes)"
         }
         return des_str

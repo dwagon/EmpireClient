@@ -79,7 +79,7 @@ struct MapView: View {
         func cellText(_ cell: Cell) -> String {
             let map_coord = screenToMapCoord(cell.coordinates)
             if let sector = game_map[map_coord] {
-                return sector.repr
+                return sector.symbol
             } else {
                 return "\(map_coord.x),\(map_coord.y)"
             }
@@ -91,7 +91,7 @@ struct MapView: View {
             }
             let map_coord = screenToMapCoord(cell.coordinates)
             if let sector = game_map[map_coord] {
-                switch sector.desig {
+                switch sector.desig.desig {
                 case .sea:
                     return .color(Color.blue)
                 case .wilderness:
