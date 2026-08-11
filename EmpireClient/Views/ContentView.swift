@@ -34,29 +34,32 @@ struct ContentView: View {
             } else {
                 Text("\(center_coord.x), \(center_coord.y)").font(.title)
             }
-            if !isLoggedIn {
-                Button("Login") {
-                    Task {
-                        await game.login(country: "1", password: "1")
-                    }
-                    isLoggedIn = true
-                }
-            }
-            Button("Dump") {
-                Task {
-                    await game.cmd_dump()
-                }
-            }
-            Button("Map") {
-                Task {
-                    await game.cmd_bmap()
-                }
-            }
+            buttonBar
+
         }.navigationSplitViewStyle(.balanced)
             .focusable()
             .onKeyPress { press in
                 return keyPressed(press.characters)
             }
+    }
+
+    var buttonBar: some View {
+        HStack {
+            if !isLoggedIn {
+                Button("Login") {
+                    Task {
+                        await game.login(country: "1", password: "1")
+                        await game.cmd_dump()
+                        await game.cmd_bmap()
+                    }
+                    isLoggedIn = true
+                }
+            } else {
+                Button("Explore") {
+                    print("Explore button pressed")
+                }
+            }
+        }
     }
 
     func keyPressed(_ keys: String) -> KeyPress.Result {
