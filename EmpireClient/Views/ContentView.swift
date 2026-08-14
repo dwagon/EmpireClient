@@ -17,46 +17,99 @@ struct ContentView: View {
     @State private var isLoggedIn: Bool = false
     @FocusState private var focused: Bool
 
+    @State private var showExplorerPopup: Bool = false
+    @State private var item: Item = .mil
+    @State private var number: Int = 1
+    @State private var destination: String = ""
+
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             Text("Sidebar")
         } content: {
-            MapView(game_map: game.game_map, center_coord: $center_coord)
-                .navigationTitle("Map")
-                .navigationSplitViewColumnWidth(min: 200, ideal: 300, max: 300)
+            Text("Content")
+            Spacer()
+            if !isLoggedIn {
+                loginButton
+                Spacer()
+            } else {
+                contentView
+            }
         } detail: {
+            Text("Detail")
+            Spacer()
+            HStack {
+                detailView
+                Divider()
+                buttonBar
+            }
+        }
+        .navigationSplitViewStyle(.balanced)
+        .focusable()
+        .onKeyPress { press in
+            return keyPressed(press.characters)
+        }
+        .sheet(
+            isPresented: $showExplorerPopup
+        ) {
+            showExplorerPopup = false
+            if number > 0 {
+                Task {
+                    await game.cmd_explo(item: item, sector: center_coord, number: number, destination: destination)
+//                    await game.cmd_dump()
+//                    await game.cmd_bmap()
+                }
+            }
+        } content: {
+            ExploreView(coord: center_coord, item: $item, number: $number, destination: $destination)
+        }
+    }
+
+    var contentView: some View {
+        VStack {
+            MapView(game_map: game.game_map, center_coord: $center_coord)
+        }
+        .navigationSplitViewColumnWidth(min: 300, ideal: 400)
+    }
+
+    var detailView: some View {
+        VStack {
             if let sector = game[center_coord] {
-                Text("\(center_coord.x), \(center_coord.y): \(sector.description)")
-                    .font(.title)
+                Text(
+                    "\(center_coord.x), \(center_coord.y): \(sector.description)"
+                )
+                .font(.title)
                 HexView(coord: center_coord, sector: sector)
                     .focusable(true)
                     .focused($focused)
             } else {
                 Text("\(center_coord.x), \(center_coord.y)").font(.title)
             }
-            if !isLoggedIn {
-                Button("Login") {
-                    Task {
-                        await game.login(country: "1", password: "1")
-                    }
-                    isLoggedIn = true
-                }
-            }
-            Button("Dump") {
+        }
+    }
+
+    var buttonBar: some View {
+        HStack {
+            exploreButton
+        }
+    }
+
+    var loginButton: some View {
+        return HStack {
+            Button("Login") {
                 Task {
+                    await game.login(country: "1", password: "1")
                     await game.cmd_dump()
-                }
-            }
-            Button("Map") {
-                Task {
                     await game.cmd_bmap()
                 }
+                isLoggedIn = true
             }
-        }.navigationSplitViewStyle(.balanced)
-            .focusable()
-            .onKeyPress { press in
-                return keyPressed(press.characters)
-            }
+        }
+    }
+
+    var exploreButton: some View {
+        Button("Explore") {
+            showExplorerPopup = true
+        }
     }
 
     func keyPressed(_ keys: String) -> KeyPress.Result {
@@ -87,9 +140,5 @@ struct ContentView: View {
 #Preview {
     @Previewable @State var game = Game()
     let mc = MapCoord(x: 0, y: 0)
-    //    let s = Sector(coords: mc)
-    //    game.game_map[mc] = s
-
     ContentView(game: game, center_coord: mc)
-        .modelContainer(for: Item.self, inMemory: true)
 }
