@@ -11,17 +11,20 @@ import SwiftUI
 struct DrawHex: View {
     var hexmap: HexGrid
     var cellText: ((Cell) -> String)?
+    var cellImage: ((Cell) -> Image)?
     var cellColour: ((Cell) -> GraphicsContext.Shading)?
     var hexGesture: ((CGPoint) -> Void)?
 
     init(
         hexmap: HexGrid,
         cellText: ((Cell) -> String)? = nil,
+        cellImage: ((Cell) -> Image)? = nil,
         cellColour: ((Cell) -> GraphicsContext.Shading)? = nil,
         hexGesture: ((CGPoint) -> Void)? = nil
     ) {
         self.hexmap = hexmap
         self.cellText = cellText
+        self.cellImage = cellImage
         self.cellColour = cellColour
         self.hexGesture = hexGesture
     }
@@ -30,7 +33,6 @@ struct DrawHex: View {
         VStack {
             drawCanvas
                 .border(Color.blue)
-                .padding()
                 .onTapGesture { location in
                     if let hexGesture {
                         hexGesture(location)
@@ -39,33 +41,9 @@ struct DrawHex: View {
         }
     }
 
-    /// Move pixel origin so map hex is centered in view
-    func origin(canvas_size: CGSize, focus: Cell) -> Point {
-        let center = hexmap.pixelCoordinates(for: focus)
-        return Point(
-            x: canvas_size.width / 2 - center.x,
-            y: canvas_size.height / 2 - center.y
-        )
-    }
-
     var drawCanvas: some View {
-        var focus: Cell
-
-        do {
-            focus = hexmap.cellAt(try CubeCoordinates(x: 0, y: 0, z: 0))!
-        } catch {
-            return Canvas { context, size in
-                context.draw(
-                    Text(
-                        "Couldn't find center of grid: \(error.localizedDescription)"
-                    ),
-                    at: CGPoint(x: size.width / 2, y: size.height / 2)
-                )
-            }
-        }
-
-        return Canvas { context, size in
-            hexmap.origin = origin(canvas_size: size, focus: focus)
+        Canvas { context, size in
+            hexmap.origin = Point(x: size.width / 2, y: size.height / 2)
             for cell in hexmap.cells {
                 let center = hexmap.pixelCoordinates(for: cell)
                 let path = CellPath(
@@ -85,6 +63,9 @@ struct DrawHex: View {
                         Text(cellText(cell)).font(.caption2),
                         at: center.cgPoint
                     )
+                }
+                if let cellImage {
+                    context.draw(cellImage(cell), at: center.cgPoint)
                 }
             }
         }
@@ -118,5 +99,9 @@ func previewCellColour(_ cell: Cell) -> GraphicsContext.Shading {
         offsetLayout: MapConfig.offsetLayout,
         hexSize: MapConfig.hexSize,
     )
-    DrawHex(hexmap: hexmap, cellText: previewCellText, cellColour: previewCellColour)
+    DrawHex(
+        hexmap: hexmap,
+        cellText: previewCellText,
+        cellColour: previewCellColour
+    )
 }
