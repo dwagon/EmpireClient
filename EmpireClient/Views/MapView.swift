@@ -45,13 +45,18 @@ struct MapView: View {
         } catch { print("cellColour: No center of hexmap") }
         let map_coord = screenToMapCoord(cell.coordinates)
         if let sector = game_map[map_coord] {
+            if sector.owned {
+                return .color(Color.mint)
+            }
             switch sector.desig.desig {
             case .sea:
                 return .color(Color.blue)
             case .wilderness:
                 return .color(Color.green)
-            default:
+            case .mountain:
                 return .color(Color.gray)
+            default:
+                return .color(Color.clear)
             }
         }
         return .color(Color.clear)
