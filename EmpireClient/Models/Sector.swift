@@ -11,6 +11,7 @@ class Sector {
     var coords: MapCoord
     var desig: Desig
     var sdes: Desig
+    var owned: Bool = false
     var data: [MapKey: MapKeyValue] = [:]
 
     init(coords: MapCoord) {

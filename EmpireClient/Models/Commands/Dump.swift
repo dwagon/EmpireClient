@@ -36,6 +36,7 @@ extension Game {
                 self[coord] = Sector(coords: coord)
             }
             sector = self[coord]!
+            sector.owned = true
             sector.desig = Desig(String(bits[2]))
             sector.sdes = Desig(String(bits[3]))
             sector[.eff] = MapKeyValue(bits[4])
