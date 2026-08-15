@@ -22,6 +22,9 @@ struct ContentView: View {
     @State private var number: Int = 1
     @State private var destination: String = ""
 
+    @State private var showDesignatePopup: Bool = false
+    @State private var designation: String = ""
+
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             Text("Sidebar")
@@ -54,13 +57,41 @@ struct ContentView: View {
             showExplorerPopup = false
             if number > 0 {
                 Task {
-                    await game.cmd_explo(item: item, sector: center_coord, number: number, destination: destination)
-//                    await game.cmd_dump()
-//                    await game.cmd_bmap()
+                    await game.cmd_explo(
+                        item: item,
+                        sector: center_coord,
+                        number: number,
+                        destination: destination
+                    )
+                    await game.cmd_dump()
+                    await game.cmd_bmap()
+                    number = 0
+                    destination = ""
+                    item = .civ
                 }
             }
         } content: {
-            ExploreView(coord: center_coord, item: $item, number: $number, destination: $destination)
+            ExploreView(
+                coord: center_coord,
+                item: $item,
+                number: $number,
+                destination: $destination
+            )
+        }
+        .sheet(
+            isPresented: $showDesignatePopup
+        ) {
+            showDesignatePopup = false
+            if designation != "" {
+                Task {
+                    await game.cmd_designate(coord: center_coord, designation: designation)
+                    await game.cmd_dump()
+                }
+            }
+        } content: {
+            if let sector = game[center_coord] {
+                DesignateView(sector: sector, designation: $designation)
+            }
         }
     }
 
@@ -88,8 +119,13 @@ struct ContentView: View {
     }
 
     var buttonBar: some View {
-        HStack {
-            exploreButton
+        VStack {
+            if let sector = game[center_coord] {
+                if sector.owned {
+                    exploreButton
+                    designateButton
+                }
+            }
         }
     }
 
@@ -109,6 +145,12 @@ struct ContentView: View {
     var exploreButton: some View {
         Button("Explore") {
             showExplorerPopup = true
+        }
+    }
+
+    var designateButton: some View {
+        Button("Designate") {
+            showDesignatePopup = true
         }
     }
 

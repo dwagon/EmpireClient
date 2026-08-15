@@ -93,7 +93,7 @@ func previewCellColour(_ cell: Cell) -> GraphicsContext.Shading {
 }
 
 #Preview {
-    var hexmap = HexGrid(
+    let hexmap = HexGrid(
         shape: .hexagon(2),
         orientation: MapConfig.orientation,
         offsetLayout: MapConfig.offsetLayout,
