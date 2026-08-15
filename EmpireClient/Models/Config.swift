@@ -17,5 +17,5 @@ struct MapConfig {
     static let map_height = 64
     static let cellSize: Double = 20
     static let hexSize = HexSize(width: cellSize, height: cellSize)
-    static let mapRadius = 4
+    static let mapRadius = 5
 }

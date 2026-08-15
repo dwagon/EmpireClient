@@ -13,7 +13,7 @@ enum DesigKey {
     case abbrev
 }
 
-enum DesigType {
+enum DesigType: CaseIterable, Comparable {
     case sea
     case mountain
     case sanctuary
@@ -49,6 +49,12 @@ enum DesigType {
     case headquarters
     case bank
     case unknown
+
+    static func < (lhs: DesigType, rhs: DesigType) -> Bool {
+        let l = Desig(lhs)
+        let r = Desig(rhs)
+        return l.name < r.name
+    }
 }
 
 let desigDetails: [DesigType: [DesigKey: String]] = [
@@ -62,32 +68,35 @@ let desigDetails: [DesigType: [DesigKey: String]] = [
     .park: [.name: "Park", .abbrev: "p"],
     .highway: [.name: "Highway", .abbrev: "+"],
     .radar: [.name: "Radar", .abbrev: ")"],
-    .bridge_head: [.name: "Bridge Head", .abbrev: "Q"],
-    .bridge_span: [.name: "Bridge Span", .abbrev: "Q"],
-    .bridge_tower: [.name: "Bridge Tower", .abbrev: "Q"],
-    .defense_plant: [.name: "Defense Plant", .abbrev: "Q"],
-    .shell_industry: [.name: "Shell Industry", .abbrev: "Q"],
-    .mine: [.name: "Mine", .abbrev: "Q"],
-    .gold_mine: [.name: "Gold Mine", .abbrev: "Q"],
-    .harbor: [.name: "Harbor", .abbrev: "Q"],
-    .warehouse: [.name: "Warehouse", .abbrev: "Q"],
-    .uranium_mine: [.name: "Uranium Mine", .abbrev: "Q"],
-    .airfield: [.name: "Airfield", .abbrev: "Q"],
-    .agribusiness: [.name: "Agribusiness", .abbrev: "Q"],
-    .oil_field: [.name: "Oil Field", .abbrev: "Q"],
-    .light_manufacturing: [.name: "Light manufacturing", .abbrev: "Q"],
-    .heavy_manufacturing: [.name: "Heavy manufacturing", .abbrev: "Q"],
-    .refinery: [.name: "Refinery", .abbrev: "Q"],
-    .technical_center: [.name: "Technical Center", .abbrev: "Q"],
-    .fortress: [.name: "Fortress", .abbrev: "Q"],
-    .research_lab: [.name: "Research Lab", .abbrev: "Q"],
-    .nuclear_plant: [.name: "Nuclear Plant", .abbrev: "Q"],
-    .library: [.name: "Library", .abbrev: "Q"],
-    .enlistment_center: [.name: "Enlistment Center", .abbrev: "Q"],
-    .headquarters: [.name: "Headquarters", .abbrev: "Q"],
-    .bank: [.name: "Bank", .abbrev: "Q"],
+    .bridge_head: [.name: "Bridge Head", .abbrev: "#"],
+    .bridge_span: [.name: "Bridge Span", .abbrev: "="],
+    .bridge_tower: [.name: "Bridge Tower", .abbrev: "@"],
+    .defense_plant: [.name: "Defense Plant", .abbrev: "d"],
+    .shell_industry: [.name: "Shell Industry", .abbrev: "i"],
+    .mine: [.name: "Mine", .abbrev: "m"],
+    .gold_mine: [.name: "Gold Mine", .abbrev: "g"],
+    .harbor: [.name: "Harbor", .abbrev: "h"],
+    .warehouse: [.name: "Warehouse", .abbrev: "w"],
+    .uranium_mine: [.name: "Uranium Mine", .abbrev: "u"],
+    .airfield: [.name: "Airfield", .abbrev: "*"],
+    .agribusiness: [.name: "Agribusiness", .abbrev: "a"],
+    .oil_field: [.name: "Oil Field", .abbrev: "o"],
+    .light_manufacturing: [.name: "Light manufacturing", .abbrev: "j"],
+    .heavy_manufacturing: [.name: "Heavy manufacturing", .abbrev: "k"],
+    .refinery: [.name: "Refinery", .abbrev: "%"],
+    .technical_center: [.name: "Technical Center", .abbrev: "t"],
+    .fortress: [.name: "Fortress", .abbrev: "f"],
+    .research_lab: [.name: "Research Lab", .abbrev: "r"],
+    .nuclear_plant: [.name: "Nuclear Plant", .abbrev: "n"],
+    .library: [.name: "Library", .abbrev: "l"],
+    .enlistment_center: [.name: "Enlistment Center", .abbrev: "e"],
+    .headquarters: [.name: "Headquarters", .abbrev: "!"],
+    .bank: [.name: "Bank", .abbrev: "b"],
     .unknown: [.name: "Unknown", .abbrev: "_"],
 ]
+
+/// Players can't designate sectors of these types
+var undesignatable: Set<DesigType> = [.sea, .mountain, .sanctuary, .wasteland, .wilderness, .plains, .unknown ]
 
 struct Desig {
     var desig: DesigType
@@ -95,14 +104,16 @@ struct Desig {
     init(_ char: String) {
         if char == "?" {
             self.desig = .unknown
-        }
-        else {
-            
+        } else {
             self.desig =
-            desigDetails.first { item in
-                item.value[.abbrev] == char
-            }?.key ?? .unknown
+                desigDetails.first { item in
+                    item.value[.abbrev] == char
+                }?.key ?? .unknown
         }
+    }
+
+    init(_ des: DesigType) {
+        self.desig = des
     }
 
     var abbrev: String {
@@ -114,6 +125,13 @@ struct Desig {
         }
         print("Error: no abbrev for \(desig)")
         return "?"
+    }
+
+    var isDesignatable: Bool {
+            if undesignatable.contains(desig) {
+                return false
+        }
+        return true
     }
 
     var name: String {

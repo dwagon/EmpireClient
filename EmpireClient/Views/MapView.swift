@@ -71,15 +71,11 @@ struct MapView: View {
     }
 
     func hexGesture(location: CGPoint) {
-        print("hexGesture(location: \(location))")
         if let cell = try? hexmap.cellAt(location.hexPoint) {
             let new_coord = cubeToDoubleWidth(
                 from: cell.coordinates,
                 orientation: MapConfig.orientation,
                 offsetLayout: MapConfig.offsetLayout
-            )
-            print(
-                "cell=\(cell.coordinates) new=\(new_coord) center=\(center_coord)"
             )
             center_coord.x += new_coord.x
             center_coord.y += new_coord.y
