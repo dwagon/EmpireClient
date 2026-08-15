@@ -1,14 +1,14 @@
 //
-//  Explore.swift
+//  Desig.swift
 //  EmpireClient
 //
-//  Created by Dougal Scott on 12/8/2026.
+//  Created by Dougal Scott on 15/8/2026.
 //
 
 import Foundation
 
 extension Game {
-    func cmd_explo(
+    func cmd_desig(
         item: Item,
         sector: MapCoord,
         number: Int,
@@ -24,7 +24,7 @@ extension Game {
             return
         }
         let cmd_string =
-        "explo \(itemstr) \(sector.x),\(sector.y) \(number) \(destination)h"
+        "explo \(itemstr) \(sector.x),\(sector.y) \(number) \(destination)"
         print("cmd_string = '\(cmd_string)'")
         let result = await client.run_cmd(cmd_string)
         guard result != [] else {
