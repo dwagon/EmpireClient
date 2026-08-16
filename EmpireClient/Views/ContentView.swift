@@ -93,6 +93,7 @@ struct ContentView: View {
                 DesignateView(sector: sector, designation: $designation)
             }
         }
+        LogView(logs: game.logs)
     }
 
     var contentView: some View {

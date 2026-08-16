@@ -25,12 +25,12 @@ extension Game {
         }
         let cmd_string =
         "explo \(itemstr) \(sector.x),\(sector.y) \(number) \(destination)h"
-        print("cmd_string = '\(cmd_string)'")
+        log("cmd_string = '\(cmd_string)'")
         let result = await client.run_cmd(cmd_string)
         guard result != [] else {
-            print("explo returned empty")
+            log("explo returned empty")
             return
         }
-        print("explo result=\n\(result)")
+        log(result)
     }
 }
