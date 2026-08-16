@@ -19,13 +19,12 @@ extension Game {
     func cmd_dump() async {
         let result = await client.run_cmd("dump #")
         guard result != [] else {
-            print("dump returned empty")
+            log("dump returned empty")
             return
         }
         var sector: Sector
-        print("result=\(result)")
         if result.contains("Command dump not found") {
-            print("Need to login")
+            log("Need to login first")
             return
         }
 

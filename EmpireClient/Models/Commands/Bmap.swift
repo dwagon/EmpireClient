@@ -29,7 +29,6 @@ extension Game {
             print("bmap returned empty")
             return
         }
-        print("result=\n\(result)")
         let min_x = get_lower_x(result)
 
         for line in result[2..<result.count - 2] {  // Skip border
@@ -44,7 +43,7 @@ extension Game {
     private func handle_bmap_line(_ line: String, min_x: Int) {
         let y = Int(line.split(separator: " ", maxSplits: 1)[0])
         if y == nil {
-            print("Error in map for line '\(line)'")
+            log("Error in map for line '\(line)'")
             return
         }
         if let left_index = line.firstIndex(of: " "),

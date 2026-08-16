@@ -12,6 +12,7 @@ import Foundation
 class Game {
     var game_map: Map
     var client = TCPClient()
+    var logs: [String] = []
 
     init() {
         game_map = Map(x_size: MapConfig.map_width, y_size: MapConfig.map_height)
@@ -27,13 +28,31 @@ class Game {
         }
     }
 
+    func log(_ line: String) {
+        if line.contains("\n") {
+            for subline in line.split(separator: "\n") {
+                logs.append(String(subline))
+            }
+        }
+        else {
+            logs.append(line)
+        }
+    }
+
+    func log(_ lines: [String]) {
+        for line in lines {
+            log(line)
+        }
+    }
+
+
     // MARK: -
     func login(country: String, password: String) async {
         var result = await client.run_cmd("coun \(country)")
-        print("coun = '\(result)'")
+        log(result)
         result = await client.run_cmd("pass \(password)")
-        print("pass = '\(result)'")
+        log(result)
         result = await client.run_cmd("play")
-        print("play = '\(result)'")
+        log(result)
     }
 }

@@ -3,6 +3,7 @@
 //  EmpireClient
 //
 //  Created by Dougal Scott on 15/8/2026.
+//  See https://www.empire.cx/infopages/designate.html
 //
 
 import Foundation
@@ -13,13 +14,9 @@ extension Game {
         designation: String
     ) async {
         let cmd_string =
-        "designate \(coord.x),\(coord.y) \(designation)"
-        print("cmd_string = '\(cmd_string)'")
+            "designate \(coord.x),\(coord.y) \(designation)"
+        log("cmd_string = '\(cmd_string)'")
         let result = await client.run_cmd(cmd_string)
-        guard result != [] else {
-            print("designate returned empty")
-            return
-        }
-        print("designate result=\n\(result)")
+        log(result)
     }
 }
