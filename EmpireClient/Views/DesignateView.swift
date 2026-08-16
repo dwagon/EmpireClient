@@ -61,6 +61,7 @@ struct DesignateView: View {
                 "Select",
                 selection: $designation,
                 content: {
+                    Text("Undefined").tag("")
                     ForEach(DesigType.allCases.sorted(), id: \.self) { des in
                         if Desig(des).isDesignatable {
                             Text(Desig(des).name).tag(Desig(des).abbrev)
