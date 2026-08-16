@@ -18,12 +18,7 @@ struct ContentView: View {
     @FocusState private var focused: Bool
 
     @State private var showExplorerPopup: Bool = false
-    @State private var item: Item = .mil
-    @State private var number: Int = 1
-    @State private var destination: String = ""
-
     @State private var showDesignatePopup: Bool = false
-    @State private var designation: String = ""
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
@@ -51,48 +46,8 @@ struct ContentView: View {
         .onKeyPress { press in
             return keyPressed(press.characters)
         }
-        .sheet(
-            isPresented: $showExplorerPopup
-        ) {
-            showExplorerPopup = false
-            if number > 0 {
-                Task {
-                    await game.cmd_explo(
-                        item: item,
-                        sector: center_coord,
-                        number: number,
-                        destination: destination
-                    )
-                    await game.cmd_dump()
-                    await game.cmd_bmap()
-                    number = 0
-                    destination = ""
-                    item = .civ
-                }
-            }
-        } content: {
-            ExploreView(
-                coord: center_coord,
-                item: $item,
-                number: $number,
-                destination: $destination
-            )
-        }
-        .sheet(
-            isPresented: $showDesignatePopup
-        ) {
-            showDesignatePopup = false
-            if designation != "" {
-                Task {
-                    await game.cmd_designate(coord: center_coord, designation: designation)
-                    await game.cmd_dump()
-                }
-            }
-        } content: {
-            if let sector = game[center_coord] {
-                DesignateView(sector: sector, designation: $designation)
-            }
-        }
+        .explore(isPresented: $showExplorerPopup, game: game, center_coord: center_coord)
+        .designate(isPresented: $showDesignatePopup, game: game, center_coord: center_coord)
         LogView(logs: game.logs)
     }
 
@@ -117,6 +72,7 @@ struct ContentView: View {
                 Text("\(center_coord.x), \(center_coord.y)").font(.title)
             }
         }
+        .navigationSplitViewColumnWidth(min: 400, ideal: 800)
     }
 
     var buttonBar: some View {

@@ -96,7 +96,9 @@ let desigDetails: [DesigType: [DesigKey: String]] = [
 ]
 
 /// Players can't designate sectors of these types
-var undesignatable: Set<DesigType> = [.sea, .mountain, .sanctuary, .wasteland, .wilderness, .plains, .unknown ]
+var undesignatable: Set<DesigType> = [
+    .sea, .mountain, .sanctuary, .wasteland, .wilderness, .plains, .unknown,
+]
 
 struct Desig {
     var desig: DesigType
@@ -128,8 +130,8 @@ struct Desig {
     }
 
     var isDesignatable: Bool {
-            if undesignatable.contains(desig) {
-                return false
+        if undesignatable.contains(desig) {
+            return false
         }
         return true
     }
