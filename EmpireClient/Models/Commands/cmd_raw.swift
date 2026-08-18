@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+extension Game {
+    func cmd_raw(_ cmd_string: String) async {
+        log("cmd_string = '\(cmd_string)'")
+        let result = await client.run_cmd(cmd_string)
+        log(result)
+    }
+}
