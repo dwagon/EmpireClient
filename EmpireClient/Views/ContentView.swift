@@ -85,9 +85,10 @@ struct ContentView: View {
         VStack {
             if let sector = game[center_coord] {
                 if sector.owned {
-                    exploreButton
+                    dumpButton
                     designateButton
                     distributeButton
+                    exploreButton
                 }
             }
         }
@@ -102,6 +103,16 @@ struct ContentView: View {
                     await game.cmd_bmap()
                 }
                 isLoggedIn = true
+            }
+        }
+    }
+
+    var dumpButton: some View {
+        return HStack {
+            Button("Dump") {
+                Task {
+                    await game.cmd_dump()
+                }
             }
         }
     }
@@ -123,6 +134,8 @@ struct ContentView: View {
             showDesignatePopup = true
         }
     }
+
+
 
     func keyPressed(_ keys: String) -> KeyPress.Result {
         switch keys {

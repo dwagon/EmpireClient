@@ -18,7 +18,7 @@ struct LogView: View {
         }
         .defaultScrollAnchor(.bottom)
         .layoutPriority(0)
-        .frame(minWidth: 800, maxHeight: 120, alignment: .leading)
+        .frame(minWidth: 800, maxWidth: 1000,  maxHeight: 120, alignment: .leading)
         .border(.cyan)
         .padding()
     }

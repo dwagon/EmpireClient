@@ -74,6 +74,13 @@ struct SectorView: View {
                 Text(verbatim: "\(sector[.m_cut], default: "?")")
                 Text(verbatim: "\(sector[.u_cut], default: "?")")
             }
+            Divider()
+            GridRow {
+                Text(verbatim: "Distribution").bold()
+                Text(verbatim: "\(sector[.c_dist], default: "?")")
+                Text(verbatim: "\(sector[.m_dist], default: "?")")
+                Text(verbatim: "\(sector[.u_dist], default: "?")")
+            }
         }
     }
 
