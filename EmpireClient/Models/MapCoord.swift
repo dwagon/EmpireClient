@@ -24,6 +24,16 @@ struct MapCoord: Hashable, Equatable {
         self = cubeToDoubleWidth(from: cube, orientation: MapConfig.orientation, offsetLayout: MapConfig.offsetLayout)
     }
 
+    init?(x: MapKeyValue, y: MapKeyValue) {
+        do {
+            self.x = try x.toInt()
+            self.y = try y.toInt()
+        }
+        catch {
+            return nil
+        }
+    }
+
     func description() -> String {
         return "MapCoords(\(self.x), \(self.y))"
     }

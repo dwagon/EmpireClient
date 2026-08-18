@@ -30,6 +30,12 @@ class Map {
     func exists(_ coordinates: MapCoord) -> Bool {
         return map_data.contains { $0.key == coordinates }
     }
+
+    /// Return a list of all instances of a particular sector designation
+    func instances(_ desigtype: DesigType) -> [Sector] {
+        let desig = Desig(desigtype)
+        return map_data.values.filter { $0.desig == desig }
+    }
 }
 
 
