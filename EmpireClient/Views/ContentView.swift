@@ -17,8 +17,9 @@ struct ContentView: View {
     @State private var isLoggedIn: Bool = false
     @FocusState private var focused: Bool
 
-    @State private var showExplorerPopup: Bool = false
+    @State private var showExplorePopup: Bool = false
     @State private var showDesignatePopup: Bool = false
+    @State private var showDistributePopup: Bool = false
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
@@ -46,8 +47,9 @@ struct ContentView: View {
         .onKeyPress { press in
             return keyPressed(press.characters)
         }
-        .explore(isPresented: $showExplorerPopup, game: game, center_coord: center_coord)
+        .explore(isPresented: $showExplorePopup, game: game, center_coord: center_coord)
         .designate(isPresented: $showDesignatePopup, game: game, center_coord: center_coord)
+        .distribute(isPresented: $showDistributePopup, game: game, center_coord: center_coord)
         LogView(logs: game.logs)
     }
 
@@ -62,10 +64,10 @@ struct ContentView: View {
         VStack {
             if let sector = game[center_coord] {
                 Text(
-                    "\(center_coord.x), \(center_coord.y): \(sector.description)"
+                    "\(center_coord.x), \(center_coord.y): \(sector.desig.name)"
                 )
                 .font(.title)
-                HexView(coord: center_coord, sector: sector)
+                SectorView(coord: center_coord, sector: sector)
                     .focusable(true)
                     .focused($focused)
             } else {
@@ -81,6 +83,7 @@ struct ContentView: View {
                 if sector.owned {
                     exploreButton
                     designateButton
+                    distributeButton
                 }
             }
         }
@@ -99,9 +102,15 @@ struct ContentView: View {
         }
     }
 
+    var distributeButton: some View {
+        Button("Distribute") {
+            showDistributePopup = true
+        }
+    }
+
     var exploreButton: some View {
         Button("Explore") {
-            showExplorerPopup = true
+            showExplorePopup = true
         }
     }
 

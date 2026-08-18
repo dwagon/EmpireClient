@@ -8,7 +8,7 @@
 import HexGrid
 import SwiftUI
 
-struct HexView: View {
+struct SectorView: View {
     var coord: MapCoord
     var sector: Sector
 
@@ -18,7 +18,7 @@ struct HexView: View {
 
     var desig_str: String {
         var des_str =
-            "Desig: \(sector.description) (Eff: \(sector[.eff], default: "??")%)"
+        "Desig: \(sector.desig.name) (Eff: \(sector[.eff], default: "??")%)"
         if sector.sdes.desig != .unknown {
             des_str += " SDesig: \(sector.sdes)"
         }
@@ -160,6 +160,14 @@ struct HexView: View {
             }
             Section("Sector Details") {
                 Text(desig_str)
+                if let dist_x = sector[.dist_x], let dist_y = sector[.dist_y] {
+                    if MapCoord(x:dist_x, y: dist_y) != coord {
+                        Text("Distribute to \(sector[.dist_x], default: "?"), \(sector[.dist_y], default: "?")")
+                    }
+                    else {
+                        Text("No distribution set")
+                    }
+                }
             }
 
             //
@@ -215,7 +223,3 @@ struct ExpandButton: View {
         .frame(width: 20, height: 20)
     }
 }
-
-//#Preview {
-//    HexView()
-//}

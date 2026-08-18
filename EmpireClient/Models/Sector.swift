@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Sector {
+class Sector: Identifiable, Hashable {
     var coords: MapCoord
     var desig: Desig
     var sdes: Desig
@@ -20,21 +20,28 @@ class Sector {
         sdes = Desig("?")
     }
 
+    static func == (lhs: Sector, rhs: Sector) -> Bool {
+        return lhs.coords == rhs.coords
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(coords)
+    }
+
+    var description: String {
+        return "<Sector \(coords.x), \(coords.y): \(desig.name)>"
+    }
+
     subscript(index: MapKey) -> MapKeyValue? {
         get {
             return data[index]
         }
         set {
-            // print("\(coords) set \(index) to \(newValue, default: "nil")")
             data[index] = newValue
         }
     }
 
     var symbol: String {
         return desig.abbrev
-    }
-
-    var description: String {
-        return desig.name
     }
 }

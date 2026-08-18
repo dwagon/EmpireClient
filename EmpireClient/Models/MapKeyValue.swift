@@ -7,6 +7,10 @@
 
 import Foundation
 
+enum MapKeyException: Error {
+    case invalidType
+}
+
 /// Value for a Map Key - can be either int or string
 enum MapKeyValue: CustomStringConvertible, Equatable {
     init(_ rawValue: Substring) {
@@ -26,7 +30,17 @@ enum MapKeyValue: CustomStringConvertible, Equatable {
             return "\(String(int))"
         }
     }
-    
+
+    func toInt() throws -> Int {
+        switch(self) {
+        case let .int(num):
+            return num
+        case let .str(string):
+            print("MapKeyValue not an int - \(string)")
+            throw MapKeyException.invalidType
+        }
+    }
+
     case str(String)
     case int(Int)
 }
