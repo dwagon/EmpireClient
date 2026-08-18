@@ -60,7 +60,9 @@ struct DrawHex: View {
                 }
                 if let cellText {
                     context.draw(
-                        Text(cellText(cell)).font(.caption2),
+                        Text(cellText(cell))
+                            .font(.caption2)
+                            .foregroundStyle(.indigo),
                         at: center.cgPoint
                     )
                 }
