@@ -50,7 +50,11 @@ struct ContentView: View {
         .explore(isPresented: $showExplorePopup, game: game, center_coord: center_coord)
         .designate(isPresented: $showDesignatePopup, game: game, center_coord: center_coord)
         .distribute(isPresented: $showDistributePopup, game: game, center_coord: center_coord)
-        LogView(logs: game.logs)
+        HStack {
+            RawCmdView(game: game).frame(maxWidth: 700)
+            Spacer()
+            LogView(logs: game.logs).scaledToFill()
+        }
     }
 
     var contentView: some View {

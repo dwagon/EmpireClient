@@ -14,17 +14,19 @@ struct LogView: View {
         let log_str = logs.joined(separator: "\n")
         ScrollView(.vertical) {
             Text(log_str)
+                .font(.system(.body, design: .monospaced))
         }
         .defaultScrollAnchor(.bottom)
         .layoutPriority(0)
-        .frame(maxHeight: 90)
+        .frame(minWidth: 800, maxHeight: 120, alignment: .leading)
         .border(.cyan)
+        .padding()
     }
 }
 
 #Preview {
     let logs = [
-        "This is a long list of", "the cat sat on the mat",
+        "This is a long list of", "       the cat sat on the mat",
         "The Quick Brown Fox was a lazy bastard",
     ]
     LogView(logs: logs)
