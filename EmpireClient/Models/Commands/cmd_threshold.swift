@@ -14,7 +14,17 @@ extension Game {
         coord: MapCoord,
         level: Int
     ) async {
-        let cmd_string = "thresh \(item) \(coord.x),\(coord.y) \(level)"
+        let cmd_string = "thresh \(item) \(coord.toString()) \(level)"
+        log(cmd_string)
+        let result = await client.run_cmd(cmd_string)
+        log(result)
+    }
+
+    func cmd_threshold(
+        item: Item,
+        level: Int
+    ) async {
+        let cmd_string = "thresh \(item) # \(level)"
         log(cmd_string)
         let result = await client.run_cmd(cmd_string)
         log(result)

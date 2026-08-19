@@ -11,6 +11,7 @@ struct ThresholdView: View {
     var coord: MapCoord
     @Binding var item: Item
     @Binding var level: Double
+    @Binding var isEverywhere: Bool
 
     @Environment(\.dismiss) var dismiss
 
@@ -23,6 +24,7 @@ struct ThresholdView: View {
                 ThresholdDetails.padding()
                 Spacer()
             }
+            Text("Set threshold of \(item.displayName) \(isEverywhere ? "everywhere" : "at \(coord.toString())") to \(Int(level))")
             HStack {
                 Button("Cancel", role: .cancel) {
                     item = .none
@@ -33,12 +35,12 @@ struct ThresholdView: View {
                     dismiss()
                 }
             }.buttonStyle(.automatic)
-
         }
     }
 
     var ThresholdDetails: some View {
         return VStack {
+            Toggle("Set for everywhere not just \(coord.toString())", isOn: $isEverywhere)
             Picker(
                 "Set",
                 selection: $item,
@@ -67,6 +69,7 @@ struct View_Threshold: ViewModifier {
     var center_coord: MapCoord
     @State private var item: Item = .none
     @State private var level = 0.0
+    @State private var isEverywhere: Bool = true
 
     func body(content: Content) -> some View {
         content
@@ -76,11 +79,17 @@ struct View_Threshold: ViewModifier {
                 isPresented = false
                 if item != .none {
                     Task {
-                        await game.cmd_threshold(
-                            item: item,
-                            coord: center_coord,
-                            level: Int(level)
-                        )
+                        if isEverywhere {
+                            await game.cmd_threshold(
+                                item: item,
+                                level: Int(level)
+                                )
+                        } else {
+                            await game.cmd_threshold(
+                                item: item,
+                                coord: center_coord,
+                                level: Int(level)
+                            )}
                         await game.cmd_dump()
                         item = .none
                         level = 0.0
@@ -91,6 +100,7 @@ struct View_Threshold: ViewModifier {
                     coord: center_coord,
                     item: $item,
                     level: $level,
+                    isEverywhere: $isEverywhere
                 )
             }
     }
@@ -116,10 +126,12 @@ extension View {
     @Previewable var coord = MapCoord(x: 0, y: 0)
     @Previewable @State var item: Item = .none
     @Previewable @State var level: Double = 0.0
+    @Previewable @State var isEverywhere: Bool = true
 
     ThresholdView(
         coord: coord,
         item: $item,
-        level: $level
+        level: $level,
+        isEverywhere: $isEverywhere
     )
 }
