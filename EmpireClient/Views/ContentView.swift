@@ -20,6 +20,7 @@ struct ContentView: View {
     @State private var showExplorePopup: Bool = false
     @State private var showDesignatePopup: Bool = false
     @State private var showDistributePopup: Bool = false
+    @State private var showThresholdPopup: Bool = false
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
@@ -47,9 +48,22 @@ struct ContentView: View {
         .onKeyPress { press in
             return keyPressed(press.characters)
         }
-        .explore(isPresented: $showExplorePopup, game: game, center_coord: center_coord)
-        .designate(isPresented: $showDesignatePopup, game: game, center_coord: center_coord)
-        .distribute(isPresented: $showDistributePopup, game: game, center_coord: center_coord)
+        .explore(
+            isPresented: $showExplorePopup,
+            game: game,
+            center_coord: center_coord
+        )
+        .designate(
+            isPresented: $showDesignatePopup,
+            game: game,
+            center_coord: center_coord
+        )
+        .distribute(
+            isPresented: $showDistributePopup,
+            game: game,
+            center_coord: center_coord
+        )
+        .threshold(isPresented: $showThresholdPopup, game: game, center_coord: center_coord)
         HStack {
             RawCmdView(game: game).frame(maxWidth: 700)
             Spacer()
@@ -89,6 +103,7 @@ struct ContentView: View {
                     designateButton
                     distributeButton
                     exploreButton
+                    thresholdButton
                 }
             }
         }
@@ -117,6 +132,12 @@ struct ContentView: View {
         }
     }
 
+    var thresholdButton: some View {
+        Button("Threshold") {
+            showThresholdPopup = true
+        }
+    }
+
     var distributeButton: some View {
         Button("Distribute") {
             showDistributePopup = true
@@ -134,8 +155,6 @@ struct ContentView: View {
             showDesignatePopup = true
         }
     }
-
-
 
     func keyPressed(_ keys: String) -> KeyPress.Result {
         switch keys {
