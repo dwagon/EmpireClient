@@ -37,6 +37,10 @@ struct MapCoord: Hashable, Equatable {
     func description() -> String {
         return "MapCoords(\(self.x), \(self.y))"
     }
+
+    func toString() -> String {
+        return "\(self.x),\(self.y)"
+    }
 }
 
 //func doubleWidthToCube(from: OffsetCoordinates) throws
