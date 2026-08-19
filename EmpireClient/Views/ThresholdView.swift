@@ -44,7 +44,7 @@ struct ThresholdView: View {
                 selection: $item,
                 content: {
                     ForEach(Item.allCases, id: \.self) { item in
-                        Text(item.name).tag(item)
+                        Text(item.displayName).tag(item)
                     }
                 }
             )
