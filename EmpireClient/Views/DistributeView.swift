@@ -8,7 +8,6 @@
 import HexGrid
 import SwiftUI
 
-
 enum DistributeOption {
     case set
     case unset
@@ -21,11 +20,13 @@ struct View_Distribute: ViewModifier {
     var center_coord: MapCoord
     @State var option: DistributeOption = .ignore
     @State var destination: MapCoord? = nil
+    @State var isEverywhere: Bool = true
 
     func body(content: Content) -> some View {
         let sectors = game.game_map.instances(.warehouse)
 
-        return content
+        return
+            content
             .sheet(
                 isPresented: $isPresented
             ) {
@@ -33,10 +34,16 @@ struct View_Distribute: ViewModifier {
                 switch option {
                 case .set:
                     Task {
-                        await game.cmd_distribute(
-                            source: center_coord,
-                            destination: destination!
-                        )
+                        if isEverywhere {
+                            await game.cmd_distribute(
+                                destination: destination!
+                            )
+                        } else {
+                            await game.cmd_distribute(
+                                source: center_coord,
+                                destination: destination!
+                            )
+                        }
                         await game.cmd_dump()
                     }
                 case .unset:
@@ -55,7 +62,8 @@ struct View_Distribute: ViewModifier {
                     coord: center_coord,
                     sectors: sectors,
                     option: $option,
-                    destination: $destination
+                    destination: $destination,
+                    isEverywhere: $isEverywhere
                 )
             }
 
@@ -80,11 +88,12 @@ extension View {
 
 struct DistributeView: View {
     var coord: MapCoord
-    var sectors: [Sector]   // Warehouse sectors
+    var sectors: [Sector]  // Warehouse sectors
     @Binding var option: DistributeOption
     @Binding var destination: MapCoord?
+    @Binding var isEverywhere: Bool
 
-    @State private var setDistribute: Bool = true
+    @State private var cancelDistribution: Bool = false
 
     @Environment(\.dismiss) var dismiss
 
@@ -94,24 +103,39 @@ struct DistributeView: View {
                 "Set distribution",
                 systemImage: "arrow.down.forward.and.arrow.up.backward"
             ).font(.title)
-            if sectors.isEmpty {
-                Text("No warehouse designated")
-            } else {
-                Picker(
-                    "Distribute to warehouse",
-                    selection: $destination,
-                    content: {
-                        ForEach(sectors) { sector in
-                            Text("\(sector.coords.x), \(sector.coords.y)").tag(
-                                sector.coords
-                            )
-                        }
-                    }
+
+            if !cancelDistribution {
+                Toggle(
+                    "Set for everywhere not just \(coord.toString())",
+                    isOn: $isEverywhere
                 )
-                .pickerStyle(.segmented)
-                .padding()
+                if sectors.isEmpty {
+                    Text("No warehouse designated")
+                } else {
+                    Picker(
+                        "Distribute to warehouse",
+                        selection: $destination,
+                        content: {
+                            ForEach(sectors) { sector in
+                                Text("\(sector.coords.toString())").tag(
+                                    sector.coords
+                                )
+                            }
+                        }
+                    )
+                    .pickerStyle(.segmented)
+                    .padding()
+                }
             }
-            Toggle("Set distribution point", isOn: $setDistribute)
+            Toggle("Cancel distribution", isOn: $cancelDistribution)
+
+            if cancelDistribution {
+                Text("Cancel distribution at \(coord.toString())")
+            } else {
+                Text(
+                    "Set distribution \(isEverywhere ? "of everywhere" : "at \(coord.toString())") to \(destination?.toString(), default: "nowhere")"
+                )
+            }
 
             HStack {
                 Button("Cancel", role: .cancel) {
@@ -120,7 +144,7 @@ struct DistributeView: View {
                 }.padding()
 
                 Button("Distribute") {
-                    option = setDistribute ? .set : .unset
+                    option = cancelDistribution ? .set : .unset
                     dismiss()
                 }
                 .buttonStyle(.automatic)
@@ -134,17 +158,19 @@ struct DistributeView: View {
 // MARK: Preview
 #Preview {
     @Previewable var sectors = [
-        Sector(coords: MapCoord(x:1, y:1)),
-        Sector(coords: MapCoord(x: -1, y:-1))
+        Sector(coords: MapCoord(x: 1, y: 1)),
+        Sector(coords: MapCoord(x: -1, y: -1)),
     ]
     @Previewable var coord = MapCoord(x: 0, y: 0)
     @Previewable @State var option = DistributeOption.ignore
     @Previewable @State var destination: MapCoord? = nil
+    @Previewable @State var isEverywhere: Bool = true
 
     DistributeView(
         coord: coord,
         sectors: sectors,
         option: $option,
-        destination: $destination
+        destination: $destination,
+        isEverywhere: $isEverywhere
     )
 }
