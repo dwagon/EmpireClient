@@ -15,7 +15,7 @@ extension Game {
     ) async {
         let cmd_string =
             "designate \(coord.x),\(coord.y) \(designation)"
-        log("cmd_string = '\(cmd_string)'")
+        log(cmd_string)
         let result = await client.run_cmd(cmd_string)
         log(result)
     }
