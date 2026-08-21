@@ -20,7 +20,7 @@ struct SectorView: View {
         var des_str =
         "Desig: \(sector.desig.name) (Eff: \(sector[.eff], default: "??")%)"
         if sector.sdes.desig != .unknown {
-            des_str += " SDesig: \(sector.sdes)"
+            des_str += " SDesig: \(sector.sdes.name)"
         }
         return des_str
     }

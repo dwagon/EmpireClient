@@ -27,6 +27,12 @@ extension Game {
             log("Need to login first")
             return
         }
+        if result.contains("\"dump\" is not a legal command") {
+            log("Need to break sanctuary before running dump")
+            return
+        }
+
+        print(result)
 
         for line in result[3..<result.count - 1] {
             let bits = line.split(separator: " ")

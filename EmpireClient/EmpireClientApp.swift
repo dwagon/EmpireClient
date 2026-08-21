@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
 struct EmpireClientApp: App {
@@ -16,7 +15,7 @@ struct EmpireClientApp: App {
             ContentView(game: game, center_coord: MapCoord(x: 0, y: 0))
         }
         Settings {
-       //     SettingsView()
+            SettingsView()
         }
     }
 }

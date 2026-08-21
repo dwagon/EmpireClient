@@ -13,7 +13,7 @@ enum DesigKey {
     case abbrev
 }
 
-enum DesigType: CaseIterable, Comparable {
+enum DesigType: CaseIterable, Comparable, Codable {
     case sea
     case mountain
     case sanctuary

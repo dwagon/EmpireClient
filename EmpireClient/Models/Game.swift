@@ -51,6 +51,9 @@ class Game {
         var result = await client.run_cmd("coun \(country)")
         log(result)
         result = await client.run_cmd("pass \(password)")
+        if result.contains("\"pass\" is not a legal command") {
+            result = await client.run_cmd("break")
+        }
         log(result)
         result = await client.run_cmd("play")
         log(result)
