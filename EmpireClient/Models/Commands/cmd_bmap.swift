@@ -29,6 +29,12 @@ extension Game {
             print("bmap returned empty")
             return
         }
+        if result.contains("\"bmap\" is not a legal command") {
+            log("Need to break sanctuary before running bmap")
+            return
+        }
+        print(result)
+
         let min_x = get_lower_x(result)
 
         for line in result[2..<result.count - 2] {  // Skip border
