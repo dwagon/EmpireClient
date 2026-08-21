@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Item: String, CaseIterable {
+enum Item: String, CaseIterable, Codable, Hashable {
     case none = ""  // For init purposes
     case civ = "c"
     case mil = "m"

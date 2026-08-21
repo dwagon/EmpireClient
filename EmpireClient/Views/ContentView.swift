@@ -6,7 +6,6 @@
 //
 
 import HexGrid
-import SwiftData
 import SwiftUI
 
 struct ContentView: View {
@@ -21,6 +20,8 @@ struct ContentView: View {
     @State private var showDesignatePopup: Bool = false
     @State private var showDistributePopup: Bool = false
     @State private var showThresholdPopup: Bool = false
+
+    var profile = loadSettings()
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
@@ -113,7 +114,7 @@ struct ContentView: View {
         return HStack {
             Button("Login") {
                 Task {
-                    await game.login(country: "1", password: "1")
+                    await game.login(country: profile.country, password: profile.password)
                     await game.cmd_dump()
                     await game.cmd_bmap()
                 }
