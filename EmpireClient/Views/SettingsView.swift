@@ -26,12 +26,12 @@ struct SettingsView: View {
         Spacer()
         HStack {
             Button("Cancel", role: .cancel) {
+                userProfile = loadSettings()
                 dismiss()
             }
             Button("OK", role: .confirm) {
                 saveSettings(profile: userProfile)
                 dismiss()
-
             }
         }
     }
@@ -43,7 +43,7 @@ struct ThresholdSettings: View {
     @State var populationThresholdCollapse: Bool = true
     @State var resourceThresholdCollapse: Bool = false
     @State var militaryThresholdCollapse: Bool = false
-
+    
     var body: some View {
         Section(isExpanded: $populationThresholdCollapse) {
             PopulationThresholdSettings
@@ -144,24 +144,18 @@ struct ThresholdSettings: View {
 
 struct GeneralSettings: View {
     @Binding var profile: UserProfile
-    @State var country: String = ""
-    @State var password: String = ""
 
     var body: some View {
         Text("General Settings")
         HStack {
             Text("Country:")
-            TextField("Country", text: $country)
+            TextField("Country", text: $profile.country)
                 .disableAutocorrection(true)
         }
         HStack {
             Text("Password:")
-            TextField("Password", text: $password)
+            TextField("Password", text: $profile.password)
                 .disableAutocorrection(true)
-        }
-        .onAppear {
-            country = profile.country
-            password = profile.password
         }
     }
 }
