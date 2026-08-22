@@ -12,6 +12,7 @@ import Foundation
 class Game {
     var game_map: Map
     var client = TCPClient()
+    var nation_report: [String] = []
     var logs: [String] = []
 
     init() {
@@ -57,5 +58,7 @@ class Game {
         log(result)
         result = await client.run_cmd("play")
         log(result)
+
+        await cmd_nation()
     }
 }
