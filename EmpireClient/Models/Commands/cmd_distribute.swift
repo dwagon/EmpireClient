@@ -8,7 +8,7 @@
 import Foundation
 
 extension Game {
-    /// Distribute to a sector (e.g. warehouse)
+    /// Distribute a sector to another sector (e.g. warehouse)
     func cmd_distribute(
         source: MapCoord,
         destination: MapCoord

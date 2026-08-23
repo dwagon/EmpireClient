@@ -136,6 +136,7 @@ struct DistributeView: View {
                     "Set distribution \(isEverywhere ? "of everywhere" : "at \(coord.toString())") to \(destination?.toString(), default: "nowhere")"
                 )
             }
+            Spacer()
 
             HStack {
                 Button("Cancel", role: .cancel) {
@@ -144,7 +145,7 @@ struct DistributeView: View {
                 }.padding()
 
                 Button("Distribute") {
-                    option = cancelDistribution ? .set : .unset
+                    option = cancelDistribution ? .unset : .set
                     dismiss()
                 }
                 .buttonStyle(.automatic)
