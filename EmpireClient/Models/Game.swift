@@ -60,5 +60,7 @@ class Game {
         log(result)
 
         await cmd_nation()
+
+        await cmd_prod()
     }
 }

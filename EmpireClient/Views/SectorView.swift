@@ -15,6 +15,7 @@ struct SectorView: View {
     @State var resourceCollapse: Bool = true
     @State var naturalResourceCollapse: Bool = true
     @State var populationCollapse: Bool = true
+    @State var productionCollapse: Bool = true
 
     var desig_str: String {
         var des_str =
@@ -28,7 +29,7 @@ struct SectorView: View {
     var naturalResourceSection: some View {
         Grid {
             GridRow {
-                Text("Mine").bold()
+                Text("Minerals").bold()
                 Text("Gold").bold()
                 Text("Fertility").bold()
                 Text("Oil").bold()
@@ -45,13 +46,38 @@ struct SectorView: View {
         }
     }
 
+    var productionSection: some View {
+        Grid {
+            GridRow {
+                Text("Make").bold()
+                Text("Prod Eff").bold()
+                Text("Cost").bold()
+                Text("Max").bold()
+                Text("Use 1").bold()
+                Text("Use 2").bold()
+                Text("Use 3").bold()
+            }
+            Divider()
+            GridRow {
+                Text(verbatim: "\(sector[.make], default: "?")")
+                Text(verbatim: "\(sector[.prodeff], default: "?")")
+                Text(verbatim: "\(sector[.cost], default: "?")")
+                Text(verbatim: "\(sector[.max], default: "?")")
+                Text(verbatim: "\(sector[.use1], default: "?") / \(sector[.max1], default: "?")")
+                Text(verbatim: "\(sector[.use2], default: "?") / \(sector[.max2], default: "?")")
+                Text(verbatim: "\(sector[.use3], default: "?") / \(sector[.max3], default: "?")")
+
+            }
+        }
+    }
+
     var populationSection: some View {
         Grid {
             GridRow {
-                Text("Population")
-                Text("Civilians")
-                Text("Military")
-                Text("Uncomp Workers")
+                Text("Population").bold()
+                Text("Civilians").bold()
+                Text("Military").bold()
+                Text("Uncomp Workers").bold()
             }
             Divider()
             GridRow {
@@ -185,6 +211,19 @@ struct SectorView: View {
                     Text("Population")
                     Spacer()
                     ExpandButton(isExpanded: $populationCollapse)
+                }
+            }
+
+            //
+            if sector[.make] != nil {
+                Section(isExpanded: $productionCollapse) {
+                    productionSection
+                } header: {
+                    HStack {
+                        Text("Production")
+                        Spacer()
+                        ExpandButton(isExpanded: $productionCollapse)
+                    }
                 }
             }
 

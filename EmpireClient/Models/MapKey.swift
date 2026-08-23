@@ -8,7 +8,7 @@
 import Foundation
 
 enum MapKey: String {
-    case desig
+    case desig  // Dump output
     case sdes
     case eff
     case mob
@@ -86,4 +86,14 @@ enum MapKey: String {
     case terr1
     case terr2
     case terr3
+    case make   // Prod output
+    case prodeff
+    case cost
+    case use1
+    case use2
+    case use3
+    case max1
+    case max2
+    case max3
+    case max
 }
