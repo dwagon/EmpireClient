@@ -32,8 +32,6 @@ extension Game {
             return
         }
 
-        print(result)
-
         for line in result[3..<result.count - 1] {
             let bits = line.split(separator: " ")
             let coord = MapCoord(x: Int(bits[0])!, y: Int(bits[1])!)

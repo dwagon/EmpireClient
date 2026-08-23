@@ -33,7 +33,6 @@ extension Game {
             log("Need to break sanctuary before running bmap")
             return
         }
-        print(result)
 
         let min_x = get_lower_x(result)
 
