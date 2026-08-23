@@ -12,14 +12,14 @@ struct SectorView: View {
     var coord: MapCoord
     var sector: Sector
 
-    @State var resourceCollapse: Bool = true
-    @State var naturalResourceCollapse: Bool = true
-    @State var populationCollapse: Bool = true
-    @State var productionCollapse: Bool = true
+    @State var resourceCollapse: Bool = false
+    @State var naturalResourceCollapse: Bool = false
+    @State var populationCollapse: Bool = false
+    @State var productionCollapse: Bool = false
 
     var desig_str: String {
         var des_str =
-        "Desig: \(sector.desig.name) (Eff: \(sector[.eff], default: "??")%)"
+            "Desig: \(sector.desig.name) (Eff: \(sector[.eff], default: "??")%)"
         if sector.sdes.desig != .unknown {
             des_str += " SDesig: \(sector.sdes.name)"
         }
@@ -63,10 +63,57 @@ struct SectorView: View {
                 Text(verbatim: "\(sector[.prodeff], default: "?")")
                 Text(verbatim: "\(sector[.cost], default: "?")")
                 Text(verbatim: "\(sector[.max], default: "?")")
-                Text(verbatim: "\(sector[.use1], default: "?") / \(sector[.max1], default: "?")")
-                Text(verbatim: "\(sector[.use2], default: "?") / \(sector[.max2], default: "?")")
-                Text(verbatim: "\(sector[.use3], default: "?") / \(sector[.max3], default: "?")")
+                Text(
+                    verbatim:
+                        "\(sector[.use1], default: "?") / \(sector[.max1], default: "?")"
+                )
+                Text(
+                    verbatim:
+                        "\(sector[.use2], default: "?") / \(sector[.max2], default: "?")"
+                )
+                Text(
+                    verbatim:
+                        "\(sector[.use3], default: "?") / \(sector[.max3], default: "?")"
+                )
 
+            }
+        }
+    }
+
+    var overviewSection: some View {
+        Grid {
+            GridRow {
+                Text("Civ").bold()
+                Text("Mil").bold()
+                Text("UW").bold()
+                Text("Food").bold()
+                Text("Shells").bold()
+                Text("Guns").bold()
+                Text("Petrol").bold()
+                Text("Iron").bold()
+                Text("Dust").bold()
+                Text("Bars").bold()
+                Text("Oil").bold()
+                Text("LCM").bold()
+                Text("HCM").bold()
+                Text("Rad").bold()
+            }
+            Divider()
+            GridRow {
+                Text(verbatim: "\(sector[.civ], default: "?")")
+                Text(verbatim: "\(sector[.mil], default: "?")")
+                Text(verbatim: "\(sector[.uw], default: "?")")
+                Text(verbatim: "\(sector[.food], default: "?")")
+                Text(verbatim: "\(sector[.shell], default: "?")")
+                Text(verbatim: "\(sector[.gun], default: "?")")
+                Text(verbatim: "\(sector[.pet], default: "?")")
+                Text(verbatim: "\(sector[.iron], default: "?")")
+                Text(verbatim: "\(sector[.dust], default: "?")")
+                Text(verbatim: "\(sector[.bar], default: "?")")
+                Text(verbatim: "\(sector[.oil], default: "?")")
+                Text(verbatim: "\(sector[.lcm], default: "?")")
+                Text(verbatim: "\(sector[.hcm], default: "?")")
+                Text(verbatim: "\(sector[.rad], default: "?")")
             }
         }
     }
@@ -188,21 +235,26 @@ struct SectorView: View {
 
     var body: some View {
         List {
-            Section {
-                Text("Map: \(coord.x), \(coord.y)")
-            }
+            //
             Section("Sector Details") {
                 Text(desig_str)
                 if let dist_x = sector[.dist_x], let dist_y = sector[.dist_y] {
-                    if MapCoord(x:dist_x, y: dist_y) != coord {
-                        Text("Distribute to \(sector[.dist_x], default: "?"), \(sector[.dist_y], default: "?")")
-                    }
-                    else {
+                    if MapCoord(x: dist_x, y: dist_y) != coord {
+                        Text(
+                            "Distribute to \(sector[.dist_x], default: "?"), \(sector[.dist_y], default: "?")"
+                        )
+                    } else {
                         Text("No distribution set")
                     }
                 }
+                Text("Mobility: \(sector[.mob], default: "?")")
             }
 
+            //
+            Section("Overview") {
+                overviewSection
+            }
+            Spacer()
             //
             Section(isExpanded: $populationCollapse) {
                 populationSection
