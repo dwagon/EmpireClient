@@ -15,21 +15,43 @@ struct MapCoord: Hashable, Equatable {
         self.y = y
     }
 
+    /// initialise with e.g. "4,-2"
+    init?(coord: String) {
+        let bits = coord.split(separator: ",")
+        self.init(x: String(bits[0]), y: String(bits[1]))
+    }
+
+    init?(x: String, y: String) {
+        guard Int(x) != nil else {
+            print("MapCoord x must be an number, not \(x)")
+            return nil
+        }
+        guard Int(y) != nil else {
+            print("MapCoord y must be an number, not \(x)")
+            return nil
+        }
+        self.x = Int(x)!
+        self.y = Int(y)!
+    }
+
     init(_ offset: OffsetCoordinates) {
         self.x = offset.column * 2
         self.y = offset.row
     }
 
     init(_ cube: CubeCoordinates) {
-        self = cubeToDoubleWidth(from: cube, orientation: MapConfig.orientation, offsetLayout: MapConfig.offsetLayout)
+        self = cubeToDoubleWidth(
+            from: cube,
+            orientation: MapConfig.orientation,
+            offsetLayout: MapConfig.offsetLayout
+        )
     }
 
     init?(x: MapKeyValue, y: MapKeyValue) {
         do {
             self.x = try x.toInt()
             self.y = try y.toInt()
-        }
-        catch {
+        } catch {
             return nil
         }
     }
