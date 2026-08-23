@@ -13,6 +13,7 @@ class Game {
     var game_map: Map
     var client = TCPClient()
     var nation_report: [String] = []
+    var budget_report: [String] = []
     var logs: [String] = []
 
     init() {
@@ -60,7 +61,7 @@ class Game {
         log(result)
 
         await cmd_nation()
-
+        await cmd_budget()
         await cmd_prod()
     }
 }
