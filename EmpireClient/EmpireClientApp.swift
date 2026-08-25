@@ -40,7 +40,7 @@ struct EmpireClientApp: App {
         }
 
         Window("Budget Report", id: "budget_report") {
-            NationReport(game: game)
+            BudgetReport(game: game)
         }
 
         Window("Ship Types Report", id: "ship_types_report") {

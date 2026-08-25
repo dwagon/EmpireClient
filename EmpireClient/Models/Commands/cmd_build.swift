@@ -8,15 +8,6 @@
 
 import Foundation
 
-enum BuildType: String {
-    case ship = "s"
-    case plane = "p"
-    case land = "l"
-    case nuke = "n"
-    case bridge = "b"
-    case tower = "t"
-}
-
 extension Game {
     // build [ship|plane|land|nuke] <SECTS> TYPE [NUMBER] [TECH] [SURE?]
     func cmd_build(
@@ -26,7 +17,7 @@ extension Game {
         number: Int = 1
     ) async {
         let cmd_string =
-            "build \(device.rawValue) \(sector.toString()) \(number)"
+            "build \(device.abbrev) \(sector.toString()) \(type) \(number)"
         log(cmd_string)
         let result = await client.run_cmd(cmd_string)
         log(result)
