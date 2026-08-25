@@ -25,18 +25,26 @@ struct EmpireClientApp: App {
                 Button("Nation", systemImage: "popcorn") {
                     openWindow(id: "nation_report")
                 }
-                Button("Budget", systemImage: "dollarsign.building.classical") {
+                Button("Budget", systemImage: "dollarsign.gauge.chart.lefthalf.righthalf") {
                     openWindow(id: "budget_report")
                 }
+                Button("Ship Types", systemImage: "sailboat") {
+                    openWindow(id: "ship_types_report")
+                }
+
             }
         }
 
         Window("Nation Report", id: "nation_report") {
-            NationReportView(game: game)
+            NationReport(game: game)
         }
 
         Window("Budget Report", id: "budget_report") {
-            NationReportView(game: game)
+            NationReport(game: game)
+        }
+
+        Window("Ship Types Report", id: "ship_types_report") {
+            ShipTypeReport(shipTypes: game.shipTypes)
         }
     }
 }

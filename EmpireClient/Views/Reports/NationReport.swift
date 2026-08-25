@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NationReportView: View {
+struct NationReport: View {
     let game: Game
     @Environment(\.dismiss) private var dismiss
 
@@ -29,5 +29,5 @@ struct NationReportView: View {
 
 #Preview {
     @Previewable @State var game: Game = Game()
-    NationReportView(game: game)
+    NationReport(game: game)
 }

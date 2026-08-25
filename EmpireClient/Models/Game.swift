@@ -15,6 +15,8 @@ class Game {
     var nation_report: [String] = []
     var budget_report: [String] = []
     var logs: [String] = []
+    var ships: [Ship] = []
+    var shipTypes: [String: ShipType] = [:]
 
     init() {
         game_map = Map(x_size: MapConfig.map_width, y_size: MapConfig.map_height)
@@ -59,9 +61,14 @@ class Game {
         log(result)
         result = await client.run_cmd("play")
         log(result)
+    }
 
+    func get_data() async {
+        await cmd_dump()
+        await cmd_bmap()
         await cmd_nation()
         await cmd_budget()
         await cmd_prod()
+        await cmd_show_ship()
     }
 }

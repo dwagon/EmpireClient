@@ -115,19 +115,18 @@ struct ContentView: View {
             Button("Login") {
                 Task {
                     await game.login(country: profile.country, password: profile.password)
-                    await game.cmd_dump()
-                    await game.cmd_bmap()
+                    await game.get_data()
                 }
-                isLoggedIn = true
+                isLoggedIn = game.nation_report.count >= 0
             }
         }
     }
 
     var dumpButton: some View {
         return HStack {
-            Button("Dump") {
+            Button("Refresh") {
                 Task {
-                    await game.cmd_dump()
+                    await game.get_data()
                 }
             }
         }
