@@ -248,6 +248,7 @@ struct SectorView: View {
                     }
                 }
                 Text("Mobility: \(sector[.mob], default: "?")")
+                Text("Available Work: \(sector[.avail], default: "?")")
             }
 
             //

@@ -20,6 +20,7 @@ struct ContentView: View {
     @State private var showDesignatePopup: Bool = false
     @State private var showDistributePopup: Bool = false
     @State private var showThresholdPopup: Bool = false
+    @State private var showBuildPopup: Bool = false
 
     var profile = loadSettings()
 
@@ -64,7 +65,16 @@ struct ContentView: View {
             game: game,
             center_coord: center_coord
         )
-        .threshold(isPresented: $showThresholdPopup, game: game, center_coord: center_coord)
+        .threshold(
+            isPresented: $showThresholdPopup,
+            game: game,
+            center_coord: center_coord
+        )
+        .build(
+            isPresented: $showBuildPopup,
+            game: game,
+            center_coord: center_coord
+        )
         HStack {
             RawCmdView(game: game).frame(maxWidth: 700)
             Spacer()
@@ -101,6 +111,7 @@ struct ContentView: View {
             if let sector = game[center_coord] {
                 if sector.owned {
                     dumpButton
+                    buildButton
                     designateButton
                     distributeButton
                     exploreButton
@@ -111,25 +122,30 @@ struct ContentView: View {
     }
 
     var loginButton: some View {
-        return HStack {
-            Button("Login") {
-                Task {
-                    await game.login(country: profile.country, password: profile.password)
-                    await game.cmd_dump()
-                    await game.cmd_bmap()
-                }
-                isLoggedIn = true
+        Button("Login") {
+            Task {
+                await game.login(
+                    country: profile.country,
+                    password: profile.password
+                )
+                await game.get_data()
             }
+            isLoggedIn = game.nation_report.count >= 0
         }
     }
 
     var dumpButton: some View {
-        return HStack {
-            Button("Dump") {
+        return
+            Button("Refresh") {
                 Task {
-                    await game.cmd_dump()
+                    await game.get_data()
                 }
             }
+    }
+
+    var buildButton: some View {
+        Button("Build") {
+            showBuildPopup = true
         }
     }
 
