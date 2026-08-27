@@ -27,7 +27,7 @@ enum UnitMapStyle {
 struct MapView: View {
     let game_map: Map
     @Binding var center_coord: MapCoord
-    let ships: [Int: Ship]
+    let ships: [String: Ship]
 
     @State var displayResourceMapStyle: ResourceMapStyle = .normal
     @State var displayUnitMapStyle: UnitMapStyle = .none

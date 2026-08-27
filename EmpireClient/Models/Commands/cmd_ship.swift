@@ -24,9 +24,9 @@ extension Game {
             var ship: Ship
             let bits = line.split(separator: " ")
             let bl = bits.count
-            let shipNum = Int(bits[0])!
+            let shipNum = String(bits[0])
             if ships[shipNum] == nil {
-                ship = Ship(type: shipTypes[String(bits[1])]!)
+                ship = Ship(type: String(bits[1]))
             } else {
                 ship = ships[shipNum]!
             }
