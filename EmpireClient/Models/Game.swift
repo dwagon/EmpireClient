@@ -9,14 +9,14 @@ import Foundation
 
 // MARK: -
 @Observable
-class Game {
+class Game: Decodable {
     var game_map: Map
     var client = TCPClient()
-    var nation_report: [String] = []
-    var budget_report: [String] = []
+    var nationReport: [String] = []
+    var budgetReport: [String] = []
     var logs: [String] = []
-    var ships: [Int: Ship] = [:]
     var shipTypes: [String: ShipType] = [:]
+    var ships: [String: Ship] = [:]
 
     init() {
         game_map = Map(x_size: MapConfig.map_width, y_size: MapConfig.map_height)
@@ -75,5 +75,24 @@ class Game {
         await cmd_prod()
         await cmd_show_ship()
         await cmd_ship()
+    }
+
+    enum CodingKeys: String, CodingKey {
+//        case game_map
+        case nationReport
+        case budgetReport
+        case ships
+        case shipTypes
+    }
+
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        game_map = Map()
+        client = TCPClient()
+        nationReport = try values.decode([String].self, forKey: .nationReport)
+        budgetReport = try values.decode([String].self, forKey: .budgetReport)
+        logs = []
+        ships = try values.decode([String: Ship].self, forKey: .ships)
+        shipTypes = try values.decode([String: ShipType].self, forKey: .shipTypes)
     }
 }

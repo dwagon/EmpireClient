@@ -1,0 +1,45 @@
+    {
+        "nationReport": ["Lorem"],
+        "budgetReport": ["Ipsum"],
+        "ships": {
+            "0": {
+                "number": "0",
+                "type": "tb",
+                "coords": {"x": 2, "y": 4},
+                "fleet": "",
+                "eff": 99,
+                "civ": 10,
+                "mil": 11,
+                "uw": 12,
+                "food": 13,
+                "planes": 14,
+                "heli": 15,
+                "xlPlanes": 16,
+                "landUnits": 17,
+                "mob": 18,
+                "tech": 19
+            }
+        },
+        "shipTypes": {
+            "tb": {
+                "abbrev": "tb",
+                "name": "test boat",
+                "lcm_cost": 10,
+                "hcm_cost": 15,
+                "avail": 20,
+                "tech": 0,
+                "cost": 1000,
+                "defence": 1,
+                "speed": 2,
+                "visible": 3,
+                "spy": 4,
+                "range": 5,
+                "fire": 6,
+                "landUnits": 7,
+                "planes": 8,
+                "helicopters": 9,
+                "lightPlanes": 10,
+                "cargo": "3 cats"
+            }
+        }
+    }

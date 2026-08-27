@@ -7,8 +7,7 @@
 
 import Foundation
 
-struct ShipType: Identifiable {
-
+struct ShipType: Identifiable, Codable {
     var abbrev: String = ""
     var name: String = ""
     var lcm_cost: Int = 0
@@ -31,12 +30,11 @@ struct ShipType: Identifiable {
     var id: String {
         return self.abbrev
     }
-
 }
 
-struct Ship: Identifiable {
-    var number: Int = 0
-    var type: ShipType
+struct Ship: Identifiable, Codable {
+    var number: String = ""
+    var type: String = ""
     var coords: MapCoord = MapCoord(x:0, y:0)
     var fleet: String = ""
     var eff: Int = 0

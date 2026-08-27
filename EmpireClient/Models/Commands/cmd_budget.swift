@@ -24,6 +24,6 @@ extension Game {
             print("budget returned empty")
             return
         }
-        budget_report = result
+        budgetReport = result
     }
 }

@@ -26,6 +26,6 @@ extension Game {
             print("nation returned empty")
             return
         }
-        nation_report = result
+        nationReport = result
     }
 }

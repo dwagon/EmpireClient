@@ -154,7 +154,7 @@ struct ContentView: View {
                 )
                 await game.get_data()
             }
-            isLoggedIn = game.nation_report.count >= 0
+            isLoggedIn = game.nationReport.count >= 0
         }
     }
 

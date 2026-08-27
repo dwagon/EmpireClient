@@ -13,7 +13,7 @@ struct BudgetReport: View {
 
     var body: some View {
         VStack {
-            Text(game.budget_report.joined(separator: "\n"))
+            Text(game.budgetReport.joined(separator: "\n"))
                 .font(
                     .system(.body, design: .monospaced)
                 ).border(.blue)

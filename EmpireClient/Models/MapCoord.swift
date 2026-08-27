@@ -6,7 +6,7 @@
 //
 import HexGrid
 
-struct MapCoord: Hashable, Equatable {
+struct MapCoord: Hashable, Equatable, Codable {
     var x: Int
     var y: Int
 

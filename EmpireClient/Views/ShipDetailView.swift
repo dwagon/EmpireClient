@@ -17,7 +17,7 @@ struct ShipDetailView: View {
                 TableColumn("Ship #") { val in Text("\(val.number)") }
                     .width(min: 20, ideal: 30, max: 60)
                 TableColumn("Type") { val in
-                    Text("\(val.type.name) (\(val.type.abbrev))")
+                    Text("\(game.shipTypes[val.type]!.name) (\(val.type))")
                 }
                 TableColumn("Coord") { val in
                     Text("\(val.coords.toString(), default: "unknown")")
@@ -41,38 +41,43 @@ struct ShipDetailView: View {
             }
 
             if let selectedShip {
-                let shipNum = Int(selectedShip)!
+                let shipNum = String(selectedShip)
                 let ship = game.ships[shipNum]!
+                let st = game.shipTypes[ship.type]!
                 Divider()
                 VStack(alignment: .leading) {
                     HStack {
                         Text("Ship \(selectedShip)")
-                        Text("\(ship.type.name)")
-                        Text("\(ship.type.abbrev)")
+                        Text("\(st.name.capitalized)").bold()
+                        Text("'\(st.abbrev)'")
                     }
                     HStack {
-                        Text("Defense: \(ship.type.defence)")
-                        Text("Speed: \(ship.type.speed)")
+                        Text("Defense: \(st.defence)")
+                        Text("Speed: \(st.speed)")
                     }
                     HStack {
-                        Text("Visibility: \(ship.type.visible)")
-                        Text("Spy: \(ship.type.spy)")
+                        Text("Visibility: \(st.visible)")
+                        Text("Spy: \(st.spy)")
                     }
                     HStack {
-                        Text("Fire: \(ship.type.fire)")
-                        Text("Range: \(ship.type.range)")
+                        Text("Fire: \(st.fire)")
+                        Text("Range: \(st.range)")
                     }
                     HStack {
                         Text("Civ: \(ship.civ)")
                         Text("Mil: \(ship.mil)")
                         Text("UW: \(ship.uw)")
-                        Text("Cargo: \(ship.type.cargo)")
+                        Text("Cargo: \(st.cargo)")
                     }
                     HStack {
-                        Text("Land Units: \(ship.landUnits) / \(ship.type.landUnits)")
-                        Text("Helicopters: \(ship.heli) / \(ship.type.helicopters)")
-                        Text("Light Planes: \(ship.planes) / \(ship.type.planes)")
-                        Text("Extra Light Planes: \(ship.xlPlanes) / \(ship.type.lightPlanes)")
+                        Text("Land Units: \(ship.landUnits) / \(st.landUnits)")
+                    }
+                    HStack {
+                        Text("Helicopters: \(ship.heli) / \(st.helicopters)")
+                        Text("Light Planes: \(ship.planes) / \(st.planes)")
+                        Text(
+                            "Extra Light Planes: \(ship.xlPlanes) / \(st.lightPlanes)"
+                        )
                     }
                 }
             }
@@ -82,6 +87,9 @@ struct ShipDetailView: View {
 }
 
 #Preview {
-    @Previewable @State var game = Game()
+    @Previewable @State var game = DataLoader.loadSampleGame(
+        name: "Game_ShipView"
+    )
     ShipDetailView(game: game)
+
 }

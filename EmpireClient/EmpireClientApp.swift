@@ -9,7 +9,8 @@ import SwiftUI
 
 @main
 struct EmpireClientApp: App {
-    var game = Game()
+    var game = DataLoader.loadSampleGame(name: "Game_ShipView")
+//    var game = Game()
     @Environment(\.openWindow) private var openWindow
 
     
