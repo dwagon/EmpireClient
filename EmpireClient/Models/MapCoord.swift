@@ -16,7 +16,7 @@ struct MapCoord: Hashable, Equatable {
     }
 
     /// initialise with e.g. "4,-2"
-    init?(coord: String) {
+    init?(_ coord: String) {
         let bits = coord.split(separator: ",")
         self.init(x: String(bits[0]), y: String(bits[1]))
     }

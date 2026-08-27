@@ -12,20 +12,23 @@ struct DrawHex: View {
     var hexmap: HexGrid
     var cellText: ((Cell) -> String)?
     var cellImage: ((Cell) -> Image)?
-    var cellColour: ((Cell) -> GraphicsContext.Shading)?
+    var cellFillColour: ((Cell) -> GraphicsContext.Shading)?
+    var cellEdgeColour: ((Cell) -> GraphicsContext.Shading)?
     var hexGesture: ((CGPoint) -> Void)?
 
     init(
         hexmap: HexGrid,
         cellText: ((Cell) -> String)? = nil,
         cellImage: ((Cell) -> Image)? = nil,
-        cellColour: ((Cell) -> GraphicsContext.Shading)? = nil,
+        cellFillColour: ((Cell) -> GraphicsContext.Shading)? = nil,
+        cellEdgeColour: ((Cell) -> GraphicsContext.Shading)? = nil,
         hexGesture: ((CGPoint) -> Void)? = nil
     ) {
         self.hexmap = hexmap
         self.cellText = cellText
         self.cellImage = cellImage
-        self.cellColour = cellColour
+        self.cellFillColour = cellFillColour
+        self.cellEdgeColour = cellEdgeColour
         self.hexGesture = hexGesture
     }
 
@@ -52,11 +55,11 @@ struct DrawHex: View {
                 )
                 context.stroke(
                     path,
-                    with: .color(red: 0.65, green: 0.9, blue: 1.0),
+                    with: cellStrokeColour(cell: cell),
                     lineWidth: 2
                 )
-                if let cellColour {
-                    context.fill(path, with: cellColour(cell))
+                if let cellFillColour {
+                    context.fill(path, with: cellFillColour(cell))
                 }
                 if let cellText {
                     context.draw(
@@ -70,6 +73,15 @@ struct DrawHex: View {
                     context.draw(cellImage(cell), at: center.cgPoint)
                 }
             }
+        }
+    }
+
+    func cellStrokeColour(cell: Cell) -> GraphicsContext.Shading {
+        if let cellEdgeColour {
+            return cellEdgeColour(cell)
+        }
+        else {
+            return .color(red: 0.65, green: 0.9, blue: 1.0)
         }
     }
 
@@ -104,6 +116,6 @@ func previewCellColour(_ cell: Cell) -> GraphicsContext.Shading {
     DrawHex(
         hexmap: hexmap,
         cellText: previewCellText,
-        cellColour: previewCellColour
+        cellFillColour: previewCellColour
     )
 }

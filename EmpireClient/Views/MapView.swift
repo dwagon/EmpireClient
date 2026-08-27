@@ -8,7 +8,7 @@
 import HexGrid
 import SwiftUI
 
-enum MapStyle {
+enum ResourceMapStyle {
     case normal
     case fertility
     case gold
@@ -17,10 +17,20 @@ enum MapStyle {
     case uranium
 }
 
+enum UnitMapStyle {
+    case none
+    case ship
+    case plane
+    case land
+}
+
 struct MapView: View {
     let game_map: Map
-    @State var mapstyle: MapStyle = .normal
     @Binding var center_coord: MapCoord
+    let ships: [Int: Ship]
+
+    @State var displayResourceMapStyle: ResourceMapStyle = .normal
+    @State var displayUnitMapStyle: UnitMapStyle = .none
 
     var hexmap = HexGrid(
         shape: .hexagon(MapConfig.mapRadius),
@@ -34,16 +44,23 @@ struct MapView: View {
             DrawHex(
                 hexmap: hexmap,
                 cellText: cellText,
-                cellColour: cellColour,
+                cellFillColour: cellColour,
+                cellEdgeColour: edgeColour,
                 hexGesture: hexGesture
             )
-            Picker("", selection: $mapstyle) {
-                Text("Normal").tag(MapStyle.normal)
-                Text("Fertitilty").tag(MapStyle.fertility)
-                Text("Gold").tag(MapStyle.gold)
-                Text("Minerals").tag(MapStyle.mine)
-                Text("Oil").tag(MapStyle.oil)
-                Text("Uranium").tag(MapStyle.uranium)
+            Picker("", selection: $displayUnitMapStyle) {
+                Text("Normal").tag(UnitMapStyle.none)
+                Text("Ship").tag(UnitMapStyle.ship)
+                Text("Plane").tag(UnitMapStyle.plane)
+                Text("Land Unit").tag(UnitMapStyle.land)
+            }.pickerStyle(.segmented)
+            Picker("", selection: $displayResourceMapStyle) {
+                Text("Normal").tag(ResourceMapStyle.normal)
+                Text("Fertitilty").tag(ResourceMapStyle.fertility)
+                Text("Gold").tag(ResourceMapStyle.gold)
+                Text("Minerals").tag(ResourceMapStyle.mine)
+                Text("Oil").tag(ResourceMapStyle.oil)
+                Text("Uranium").tag(ResourceMapStyle.uranium)
             }.pickerStyle(.segmented)
         }
     }
@@ -57,8 +74,36 @@ struct MapView: View {
         }
     }
 
+    func edgeColour(_ cell: Cell) -> GraphicsContext.Shading {
+        let defaultColour: GraphicsContext.Shading = .color(
+            red: 0.65,
+            green: 0.9,
+            blue: 1.0
+        )
+        let foundColour: GraphicsContext.Shading = .color(
+            red: 1.0,
+            green: 0.1,
+            blue: 0.1
+        )
+        switch displayUnitMapStyle {
+        case .none:
+            return defaultColour
+        case .ship:
+            for (_, ship) in ships {
+                if ship.coords == MapCoord(cell.coordinates) {
+                    return foundColour
+                }
+            }
+            return defaultColour
+        case .plane:
+            return defaultColour
+        case .land:
+            return defaultColour
+        }
+    }
+
     func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
-        switch mapstyle {
+        switch displayResourceMapStyle {
         case .normal:
             return cellColourNormal(cell)
         case .fertility:
@@ -71,8 +116,8 @@ struct MapView: View {
             return cellColourBySector(cell, mapkey: .uran)
         case .gold:
             return cellColourBySector(cell, mapkey: .gold)
-//        default:
-//            return cellColourNormal(cell)
+        //        default:
+        //            return cellColourNormal(cell)
         }
     }
 
@@ -101,7 +146,9 @@ struct MapView: View {
         return .color(Color.clear)
     }
 
-    func cellColourBySector(_ cell: Cell, mapkey: MapKey) -> GraphicsContext.Shading {
+    func cellColourBySector(_ cell: Cell, mapkey: MapKey)
+        -> GraphicsContext.Shading
+    {
         let map_coord = screenToMapCoord(cell.coordinates)
         if let sector = game_map[map_coord] {
             if sector.desig.desig == .sea {
@@ -110,7 +157,12 @@ struct MapView: View {
             do {
                 if let val = sector[mapkey] {
                     let val_ratio = try (val.toDouble() / 100.0)
-                    return .color(.sRGB, red: val_ratio, green: val_ratio, blue: val_ratio)
+                    return .color(
+                        .sRGB,
+                        red: val_ratio,
+                        green: val_ratio,
+                        blue: val_ratio
+                    )
                 }
             } catch {
                 return .color(Color.clear)
@@ -146,5 +198,5 @@ struct MapView: View {
 #Preview {
     @Previewable var game = Game()
     @Previewable @State var center_coord = MapCoord(x: 0, y: 0)
-    MapView(game_map: game.game_map, center_coord: $center_coord)
+    MapView(game_map: game.game_map, center_coord: $center_coord, ships: [:])
 }
