@@ -8,11 +8,15 @@
 import HexGrid
 import SwiftUI
 
+enum contentType {
+    case sector
+    case ship
+}
+
 struct ContentView: View {
     @State var game: Game
     @State var center_coord: MapCoord
-    @State private var columnVisibility = NavigationSplitViewVisibility
-        .doubleColumn
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var isLoggedIn: Bool = false
     @FocusState private var focused: Bool
 
@@ -22,13 +26,19 @@ struct ContentView: View {
     @State private var showThresholdPopup: Bool = false
     @State private var showBuildPopup: Bool = false
 
+    @State private var content: contentType = .sector
+
     var profile = loadSettings()
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            Text("Sidebar")
+            List {
+                Button("Sector") { content = .sector }
+                if !game.ships.isEmpty {
+                    Button("Ship") { content = .ship }
+                }
+            }
         } content: {
-            Text("Content")
             Spacer()
             if !isLoggedIn {
                 loginButton
@@ -37,19 +47,67 @@ struct ContentView: View {
                 contentView
             }
         } detail: {
-            Text("Detail")
             Spacer()
-            HStack {
-                detailView
-                Divider()
-                buttonBar
-            }
+            detailView
         }
         .navigationSplitViewStyle(.balanced)
         .focusable()
         .onKeyPress { press in
             return keyPressed(press.characters)
         }
+        HStack {
+            RawCmdView(game: game).frame(maxWidth: 700)
+            Spacer()
+            LogView(logs: game.logs).scaledToFill()
+        }
+    }
+
+    var contentView: some View {
+        VStack {
+            MapView(
+                game_map: game.game_map,
+                center_coord: $center_coord,
+                ships: game.ships
+            )
+        }
+        .navigationSplitViewColumnWidth(min: 300, ideal: 400)
+    }
+
+    var detailView: some View {
+        VStack {
+            switch content {
+            case .sector:
+                sectorDetailView
+            case .ship:
+                ShipDetailView(game: game)
+            }
+        }
+        .navigationSplitViewColumnWidth(min: 400, ideal: 800)
+    }
+ 
+    var sectorDetailView: some View {
+        HStack {
+            VStack {
+                if let sector = game[center_coord] {
+                    Text(
+                        "\(center_coord.x), \(center_coord.y): \(sector.desig.name)"
+                    )
+                    .font(.title)
+                    SectorView(coord: center_coord, sector: sector)
+                        .focusable(true)
+                        .focused($focused)
+                } else {
+                    Text("\(center_coord.x), \(center_coord.y)").font(.title)
+                }
+            }
+            buttonBar
+        }
+        .navigationSplitViewColumnWidth(min: 400, ideal: 800)
+        .build(
+            isPresented: $showBuildPopup,
+            game: game,
+            center_coord: center_coord
+        )
         .explore(
             isPresented: $showExplorePopup,
             game: game,
@@ -70,40 +128,6 @@ struct ContentView: View {
             game: game,
             center_coord: center_coord
         )
-        .build(
-            isPresented: $showBuildPopup,
-            game: game,
-            center_coord: center_coord
-        )
-        HStack {
-            RawCmdView(game: game).frame(maxWidth: 700)
-            Spacer()
-            LogView(logs: game.logs).scaledToFill()
-        }
-    }
-
-    var contentView: some View {
-        VStack {
-            MapView(game_map: game.game_map, center_coord: $center_coord)
-        }
-        .navigationSplitViewColumnWidth(min: 300, ideal: 400)
-    }
-
-    var detailView: some View {
-        VStack {
-            if let sector = game[center_coord] {
-                Text(
-                    "\(center_coord.x), \(center_coord.y): \(sector.desig.name)"
-                )
-                .font(.title)
-                SectorView(coord: center_coord, sector: sector)
-                    .focusable(true)
-                    .focused($focused)
-            } else {
-                Text("\(center_coord.x), \(center_coord.y)").font(.title)
-            }
-        }
-        .navigationSplitViewColumnWidth(min: 400, ideal: 800)
     }
 
     var buttonBar: some View {
@@ -197,6 +221,7 @@ struct ContentView: View {
         return .handled
     }
 }
+
 
 #Preview {
     @Previewable @State var game = Game()

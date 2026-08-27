@@ -30,7 +30,7 @@ struct ExploreView: View {
                 DrawHex(
                     hexmap: hexmap,
                     cellText: cellText,
-                    cellColour: CellColour,
+                    cellFillColour: CellColour,
                     hexGesture: hexGesture
                 ).scaledToFit()
                 ExploreDetails.padding()

@@ -15,11 +15,15 @@ class Game {
     var nation_report: [String] = []
     var budget_report: [String] = []
     var logs: [String] = []
-    var ships: [Ship] = []
+    var ships: [Int: Ship] = [:]
     var shipTypes: [String: ShipType] = [:]
 
     init() {
         game_map = Map(x_size: MapConfig.map_width, y_size: MapConfig.map_height)
+    }
+
+    var shipTable: [Ship] {
+        return Array(ships.values)
     }
 
     subscript(key: MapCoord) -> Sector?
@@ -70,5 +74,6 @@ class Game {
         await cmd_budget()
         await cmd_prod()
         await cmd_show_ship()
+        await cmd_ship()
     }
 }

@@ -34,7 +34,24 @@ struct ShipType: Identifiable {
 
 }
 
-struct Ship {
+struct Ship: Identifiable {
     var number: Int = 0
     var type: ShipType
+    var coords: MapCoord = MapCoord(x:0, y:0)
+    var fleet: String = ""
+    var eff: Int = 0
+    var civ: Int = 0
+    var mil: Int = 0
+    var uw: Int = 0
+    var food: Int = 0
+    var planes: Int = 0
+    var heli: Int = 0
+    var xlPlanes: Int = 0
+    var landUnits: Int = 0
+    var mob: Int = 0
+    var tech: Int = 0
+
+    var id: String {
+        return String(self.number)
+    }
 }

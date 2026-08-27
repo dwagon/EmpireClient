@@ -28,7 +28,7 @@ extension Game {
         }
         for line in result[3..<result.count - 1] {
             let bits = line.split(separator: " ")
-            if let coord = MapCoord(coord: String(bits[0])) {
+            if let coord = MapCoord(String(bits[0])) {
                 if self[coord] == nil {
                     self[coord] = Sector(coords: coord)
                 }
