@@ -21,7 +21,7 @@ struct ThresholdView: View {
                 .title
             )
             HStack {
-                ThresholdDetails.padding()
+                thresholdDetails.padding()
                 Spacer()
             }
             Text("Set threshold of \(item.displayName) \(isEverywhere ? "everywhere" : "at \(coord.toString())") to \(Int(level))")
@@ -38,7 +38,7 @@ struct ThresholdView: View {
         }
     }
 
-    var ThresholdDetails: some View {
+    var thresholdDetails: some View {
         return VStack {
             Toggle("Set for everywhere not just \(coord.toString())", isOn: $isEverywhere)
             Picker(
@@ -63,10 +63,10 @@ struct ThresholdView: View {
     }
 }
 
-struct View_Threshold: ViewModifier {
+struct ViewThreshold: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
-    var center_coord: MapCoord
+    var centerCoord: MapCoord
     @State private var item: Item = .none
     @State private var level = 0.0
     @State private var isEverywhere: Bool = true
@@ -87,7 +87,7 @@ struct View_Threshold: ViewModifier {
                         } else {
                             await game.cmd_threshold(
                                 item: item,
-                                coord: center_coord,
+                                coord: centerCoord,
                                 level: Int(level)
                             )}
                         await game.cmd_dump()
@@ -97,7 +97,7 @@ struct View_Threshold: ViewModifier {
                 }
             } content: {
                 ThresholdView(
-                    coord: center_coord,
+                    coord: centerCoord,
                     item: $item,
                     level: $level,
                     isEverywhere: $isEverywhere
@@ -110,13 +110,13 @@ extension View {
     func threshold(
         isPresented: Binding<Bool>,
         game: Game,
-        center_coord: MapCoord
+        centerCoord: MapCoord
     ) -> some View {
         modifier(
-            View_Threshold(
+            ViewThreshold(
                 isPresented: isPresented,
                 game: game,
-                center_coord: center_coord
+                centerCoord: centerCoord
             )
         )
     }

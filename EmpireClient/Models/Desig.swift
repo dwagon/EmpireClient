@@ -24,36 +24,36 @@ enum DesigType: CaseIterable, Comparable, Codable {
     case park
     case highway
     case radar
-    case bridge_head
-    case bridge_span
-    case bridge_tower
-    case defense_plant
-    case shell_industry
+    case bridgeHead
+    case bridgeSpan
+    case bridgeTower
+    case defensePlant
+    case shellIndustry
     case mine
-    case gold_mine
+    case goldMine
     case harbor
     case warehouse
-    case uranium_mine
+    case uraniumMine
     case airfield
     case agribusiness
-    case oil_field
-    case light_manufacturing
-    case heavy_manufacturing
+    case oilField
+    case lightManufacturing
+    case heavyManufacturing
     case refinery
-    case technical_center
+    case technicalCenter
     case fortress
-    case research_lab
-    case nuclear_plant
+    case researchLab
+    case nuclearPlant
     case library
-    case enlistment_center
+    case enlistmentCenter
     case headquarters
     case bank
     case unknown
 
     static func < (lhs: DesigType, rhs: DesigType) -> Bool {
-        let l = Desig(lhs)
-        let r = Desig(rhs)
-        return l.name < r.name
+        let lDesType = Desig(lhs)
+        let rDesType = Desig(rhs)
+        return lDesType.name < rDesType.name
     }
 }
 
@@ -68,36 +68,36 @@ let desigDetails: [DesigType: [DesigKey: String]] = [
     .park: [.name: "Park", .abbrev: "p"],
     .highway: [.name: "Highway", .abbrev: "+"],
     .radar: [.name: "Radar", .abbrev: ")"],
-    .bridge_head: [.name: "Bridge Head", .abbrev: "#"],
-    .bridge_span: [.name: "Bridge Span", .abbrev: "="],
-    .bridge_tower: [.name: "Bridge Tower", .abbrev: "@"],
-    .defense_plant: [.name: "Defense Plant", .abbrev: "d"],
-    .shell_industry: [.name: "Shell Industry", .abbrev: "i"],
+    .bridgeHead: [.name: "Bridge Head", .abbrev: "#"],
+    .bridgeSpan: [.name: "Bridge Span", .abbrev: "="],
+    .bridgeTower: [.name: "Bridge Tower", .abbrev: "@"],
+    .defensePlant: [.name: "Defense Plant", .abbrev: "d"],
+    .shellIndustry: [.name: "Shell Industry", .abbrev: "i"],
     .mine: [.name: "Mine", .abbrev: "m"],
-    .gold_mine: [.name: "Gold Mine", .abbrev: "g"],
+    .goldMine: [.name: "Gold Mine", .abbrev: "g"],
     .harbor: [.name: "Harbor", .abbrev: "h"],
     .warehouse: [.name: "Warehouse", .abbrev: "w"],
-    .uranium_mine: [.name: "Uranium Mine", .abbrev: "u"],
+    .uraniumMine: [.name: "Uranium Mine", .abbrev: "u"],
     .airfield: [.name: "Airfield", .abbrev: "*"],
     .agribusiness: [.name: "Agribusiness", .abbrev: "a"],
-    .oil_field: [.name: "Oil Field", .abbrev: "o"],
-    .light_manufacturing: [.name: "Light manufacturing", .abbrev: "j"],
-    .heavy_manufacturing: [.name: "Heavy manufacturing", .abbrev: "k"],
+    .oilField: [.name: "Oil Field", .abbrev: "o"],
+    .lightManufacturing: [.name: "Light manufacturing", .abbrev: "j"],
+    .heavyManufacturing: [.name: "Heavy manufacturing", .abbrev: "k"],
     .refinery: [.name: "Refinery", .abbrev: "%"],
-    .technical_center: [.name: "Technical Center", .abbrev: "t"],
+    .technicalCenter: [.name: "Technical Center", .abbrev: "t"],
     .fortress: [.name: "Fortress", .abbrev: "f"],
-    .research_lab: [.name: "Research Lab", .abbrev: "r"],
-    .nuclear_plant: [.name: "Nuclear Plant", .abbrev: "n"],
+    .researchLab: [.name: "Research Lab", .abbrev: "r"],
+    .nuclearPlant: [.name: "Nuclear Plant", .abbrev: "n"],
     .library: [.name: "Library", .abbrev: "l"],
-    .enlistment_center: [.name: "Enlistment Center", .abbrev: "e"],
+    .enlistmentCenter: [.name: "Enlistment Center", .abbrev: "e"],
     .headquarters: [.name: "Headquarters", .abbrev: "!"],
     .bank: [.name: "Bank", .abbrev: "b"],
-    .unknown: [.name: "Unknown", .abbrev: "_"],
+    .unknown: [.name: "Unknown", .abbrev: "_"]
 ]
 
 /// Players can't designate sectors of these types
 var undesignatable: Set<DesigType> = [
-    .sea, .mountain, .sanctuary, .wasteland, .wilderness, .plains, .unknown,
+    .sea, .mountain, .sanctuary, .wasteland, .wilderness, .plains, .unknown
 ]
 
 struct Desig: Equatable {

@@ -30,10 +30,10 @@ struct ExploreView: View {
                 DrawHex(
                     hexmap: hexmap,
                     cellText: cellText,
-                    cellFillColour: CellColour,
+                    cellFillColour: cellColour,
                     hexGesture: hexGesture
                 ).scaledToFit()
-                ExploreDetails.padding()
+                exploreDetails.padding()
                 Spacer()
             }
             HStack {
@@ -50,7 +50,7 @@ struct ExploreView: View {
         }
     }
 
-    var ExploreDetails: some View {
+    var exploreDetails: some View {
         return VStack {
             Picker(
                 "Use",
@@ -81,7 +81,7 @@ struct ExploreView: View {
         }
     }
 
-    func CellColour(_ cell: Cell) -> GraphicsContext.Shading {
+    func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
         if destination == directionString(cell) {
             return .color(Color.red)
         }
@@ -115,10 +115,10 @@ struct ExploreView: View {
     }
 }
 
-struct View_Explore: ViewModifier {
+struct ViewExplore: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
-    var center_coord: MapCoord
+    var centerCoord: MapCoord
     @State private var item: Item = .mil
     @State private var number: Int = 1
     @State private var destination: String = ""
@@ -133,7 +133,7 @@ struct View_Explore: ViewModifier {
                 Task {
                     await game.cmd_explo(
                         item: item,
-                        sector: center_coord,
+                        sector: centerCoord,
                         number: number,
                         destination: destination
                     )
@@ -146,7 +146,7 @@ struct View_Explore: ViewModifier {
             }
         } content: {
             ExploreView(
-                coord: center_coord,
+                coord: centerCoord,
                 item: $item,
                 number: $number,
                 destination: $destination
@@ -159,13 +159,13 @@ extension View {
     func explore(
         isPresented: Binding<Bool>,
         game: Game,
-        center_coord: MapCoord
+        centerCoord: MapCoord
     ) -> some View {
         modifier(
-            View_Explore(
+            ViewExplore(
                 isPresented: isPresented,
                 game: game,
-                center_coord: center_coord
+                centerCoord: centerCoord
             )
         )
     }

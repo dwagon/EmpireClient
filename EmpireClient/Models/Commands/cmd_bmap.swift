@@ -34,30 +34,30 @@ extension Game {
             return
         }
 
-        let min_x = get_lower_x(result)
+        let minX = get_lower_x(result)
 
         for line in result[2..<result.count - 2] {  // Skip border
             if line.split(separator: " ").count == 2 {
                 continue
             }
-            handle_bmap_line(line, min_x: min_x)
+            handle_bmap_line(line, minX: minX)
         }
     }
 
     /// Handle a line of the bmap output that contains map data
-    private func handle_bmap_line(_ line: String, min_x: Int) {
+    private func handle_bmap_line(_ line: String, minX: Int) {
         let y = Int(line.split(separator: " ", maxSplits: 1)[0])
         if y == nil {
             log("Error in map for line '\(line)'")
             return
         }
-        if let left_index = line.firstIndex(of: " "),
-            let right_index = line.lastIndex(of: " ")
+        if let leftIndex = line.firstIndex(of: " "),
+            let rightIndex = line.lastIndex(of: " ")
         {
-            let next_index = line.index(after: left_index)
-            let map_part = line[next_index...right_index]
-            for (pos, char) in map_part.enumerated() {
-                let x = pos + min_x
+            let nextIndex = line.index(after: leftIndex)
+            let mapPart = line[nextIndex...rightIndex]
+            for (pos, char) in mapPart.enumerated() {
+                let x = pos + minX
                 if is_valid_coord(x: x, y: y!) && char != " " {
                     let coord = MapCoord(x: x, y: y!)
                     set_bmap_sector(coord, to: String(char))
@@ -67,11 +67,11 @@ extension Game {
     }
 
     private func set_bmap_sector(_ coord: MapCoord, to: String) {
-        if let sector = game_map[coord] {
+        if let sector = gameMap[coord] {
             sector.desig = Desig(to)
         } else {
-            game_map[coord] = Sector(coords: coord)
-            game_map[coord]!.desig = Desig(to)
+            gameMap[coord] = Sector(coords: coord)
+            gameMap[coord]!.desig = Desig(to)
         }
     }
 }
@@ -80,29 +80,29 @@ extension Game {
 /// --------00000000001
 /// 8765432101234567890
 func get_lower_x(_ msg: [String]) -> Int {
-    var lower_x: Int
+    var lowerX: Int
     var tens: Int
     var units: Int
-    let first_line = msg[0]
-    let second_line = msg[1]
-    let first_char = first_line[first_line.startIndex]
+    let firstLine = msg[0]
+    let secondLine = msg[1]
+    let firstChar = firstLine[firstLine.startIndex]
 
-    if first_line.starts(with: "-") {
+    if firstLine.starts(with: "-") {
         tens = 0
     } else {
-        tens = Int(String(first_char))!
+        tens = Int(String(firstChar))!
     }
-    units = Int(String(second_line[second_line.startIndex]))!
+    units = Int(String(secondLine[secondLine.startIndex]))!
 
-    lower_x = tens * 10 + units
-    if first_char == "-" {
-        lower_x = -lower_x
+    lowerX = tens * 10 + units
+    if firstChar == "-" {
+        lowerX = -lowerX
     }
-    return lower_x
+    return lowerX
 }
 
 func is_valid_coord(x: Int, y: Int) -> Bool {
-    if (abs(x) % 2 == abs(y) % 2) {
+    if abs(x) % 2 == abs(y) % 2 {
         return true
     }
     return false

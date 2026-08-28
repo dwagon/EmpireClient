@@ -25,8 +25,8 @@ enum UnitMapStyle {
 }
 
 struct MapView: View {
-    let game_map: Map
-    @Binding var center_coord: MapCoord
+    let gameMap: Map
+    @Binding var centerCoord: MapCoord
     let ships: [String: Ship]
 
     @State var displayResourceMapStyle: ResourceMapStyle = .normal
@@ -66,11 +66,11 @@ struct MapView: View {
     }
 
     func cellText(_ cell: Cell) -> String {
-        let map_coord = screenToMapCoord(cell.coordinates)
-        if let sector = game_map[map_coord] {
+        let mapCoord = screenToMapCoord(cell.coordinates)
+        if let sector = gameMap[mapCoord] {
             return sector.symbol
         } else {
-            return "\(map_coord.x),\(map_coord.y)"
+            return "\(mapCoord.x),\(mapCoord.y)"
         }
     }
 
@@ -89,10 +89,9 @@ struct MapView: View {
         case .none:
             return defaultColour
         case .ship:
-            for (_, ship) in ships {
-                if ship.coords == MapCoord(cell.coordinates) {
-                    return foundColour
-                }
+            for (_, ship) in ships
+            where ship.coords == MapCoord(cell.coordinates) {
+                return foundColour
             }
             return defaultColour
         case .plane:
@@ -116,8 +115,6 @@ struct MapView: View {
             return cellColourBySector(cell, mapkey: .uran)
         case .gold:
             return cellColourBySector(cell, mapkey: .gold)
-        //        default:
-        //            return cellColourNormal(cell)
         }
     }
 
@@ -127,8 +124,8 @@ struct MapView: View {
                 return .color(Color.red)
             }
         } catch { print("cellColour: No center of hexmap") }
-        let map_coord = screenToMapCoord(cell.coordinates)
-        if let sector = game_map[map_coord] {
+        let mapCoord = screenToMapCoord(cell.coordinates)
+        if let sector = gameMap[mapCoord] {
             if sector.owned {
                 return .color(Color.mint)
             }
@@ -149,19 +146,19 @@ struct MapView: View {
     func cellColourBySector(_ cell: Cell, mapkey: MapKey)
         -> GraphicsContext.Shading
     {
-        let map_coord = screenToMapCoord(cell.coordinates)
-        if let sector = game_map[map_coord] {
+        let mapCoord = screenToMapCoord(cell.coordinates)
+        if let sector = gameMap[mapCoord] {
             if sector.desig.desig == .sea {
                 return .color(Color.blue)
             }
             do {
                 if let val = sector[mapkey] {
-                    let val_ratio = try (val.toDouble() / 100.0)
+                    let valRatio = try (val.toDouble() / 100.0)
                     return .color(
                         .sRGB,
-                        red: val_ratio,
-                        green: val_ratio,
-                        blue: val_ratio
+                        red: valRatio,
+                        green: valRatio,
+                        blue: valRatio
                     )
                 }
             } catch {
@@ -174,20 +171,20 @@ struct MapView: View {
     /// Adjust screen coordinates to map coordinates
     func screenToMapCoord(_ coord: CubeCoordinates) -> MapCoord {
         var adjusted = MapCoord(coord)
-        adjusted.x += center_coord.x
-        adjusted.y += center_coord.y
+        adjusted.x += centerCoord.x
+        adjusted.y += centerCoord.y
         return adjusted
     }
 
     func hexGesture(location: CGPoint) {
         if let cell = try? hexmap.cellAt(location.hexPoint) {
-            let new_coord = cubeToDoubleWidth(
+            let newCoord = cubeToDoubleWidth(
                 from: cell.coordinates,
                 orientation: MapConfig.orientation,
                 offsetLayout: MapConfig.offsetLayout
             )
-            center_coord.x += new_coord.x
-            center_coord.y += new_coord.y
+            centerCoord.x += newCoord.x
+            centerCoord.y += newCoord.y
         } else {
             print("no cell at \(location.hexPoint)")
         }
@@ -197,6 +194,6 @@ struct MapView: View {
 // MARK: -
 #Preview {
     @Previewable var game = Game()
-    @Previewable @State var center_coord = MapCoord(x: 0, y: 0)
-    MapView(game_map: game.game_map, center_coord: $center_coord, ships: [:])
+    @Previewable @State var centerCoord = MapCoord(x: 0, y: 0)
+    MapView(gameMap: game.gameMap, centerCoord: $centerCoord, ships: [:])
 }

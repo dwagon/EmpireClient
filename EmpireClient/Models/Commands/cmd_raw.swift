@@ -8,9 +8,9 @@
 import Foundation
 
 extension Game {
-    func cmd_raw(_ cmd_string: String) async {
-        log(cmd_string)
-        let result = await client.run_cmd(cmd_string)
+    func cmd_raw(_ cmdString: String) async {
+        log(cmdString)
+        let result = await client.run_cmd(cmdString)
         log(result)
     }
 }

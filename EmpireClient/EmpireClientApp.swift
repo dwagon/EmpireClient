@@ -13,10 +13,9 @@ struct EmpireClientApp: App {
     var game = Game()
     @Environment(\.openWindow) private var openWindow
 
-    
     var body: some Scene {
         WindowGroup {
-            ContentView(game: game, center_coord: MapCoord(x: 0, y: 0))
+            ContentView(game: game, centerCoord: MapCoord(x: 0, y: 0))
         }
         Settings {
             SettingsView()

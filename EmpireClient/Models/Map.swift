@@ -9,40 +9,40 @@ import Foundation
 
 @Observable
 class Map {
-    private var map_data: [MapCoord:Sector] = [:]
-    private var x_size: Int
-    private var y_size: Int
+    private var mapData: [MapCoord: Sector] = [:]
+    private var xSize: Int
+    private var ySize: Int
 
-    init(x_size: Int = 64, y_size: Int = 32) {
-        self.x_size = x_size
-        self.y_size = y_size
+    init(xSize: Int = 64, ySize: Int = 32) {
+        self.xSize = xSize
+        self.ySize = ySize
     }
 
     subscript(key: MapCoord) -> Sector? {
         get {
-            return map_data[key]
+            return mapData[key]
         }
         set {
-            map_data[key] = newValue
+            mapData[key] = newValue
         }
     }
 
     func exists(_ coordinates: MapCoord) -> Bool {
-        return map_data.contains { $0.key == coordinates }
+        return mapData.contains { $0.key == coordinates }
     }
 
     /// Return a list of all instances of a particular sector designation
     func instances(_ desigtype: DesigType) -> [Sector] {
         let desig = Desig(desigtype)
-        return map_data.values.filter { $0.desig == desig }
+        return mapData.values.filter { $0.desig == desig }
     }
 
     /// Check for
     func isValidCoord(_ coord: MapCoord) -> Bool {
-        if coord.x < -self.x_size || coord.y < -self.y_size {
+        if coord.x < -self.xSize || coord.y < -self.ySize {
             return false
         }
-        if coord.x > self.x_size || coord.y > self.y_size {
+        if coord.x > self.xSize || coord.y > self.ySize {
             return false
         }
         if coord.x % 2 != coord.y % 2 {

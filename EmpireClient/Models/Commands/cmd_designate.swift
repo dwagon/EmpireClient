@@ -13,10 +13,10 @@ extension Game {
         coord: MapCoord,
         designation: String
     ) async {
-        let cmd_string =
+        let cmdString =
             "designate \(coord.x),\(coord.y) \(designation)"
-        log(cmd_string)
-        let result = await client.run_cmd(cmd_string)
+        log(cmdString)
+        let result = await client.run_cmd(cmdString)
         log(result)
     }
 }

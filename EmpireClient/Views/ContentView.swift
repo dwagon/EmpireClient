@@ -8,14 +8,14 @@
 import HexGrid
 import SwiftUI
 
-enum contentType {
+enum ContentType {
     case sector
     case ship
 }
 
 struct ContentView: View {
     @State var game: Game
-    @State var center_coord: MapCoord
+    @State var centerCoord: MapCoord
     @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var isLoggedIn: Bool = false
     @FocusState private var focused: Bool
@@ -26,7 +26,7 @@ struct ContentView: View {
     @State private var showThresholdPopup: Bool = false
     @State private var showBuildPopup: Bool = false
 
-    @State private var content: contentType = .sector
+    @State private var content: ContentType = .sector
 
     var profile = loadSettings()
 
@@ -65,8 +65,8 @@ struct ContentView: View {
     var contentView: some View {
         VStack {
             MapView(
-                game_map: game.game_map,
-                center_coord: $center_coord,
+                gameMap: game.gameMap,
+                centerCoord: $centerCoord,
                 ships: game.ships
             )
         }
@@ -84,20 +84,20 @@ struct ContentView: View {
         }
         .navigationSplitViewColumnWidth(min: 400, ideal: 800)
     }
- 
+
     var sectorDetailView: some View {
         HStack {
             VStack {
-                if let sector = game[center_coord] {
+                if let sector = game[centerCoord] {
                     Text(
-                        "\(center_coord.x), \(center_coord.y): \(sector.desig.name)"
+                        "\(centerCoord.x), \(centerCoord.y): \(sector.desig.name)"
                     )
                     .font(.title)
-                    SectorView(coord: center_coord, sector: sector)
+                    SectorView(coord: centerCoord, sector: sector)
                         .focusable(true)
                         .focused($focused)
                 } else {
-                    Text("\(center_coord.x), \(center_coord.y)").font(.title)
+                    Text("\(centerCoord.x), \(centerCoord.y)").font(.title)
                 }
             }
             buttonBar
@@ -106,33 +106,33 @@ struct ContentView: View {
         .build(
             isPresented: $showBuildPopup,
             game: game,
-            center_coord: center_coord
+            center_coord: centerCoord
         )
         .explore(
             isPresented: $showExplorePopup,
             game: game,
-            center_coord: center_coord
+            center_coord: centerCoord
         )
         .designate(
             isPresented: $showDesignatePopup,
             game: game,
-            center_coord: center_coord
+            center_coord: centerCoord
         )
         .distribute(
             isPresented: $showDistributePopup,
             game: game,
-            center_coord: center_coord
+            center_coord: centerCoord
         )
         .threshold(
             isPresented: $showThresholdPopup,
             game: game,
-            center_coord: center_coord
+            center_coord: centerCoord
         )
     }
 
     var buttonBar: some View {
         VStack {
-            if let sector = game[center_coord] {
+            if let sector = game[centerCoord] {
                 if sector.owned {
                     dumpButton
                     buildButton
@@ -200,21 +200,21 @@ struct ContentView: View {
     func keyPressed(_ keys: String) -> KeyPress.Result {
         switch keys {
         case "j":
-            center_coord.x += 2
+            centerCoord.x += 2
         case "g":
-            center_coord.x -= 2
+            centerCoord.x -= 2
         case "y":
-            center_coord.x -= 1
-            center_coord.y -= 1
+            centerCoord.x -= 1
+            centerCoord.y -= 1
         case "u":
-            center_coord.x += 1
-            center_coord.y -= 1
+            centerCoord.x += 1
+            centerCoord.y -= 1
         case "b":
-            center_coord.x -= 1
-            center_coord.y += 1
+            centerCoord.x -= 1
+            centerCoord.y += 1
         case "n":
-            center_coord.x += 1
-            center_coord.y += 1
+            centerCoord.x += 1
+            centerCoord.y += 1
         default:
             return .ignored
         }
@@ -222,9 +222,8 @@ struct ContentView: View {
     }
 }
 
-
 #Preview {
     @Previewable @State var game = Game()
     let mc = MapCoord(x: 0, y: 0)
-    ContentView(game: game, center_coord: mc)
+    ContentView(game: game, centerCoord: mc)
 }

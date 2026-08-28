@@ -49,7 +49,7 @@ struct DrawHex: View {
             hexmap.origin = Point(x: size.width / 2, y: size.height / 2)
             for cell in hexmap.cells {
                 let center = hexmap.pixelCoordinates(for: cell)
-                let path = CellPath(
+                let path = cellPath(
                     cell: cell,
                     corners: hexmap.polygonCorners(for: cell)
                 )
@@ -80,17 +80,15 @@ struct DrawHex: View {
         if let cellEdgeColour {
             return cellEdgeColour(cell)
         }
-        else {
-            return .color(red: 0.65, green: 0.9, blue: 1.0)
-        }
+        return .color(red: 0.65, green: 0.9, blue: 1.0)
     }
 
-    func CellPath(cell: Cell, corners: [Point]) -> Path {
+    func cellPath(cell: Cell, corners: [Point]) -> Path {
         var path = Path()
         guard let firstPoint = corners.first?.cgPoint else { return Path() }
         path.move(to: firstPoint)
-        for i in 0..<corners.count {
-            path.addLine(to: corners[i].cgPoint)
+        for idx in 0..<corners.count {
+            path.addLine(to: corners[idx].cgPoint)
         }
         path.closeSubpath()
         return path

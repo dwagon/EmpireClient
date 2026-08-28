@@ -43,8 +43,8 @@ final class GameTests: XCTestCase {
             capStr: c_str
         )
         XCTAssertEqual(ans["fb"]!.name, "fishing test")
-        XCTAssertEqual(ans["fb"]!.lcm_cost, 25)
-        XCTAssertEqual(ans["fb"]!.hcm_cost, 15)
+        XCTAssertEqual(ans["fb"]!.lcmCost, 25)
+        XCTAssertEqual(ans["fb"]!.hcmCost, 15)
         XCTAssertEqual(ans["fb"]!.avail, 75)
         XCTAssertEqual(ans["fb"]!.tech, 0)
         XCTAssertEqual(ans["fb"]!.cost, 180)

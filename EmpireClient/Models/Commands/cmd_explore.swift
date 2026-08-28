@@ -23,10 +23,10 @@ extension Game {
             print("Invalid explore item \(item) - has to be civ or mil")
             return
         }
-        let cmd_string =
+        let cmdString =
         "explo \(itemstr) \(sector.x),\(sector.y) \(number) \(destination)h"
-        log(cmd_string)
-        let result = await client.run_cmd(cmd_string)
+        log(cmdString)
+        let result = await client.run_cmd(cmdString)
         guard result != [] else {
             log("explo returned empty")
             return

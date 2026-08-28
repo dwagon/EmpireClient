@@ -13,8 +13,8 @@ import HexGrid
 struct MapConfig {
     static let orientation = Orientation.pointyOnTop
     static let offsetLayout = OffsetLayout.odd
-    static let map_width = 32
-    static let map_height = 64
+    static let mapWidth = 32
+    static let mapHeight = 64
     static let cellSize: Double = 20
     static let hexSize = HexSize(width: cellSize, height: cellSize)
     static let mapRadius = 5

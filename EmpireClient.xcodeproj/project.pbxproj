@@ -225,6 +225,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				3820BEC6301059EB00E16EDD /* XCRemoteSwiftPackageReference "hex-grid" */,
+				38BE95AA3041135800CF61F7 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3820BE973010555200E16EDD /* Products */;
@@ -636,6 +637,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.4.11;
+			};
+		};
+		38BE95AA3041135800CF61F7 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.65.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -16,8 +16,7 @@ enum MapKeyValue: CustomStringConvertible, Equatable {
     init(_ rawValue: Substring) {
         if let isInt = Int(String(rawValue)) {
             self = .int(Int(isInt))
-        }
-        else {
+        } else {
             self = .str(String(rawValue))
         }
     }
@@ -32,10 +31,9 @@ enum MapKeyValue: CustomStringConvertible, Equatable {
     }
 
     func toInt() throws -> Int {
-        switch(self) {
-        case let .int(num):
-            return num
-        case let .str(string):
+        switch self {
+        case .int(let num): return num
+        case .str(let string):
             print("MapKeyValue not an int - \(string)")
             throw MapKeyException.invalidType
         }
