@@ -9,8 +9,9 @@ import XCTest
 
 @testable import EmpireClient
 
+@MainActor
 final class GameTests: XCTestCase {
-    func test_parse_ship_str() throws {
+    func test_parse_show_ship_str() throws {
         let b_str = [
             "Printing for tech level '0'",
             "                          lcm hcm avail tech $",
@@ -62,4 +63,23 @@ final class GameTests: XCTestCase {
         XCTAssertEqual(ans["ss"]!.name, "slave ship")
     }
 
+    func test_parse_ship_cmd() throws {
+        let g = Game()
+        let result = [
+            "shp#     ship type       x,y   fl   eff civ mil  uw  fd pn he xl ln mob tech",
+            "   0 fb   fishing boa    4,0       100%   1   2   3   4  0  0  0  0 127    0",
+            " 1 ship",
+        ]
+        g.parse_ship_cmd(result)
+
+        XCTAssertEqual(g.ships.count, 1)
+        XCTAssertTrue(g.ships.keys.contains("0"))
+        XCTAssertEqual(g.ships["0"]!.type, "fb")
+        XCTAssertEqual(g.ships["0"]!.eff, 100)
+        XCTAssertEqual(g.ships["0"]!.mob, 127)
+        XCTAssertEqual(g.ships["0"]!.tech, 0)
+        XCTAssertEqual(g.ships["0"]!.coords, MapCoord(x:4, y:0))
+        XCTAssertEqual(g.ships["0"]!.civ, 1)
+        XCTAssertEqual(g.ships["0"]!.mil, 2)
+    }
 }

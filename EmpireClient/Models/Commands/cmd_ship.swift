@@ -19,8 +19,12 @@ extension Game {
             log("ship returned empty")
             return
         }
+        parse_ship_cmd(result)
+    }
+
+    func parse_ship_cmd(_ input: [String]) {
         let coord_reg = /(-*\d+),(-*\d+)/
-        for line in result[1..<result.count - 1] {
+        for line in input[1..<input.count - 1] {
             var ship: Ship
             let bits = line.split(separator: " ")
             let bl = bits.count
