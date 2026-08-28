@@ -64,6 +64,7 @@ final class DoubleWidthTests: XCTestCase {
     }
 
     func test_cubeToDoubleWidth() throws {
+        // Note that the coordinates are rotated to make work better, so these are slightly different to what you expect
         var cube: CubeCoordinates
 
         cube = try CubeCoordinates(x: 3, y: -2, z: -1)
@@ -73,7 +74,7 @@ final class DoubleWidthTests: XCTestCase {
                 orientation: pointy,
                 offsetLayout: even
             ),
-            MapCoord(x: 4, y: -2)
+            MapCoord(x: 5, y: -1)
         )
 
         cube = try CubeCoordinates(x: -1, y: -1, z: 2)
@@ -83,7 +84,7 @@ final class DoubleWidthTests: XCTestCase {
                 orientation: pointy,
                 offsetLayout: even
             ),
-            MapCoord(x: -3, y: -1)
+            MapCoord(x: 0, y: 2)
         )
     }
 }

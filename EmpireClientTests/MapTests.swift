@@ -11,7 +11,7 @@ import XCTest
 final class MapTests: XCTestCase {
 
     func test_validCoord() throws {
-        let m = Map(x_size: 5, y_size: 5)
+        let m = Map(xSize: 5, ySize: 5)
         let good_coord = MapCoord(x: 0, y: 0)
         let bad_coord = MapCoord(x: -9, y:9)
         let ugly_coord = MapCoord(x: -3, y:2)
