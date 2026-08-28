@@ -19,7 +19,7 @@ class Game: Decodable {
     var ships: [String: Ship] = [:]
 
     init() {
-        game_map = Map(x_size: MapConfig.mapWidth, y_size: MapConfig.map_height)
+        gameMap = Map(xSize: MapConfig.mapWidth, ySize: MapConfig.mapHeight)
     }
 
     var shipTable: [Ship] {

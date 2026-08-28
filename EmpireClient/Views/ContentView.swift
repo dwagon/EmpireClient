@@ -106,27 +106,27 @@ struct ContentView: View {
         .build(
             isPresented: $showBuildPopup,
             game: game,
-            center_coord: centerCoord
+            centerCoord: centerCoord
         )
         .explore(
             isPresented: $showExplorePopup,
             game: game,
-            center_coord: centerCoord
+            centerCoord: centerCoord
         )
         .designate(
             isPresented: $showDesignatePopup,
             game: game,
-            center_coord: centerCoord
+            centerCoord: centerCoord
         )
         .distribute(
             isPresented: $showDistributePopup,
             game: game,
-            center_coord: centerCoord
+            centerCoord: centerCoord
         )
         .threshold(
             isPresented: $showThresholdPopup,
             game: game,
-            center_coord: centerCoord
+            centerCoord: centerCoord
         )
     }
 
@@ -146,15 +146,20 @@ struct ContentView: View {
     }
 
     var loginButton: some View {
-        Button("Login") {
-            Task {
-                await game.login(
-                    country: profile.country,
-                    password: profile.password
-                )
-                await game.get_data()
+        if profile.country.isEmpty || profile.password.isEmpty {
+            Button("Set Country / Password first") {}
+        }
+        else {
+            Button("Login") {
+                Task {
+                    await game.login(
+                        country: profile.country,
+                        password: profile.password
+                    )
+                    await game.get_data()
+                }
+                isLoggedIn = game.nationReport.count >= 0
             }
-            isLoggedIn = game.nationReport.count >= 0
         }
     }
 

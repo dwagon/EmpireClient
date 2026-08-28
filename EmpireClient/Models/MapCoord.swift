@@ -79,8 +79,8 @@ func cubeToDoubleWidth(
     orientation: Orientation,
     offsetLayout: OffsetLayout
 ) -> MapCoord {
-    let col: Int = 2 * from.x + from.y
-    let row: Int = from.y
+    let col: Int = 2 * from.x + from.z
+    let row: Int = from.z
     let offset = OffsetCoordinates(
         column: col,
         row: row,
