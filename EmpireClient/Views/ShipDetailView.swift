@@ -42,6 +42,7 @@ struct ShipDetailView: View {
 
             if let selectedShip {
                 let shipNum = String(selectedShip)
+                let _ = print("DBG: shipNum=\(shipNum) ships=\(game.ships)")
                 let ship = game.ships[shipNum]!
                 let st = game.shipTypes[ship.type]!
                 Divider()

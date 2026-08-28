@@ -36,6 +36,18 @@ class Map {
         let desig = Desig(desigtype)
         return map_data.values.filter { $0.desig == desig }
     }
+
+    /// Check for
+    func isValidCoord(_ coord: MapCoord) -> Bool {
+        if coord.x < -self.x_size || coord.y < -self.y_size {
+            return false
+        }
+        if coord.x > self.x_size || coord.y > self.y_size {
+            return false
+        }
+        if coord.x % 2 != coord.y % 2 {
+            return false
+        }
+        return true
+    }
 }
-
-

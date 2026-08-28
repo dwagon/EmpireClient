@@ -14,8 +14,11 @@ final class MapTests: XCTestCase {
         let m = Map(x_size: 5, y_size: 5)
         let good_coord = MapCoord(x: 0, y: 0)
         let bad_coord = MapCoord(x: -9, y:9)
-//        XCTAssertTrue(m.validCoord(good_coord))
-//        XCTAssertFalse(m.validCoord(bad_coord))
+        let ugly_coord = MapCoord(x: -3, y:2)
+
+        XCTAssertTrue(m.isValidCoord(good_coord))
+        XCTAssertFalse(m.isValidCoord(bad_coord))
+        XCTAssertFalse(m.isValidCoord(ugly_coord))
     }
 
 }

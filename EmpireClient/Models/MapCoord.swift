@@ -65,15 +65,6 @@ struct MapCoord: Hashable, Equatable, Codable {
     }
 }
 
-//func doubleWidthToCube(from: OffsetCoordinates) throws
-//    -> CubeCoordinates
-//{
-//    let q: Int = (from.column - from.row) / 2
-//    let r: Int = from.row
-//    let s: Int = -q - r
-//    return try CubeCoordinates(x: q, y: r, z: s)
-//}
-
 func doubleWidthToCube(from: MapCoord) throws
     -> CubeCoordinates
 {
@@ -88,8 +79,8 @@ func cubeToDoubleWidth(
     orientation: Orientation,
     offsetLayout: OffsetLayout
 ) -> MapCoord {
-    let col: Int = 2 * from.x + from.z
-    let row: Int = from.z
+    let col: Int = 2 * from.x + from.y
+    let row: Int = from.y
     let offset = OffsetCoordinates(
         column: col,
         row: row,
