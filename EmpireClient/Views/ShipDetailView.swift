@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ShipDetailView: View {
     @State var game: Game
-    @State private var selectedShip: Ship.ID? = nil
+    @State private var selectedShip: Ship.ID?
 
     var body: some View {
         VStack {
@@ -44,40 +44,40 @@ struct ShipDetailView: View {
                 let shipNum = String(selectedShip)
                 let _ = print("DBG: shipNum=\(shipNum) ships=\(game.ships)")
                 let ship = game.ships[shipNum]!
-                let st = game.shipTypes[ship.type]!
+                let shipType = game.shipTypes[ship.type]!
                 Divider()
                 VStack(alignment: .leading) {
                     HStack {
                         Text("Ship \(selectedShip)")
-                        Text("\(st.name.capitalized)").bold()
-                        Text("'\(st.abbrev)'")
+                        Text("\(shipType.name.capitalized)").bold()
+                        Text("'\(shipType.abbrev)'")
                     }
                     HStack {
-                        Text("Defense: \(st.defence)")
-                        Text("Speed: \(st.speed)")
+                        Text("Defense: \(shipType.defence)")
+                        Text("Speed: \(shipType.speed)")
                     }
                     HStack {
-                        Text("Visibility: \(st.visible)")
-                        Text("Spy: \(st.spy)")
+                        Text("Visibility: \(shipType.visible)")
+                        Text("Spy: \(shipType.spy)")
                     }
                     HStack {
-                        Text("Fire: \(st.fire)")
-                        Text("Range: \(st.range)")
+                        Text("Fire: \(shipType.fire)")
+                        Text("Range: \(shipType.range)")
                     }
                     HStack {
                         Text("Civ: \(ship.civ)")
                         Text("Mil: \(ship.mil)")
                         Text("UW: \(ship.uw)")
-                        Text("Cargo: \(st.cargo)")
+                        Text("Cargo: \(shipType.cargo)")
                     }
                     HStack {
-                        Text("Land Units: \(ship.landUnits) / \(st.landUnits)")
+                        Text("Land Units: \(ship.landUnits) / \(shipType.landUnits)")
                     }
                     HStack {
-                        Text("Helicopters: \(ship.heli) / \(st.helicopters)")
-                        Text("Light Planes: \(ship.planes) / \(st.planes)")
+                        Text("Helicopters: \(ship.heli) / \(shipType.helicopters)")
+                        Text("Light Planes: \(ship.planes) / \(shipType.planes)")
                         Text(
-                            "Extra Light Planes: \(ship.xlPlanes) / \(st.lightPlanes)"
+                            "Extra Light Planes: \(ship.xlPlanes) / \(shipType.lightPlanes)"
                         )
                     }
                 }

@@ -9,16 +9,16 @@ import SwiftUI
 
 struct RawCmdView: View {
     var game: Game
-    @State var cmd_string: String = ""
+    @State var cmdString: String = ""
 
     var body: some View {
-        TextField("Command", text: $cmd_string)
+        TextField("Command", text: $cmdString)
             .disableAutocorrection(true)
             .font(.system(.body, design: .monospaced))
             .frame(maxWidth: 8*80)
             .onSubmit {
                 Task {
-                    await game.cmd_raw(cmd_string)
+                    await game.cmd_raw(cmdString)
                 }
             }
     }

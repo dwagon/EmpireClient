@@ -8,7 +8,7 @@
 
 import Foundation
 
-//prod #
+// prod #
 // Sun Aug 23 09:44:50 2026
 // PRODUCTION SIMULATION
 //    sect  des eff avail  make p.e. cost   use1 use2 use3  max1 max2 max3   max

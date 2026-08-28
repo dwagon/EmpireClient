@@ -26,7 +26,7 @@ enum MapKey: String {
     case food
     case shell
     case gun
-    case pet
+    case petrol
     case iron
     case dust
     case bar
@@ -34,55 +34,55 @@ enum MapKey: String {
     case lcm
     case hcm
     case rad
-    case u_del
-    case f_del
-    case s_del
-    case g_del
-    case p_del
-    case i_del
-    case d_del
-    case b_del
-    case o_del
-    case l_del
-    case h_del
-    case r_del
-    case u_cut
-    case f_cut
-    case s_cut
-    case g_cut
-    case p_cut
-    case i_cut
-    case d_cut
-    case b_cut
-    case o_cut
-    case l_cut
-    case h_cut
-    case r_cut
-    case dist_x
-    case dist_y
-    case c_dist
-    case m_dist
-    case u_dist
-    case f_dist
-    case s_dist
-    case g_dist
-    case p_dist
-    case i_dist
-    case d_dist
-    case b_dist
-    case o_dist
-    case l_dist
-    case h_dist
-    case r_dist
+    case uwDeliver
+    case foodDeliver
+    case shellDeliver
+    case gunDeliver
+    case petrolDeliver
+    case ironDeliver
+    case dustDeliver
+    case barDeliver
+    case oilDeliver
+    case lcmDeliver
+    case hcmDeliver
+    case radDeliver
+    case uranCutoff
+    case foodCutoff
+    case shellCutoff
+    case gunCutoff
+    case petrolCutoff
+    case ironCutoff
+    case dustCutoff
+    case barCutoff
+    case oilCutoff
+    case lcmCutoff
+    case hcmCutoff
+    case radCutoff
+    case distX
+    case distY
+    case civDist
+    case milDist
+    case uwDist
+    case foodDist
+    case shellDist
+    case gunDist
+    case petrolDist
+    case ironDist
+    case dustDist
+    case barDist
+    case oilDist
+    case lcmDist
+    case hcmDist
+    case radDist
     case road
     case rail
     case defence
     case fallout
     case coast
-    case c_del
-    case m_del
-    case c_cut
-    case m_cut
+    case civDeliver
+    case milDeliver
+    case civCutoff
+    case milCutoff
     case terr1
     case terr2
     case terr3

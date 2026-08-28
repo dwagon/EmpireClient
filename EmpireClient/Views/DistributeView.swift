@@ -14,16 +14,16 @@ enum DistributeOption {
     case ignore
 }
 
-struct View_Distribute: ViewModifier {
+struct ViewDistribute: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
-    var center_coord: MapCoord
+    var centerCoord: MapCoord
     @State var option: DistributeOption = .ignore
-    @State var destination: MapCoord? = nil
+    @State var destination: MapCoord?
     @State var isEverywhere: Bool = true
 
     func body(content: Content) -> some View {
-        let sectors = game.game_map.instances(.warehouse)
+        let sectors = game.gameMap.instances(.warehouse)
 
         return
             content
@@ -40,7 +40,7 @@ struct View_Distribute: ViewModifier {
                             )
                         } else {
                             await game.cmd_distribute(
-                                source: center_coord,
+                                source: centerCoord,
                                 destination: destination!
                             )
                         }
@@ -49,7 +49,7 @@ struct View_Distribute: ViewModifier {
                 case .unset:
                     Task {
                         await game.cmd_distribute(
-                            source: center_coord,
+                            source: centerCoord,
                             destination: "."
                         )
                         await game.cmd_dump()
@@ -59,7 +59,7 @@ struct View_Distribute: ViewModifier {
                 }
             } content: {
                 DistributeView(
-                    coord: center_coord,
+                    coord: centerCoord,
                     sectors: sectors,
                     option: $option,
                     destination: $destination,
@@ -74,13 +74,13 @@ extension View {
     func distribute(
         isPresented: Binding<Bool>,
         game: Game,
-        center_coord: MapCoord
+        centerCoord: MapCoord
     ) -> some View {
         modifier(
-            View_Distribute(
+            ViewDistribute(
                 isPresented: isPresented,
                 game: game,
-                center_coord: center_coord
+                centerCoord: centerCoord
             )
         )
     }
@@ -160,11 +160,11 @@ struct DistributeView: View {
 #Preview {
     @Previewable var sectors = [
         Sector(coords: MapCoord(x: 1, y: 1)),
-        Sector(coords: MapCoord(x: -1, y: -1)),
+        Sector(coords: MapCoord(x: -1, y: -1))
     ]
     @Previewable var coord = MapCoord(x: 0, y: 0)
     @Previewable @State var option = DistributeOption.ignore
-    @Previewable @State var destination: MapCoord? = nil
+    @Previewable @State var destination: MapCoord?
     @Previewable @State var isEverywhere: Bool = true
 
     DistributeView(

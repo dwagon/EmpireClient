@@ -10,7 +10,7 @@ import SwiftUI
 struct ShipTypeReport: View {
     let shipTypes: [String: ShipType]
     @Environment(\.dismiss) private var dismiss
-    @State private var selectedShip: ShipType.ID? = nil
+    @State private var selectedShip: ShipType.ID?
 
     var body: some View {
         VStack {
@@ -26,7 +26,7 @@ struct ShipTypeReport: View {
             .border(.blue)
             if let selectedShip {
                 Spacer()
-                shipTypeView(shipType: shipTypes[selectedShip]!)
+                ShipTypeView(shipType: shipTypes[selectedShip]!)
                     .border(.blue)
             }
             HStack {
@@ -37,7 +37,7 @@ struct ShipTypeReport: View {
         }
     }
 
-    struct shipTypeView: View {
+    struct ShipTypeView: View {
         let shipType: ShipType
 
         var body: some View {
@@ -50,11 +50,11 @@ struct ShipTypeReport: View {
                     }
                     GridRow {
                         Text("LCM")
-                        Text("\(shipType.lcm_cost)")
+                        Text("\(shipType.lcmCost)")
                     }
                     GridRow {
                         Text("HCM")
-                        Text("\(shipType.hcm_cost)")
+                        Text("\(shipType.hcmCost)")
                     }
                     GridRow {
                         Text("Work")

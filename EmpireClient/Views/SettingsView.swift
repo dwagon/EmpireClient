@@ -43,10 +43,10 @@ struct ThresholdSettings: View {
     @State var populationThresholdCollapse: Bool = true
     @State var resourceThresholdCollapse: Bool = false
     @State var militaryThresholdCollapse: Bool = false
-    
+
     var body: some View {
         Section(isExpanded: $populationThresholdCollapse) {
-            PopulationThresholdSettings
+            populationThresholdSettings
         } header: {
             HStack {
                 Text("Population Thresholds")
@@ -55,7 +55,7 @@ struct ThresholdSettings: View {
             }
         }
         Section(isExpanded: $resourceThresholdCollapse) {
-            ResourceThresholdSettings
+            resourceThresholdSettings
         } header: {
             HStack {
                 Text("Resource Thresholds")
@@ -64,7 +64,7 @@ struct ThresholdSettings: View {
             }
         }
         Section(isExpanded: $militaryThresholdCollapse) {
-            MilitaryThresholdSettings
+            militaryThresholdSettings
         } header: {
             HStack {
                 Text("Military Thresholds")
@@ -74,7 +74,7 @@ struct ThresholdSettings: View {
         }
     }
 
-    var PopulationThresholdSettings: some View {
+    var populationThresholdSettings: some View {
         Table(profile.thresholds) {
             TableColumn("Sector") { threshold in
                 Text("\(Desig(threshold.desig).name)")
@@ -91,7 +91,7 @@ struct ThresholdSettings: View {
         }.tableStyle(.bordered)
     }
 
-    var ResourceThresholdSettings: some View {
+    var resourceThresholdSettings: some View {
         Table(profile.thresholds) {
             TableColumn("Sector") { threshold in
                 Text("\(Desig(threshold.desig).name)")
@@ -123,7 +123,7 @@ struct ThresholdSettings: View {
         }.tableStyle(.bordered)
     }
 
-    var MilitaryThresholdSettings: some View {
+    var militaryThresholdSettings: some View {
         Table(profile.thresholds) {
             TableColumn("Sector") { threshold in
                 Text("\(Desig(threshold.desig).name)")

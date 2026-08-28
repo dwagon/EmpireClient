@@ -21,7 +21,7 @@ struct DesignateView: View {
             ).font(.title)
             HStack {
                 naturalResourceSection
-                DesignateDetails.padding()
+                designateDetails.padding()
                 Spacer()
             }
             HStack {
@@ -58,7 +58,7 @@ struct DesignateView: View {
         }
     }
 
-    var DesignateDetails: some View {
+    var designateDetails: some View {
         return VStack {
             Picker(
                 "Select",
@@ -79,10 +79,10 @@ struct DesignateView: View {
 
 }
 
-struct View_Designate: ViewModifier {
+struct ViewDesignate: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
-    var center_coord: MapCoord
+    var centerCoord: MapCoord
     @State private var designation: String = ""
 
     func body(content: Content) -> some View {
@@ -94,14 +94,14 @@ struct View_Designate: ViewModifier {
                 if designation != "" {
                     Task {
                         await game.cmd_designate(
-                            coord: center_coord,
+                            coord: centerCoord,
                             designation: designation
                         )
                         await game.cmd_dump()
                     }
                 }
             } content: {
-                if let sector = game[center_coord] {
+                if let sector = game[centerCoord] {
                     DesignateView(sector: sector, designation: $designation)
                 }
             }
@@ -112,13 +112,13 @@ extension View {
     func designate(
         isPresented: Binding<Bool>,
         game: Game,
-        center_coord: MapCoord
+        centerCoord: MapCoord
     ) -> some View {
         modifier(
-            View_Designate(
+            ViewDesignate(
                 isPresented: isPresented,
                 game: game,
-                center_coord: center_coord
+                centerCoord: centerCoord
             )
         )
     }

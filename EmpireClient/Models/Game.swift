@@ -10,7 +10,7 @@ import Foundation
 // MARK: -
 @Observable
 class Game: Decodable {
-    var game_map: Map
+    var gameMap: Map
     var client = TCPClient()
     var nationReport: [String] = []
     var budgetReport: [String] = []
@@ -19,7 +19,7 @@ class Game: Decodable {
     var ships: [String: Ship] = [:]
 
     init() {
-        game_map = Map(x_size: MapConfig.map_width, y_size: MapConfig.map_height)
+        game_map = Map(x_size: MapConfig.mapWidth, y_size: MapConfig.map_height)
     }
 
     var shipTable: [Ship] {
@@ -29,10 +29,10 @@ class Game: Decodable {
     subscript(key: MapCoord) -> Sector?
     {
         get {
-            return game_map[key]
+            return gameMap[key]
         }
         set {
-            game_map[key] = newValue
+            gameMap[key] = newValue
         }
     }
 
@@ -52,7 +52,6 @@ class Game: Decodable {
             log(line)
         }
     }
-
 
     // MARK: -
     func login(country: String, password: String) async {
@@ -87,7 +86,7 @@ class Game: Decodable {
 
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        game_map = Map()
+        gameMap = Map()
         client = TCPClient()
         nationReport = try values.decode([String].self, forKey: .nationReport)
         budgetReport = try values.decode([String].self, forKey: .budgetReport)

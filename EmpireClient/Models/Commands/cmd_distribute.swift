@@ -13,10 +13,10 @@ extension Game {
         source: MapCoord,
         destination: MapCoord
     ) async {
-        let cmd_string =
+        let cmdString =
             "distribute \(source.toString()) \(destination.toString())"
-        log(cmd_string)
-        let result = await client.run_cmd(cmd_string)
+        log(cmdString)
+        let result = await client.run_cmd(cmdString)
         log(result)
     }
 
@@ -25,9 +25,9 @@ extension Game {
         source: MapCoord,
         destination: String
     ) async {
-        let cmd_string = "distribute \(source.toString()) \(destination)"
-        log(cmd_string)
-        let result = await client.run_cmd(cmd_string)
+        let cmdString = "distribute \(source.toString()) \(destination)"
+        log(cmdString)
+        let result = await client.run_cmd(cmdString)
         log(result)
     }
 
@@ -35,9 +35,9 @@ extension Game {
     func cmd_distribute(
         destination: MapCoord
     ) async {
-        let cmd_string = "distribute # \(destination.toString())"
-        log(cmd_string)
-        let result = await client.run_cmd(cmd_string)
+        let cmdString = "distribute # \(destination.toString())"
+        log(cmdString)
+        let result = await client.run_cmd(cmdString)
         log(result)
     }
 }

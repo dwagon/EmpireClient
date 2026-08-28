@@ -46,10 +46,10 @@ class TCPClient {
     }
 
     func run_cmd(_ cmd: String) async -> [String] {
-        let cmd_str = cmd.addingPercentEncoding(
+        let cmdStr = cmd.addingPercentEncoding(
             withAllowedCharacters: .urlHostAllowed
         )
-        let url = URL(string: "http://127.0.0.1:6666/cmd/\(cmd_str!)")!
+        let url = URL(string: "http://127.0.0.1:6666/cmd/\(cmdStr!)")!
         let task = Task {
             do {
                 let data = try await fetchData(from: url)
@@ -67,20 +67,20 @@ class TCPClient {
 }
 
 // MARK: -
-enum EmpCommsProtocol: String {
-    case C_CMDOK = "0"
-    case C_DATA = "1"
-    case C_INIT = "2"
-    case C_EXIT = "3"
-    case C_FLUSH = "4"
-    case C_NOECHO = "5"
-    case C_PROMPT = "6"
-    case C_ABORT = "7"
-    case C_REDIR = "8"
-    case C_PIPE = "9"
-    case C_CMDERR = "A"
-    case C_BADCMD = "B"
-    case C_EXECUTE = "C"
-    case C_FLASH = "D"
-    case C_LAST = "E"
-}
+// enum EmpCommsProtocol: String {
+//    case C_CMDOK = "0"
+//    case C_DATA = "1"
+//    case C_INIT = "2"
+//    case C_EXIT = "3"
+//    case C_FLUSH = "4"
+//    case C_NOECHO = "5"
+//    case C_PROMPT = "6"
+//    case C_ABORT = "7"
+//    case C_REDIR = "8"
+//    case C_PIPE = "9"
+//    case C_CMDERR = "A"
+//    case C_BADCMD = "B"
+//    case C_EXECUTE = "C"
+//    case C_FLASH = "D"
+//    case C_LAST = "E"
+// }

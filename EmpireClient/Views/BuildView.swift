@@ -23,9 +23,9 @@ struct BuildView: View {
             ).font(.title)
             HStack {
                 switch buildType {
-                case .ship: BuildShipDetails
-                case .plane: BuildPlaneDetails
-                case .land: BuildLandUnitDetails
+                case .ship: buildShipDetails
+                case .plane: buildPlaneDetails
+                case .land: buildLandUnitDetails
                 default:
                     Text("Unknown \(buildType.name)")
                 }
@@ -45,7 +45,7 @@ struct BuildView: View {
         }
     }
 
-    var BuildShipDetails: some View {
+    var buildShipDetails: some View {
         return VStack {
             Group {
                 Grid(alignment: .leading) {
@@ -65,13 +65,13 @@ struct BuildView: View {
                     }
                     GridRow {
                         Text("Requirement")
-                        let lcm_cost = game.shipTypes[deviceType] != nil ? game.shipTypes[deviceType]!.lcm_cost * number : 0
-                        let hcm_cost = game.shipTypes[deviceType] != nil ? game.shipTypes[deviceType]!.hcm_cost * number : 0
+                        let lcmCost = game.shipTypes[deviceType] != nil ? game.shipTypes[deviceType]!.lcmCost * number : 0
+                        let hcmCost = game.shipTypes[deviceType] != nil ? game.shipTypes[deviceType]!.hcmCost * number : 0
                         let avail = game.shipTypes[deviceType] != nil ? game.shipTypes[deviceType]!.avail * number : 0
                         let cost = game.shipTypes[deviceType] != nil ? game.shipTypes[deviceType]!.cost * number : 0
 
-                        Text("\(lcm_cost)")
-                        Text("\(hcm_cost)")
+                        Text("\(lcmCost)")
+                        Text("\(hcmCost)")
                         Text("\(avail)")
                         Text("$\(cost)")
                     }
@@ -96,13 +96,13 @@ struct BuildView: View {
         }
     }
 
-    var BuildPlaneDetails: some View {
+    var buildPlaneDetails: some View {
         return VStack {
             Text("Unimplemented Plane")
         }
     }
 
-    var BuildLandUnitDetails: some View {
+    var buildLandUnitDetails: some View {
         return VStack {
             Text("Unimplemented Landunit")
         }
@@ -110,7 +110,7 @@ struct BuildView: View {
 
 }
 
-struct View_Build: ViewModifier {
+struct ViewBuild: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
     var coord: MapCoord
@@ -185,19 +185,19 @@ extension View {
     func build(
         isPresented: Binding<Bool>,
         game: Game,
-        center_coord: MapCoord
+        centerCoord: MapCoord
     ) -> some View {
         modifier(
-            View_Build(
+            ViewBuild(
                 isPresented: isPresented,
                 game: game,
-                coord: center_coord
+                coord: centerCoord
             )
         )
     }
 }
 
-//#Preview("Ship") {
+// #Preview("Ship") {
 //
 //    @Previewable @State var deviceType: String = ""
 //    @Previewable @State var number: Int = 1
@@ -210,4 +210,4 @@ extension View {
 //        deviceType: $deviceType,
 //        number: $number
 //    )
-//}
+// }

@@ -37,7 +37,7 @@ func loadSettings() -> UserProfile {
         return decoded
     }
 
-    return default_user_profile
+    return defaultUserProfile
 }
 
 func saveSettings(profile: UserProfile) {
@@ -46,13 +46,13 @@ func saveSettings(profile: UserProfile) {
     }
 }
 
-var default_user_profile = UserProfile(
+var defaultUserProfile = UserProfile(
     country: "",
     password: "",
-    thresholds: default_thresholds
+    thresholds: defaultThresholds
 )
 
-private var default_thresholds: [DefaultThreshold] = [
+private var defaultThresholds: [DefaultThreshold] = [
     DefaultThreshold(
         desig: .unknown,
         item: [.civ: 500, .uw: 100, .food: 100]
@@ -62,11 +62,11 @@ private var default_thresholds: [DefaultThreshold] = [
         item: [.civ: 500, .uw: 100, .food: 100, .ironOre: 0]
     ),
     DefaultThreshold(
-        desig: .light_manufacturing,
+        desig: .lightManufacturing,
         item: [.civ: 500, .uw: 100, .food: 100, .ironOre: 500]
     ),
     DefaultThreshold(
-        desig: .heavy_manufacturing,
+        desig: .heavyManufacturing,
         item: [.civ: 500, .uw: 100, .food: 100, .ironOre: 500]
     ),
     DefaultThreshold(
@@ -80,5 +80,5 @@ private var default_thresholds: [DefaultThreshold] = [
     DefaultThreshold(
         desig: .library,
         item: [.civ: 500, .uw: 100, .food: 100, .lcm: 500, .hcm: 500]
-    ),
+    )
 ]
