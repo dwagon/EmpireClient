@@ -63,7 +63,7 @@ struct ThresholdView: View {
     }
 }
 
-struct ViewThreshold: ViewModifier {
+struct ThresholdSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
     var centerCoord: MapCoord
@@ -113,7 +113,7 @@ extension View {
         centerCoord: MapCoord
     ) -> some View {
         modifier(
-            ViewThreshold(
+            ThresholdSheet(
                 isPresented: isPresented,
                 game: game,
                 centerCoord: centerCoord

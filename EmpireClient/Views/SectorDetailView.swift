@@ -78,7 +78,6 @@ struct SectorDetailView: View {
         }
     }
 
-
     var dumpButton: some View {
         return
             Button("Refresh") {

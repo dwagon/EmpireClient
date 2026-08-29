@@ -14,7 +14,7 @@ enum DistributeOption {
     case ignore
 }
 
-struct ViewDistribute: ViewModifier {
+struct DistributeSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
     var centerCoord: MapCoord
@@ -77,7 +77,7 @@ extension View {
         centerCoord: MapCoord
     ) -> some View {
         modifier(
-            ViewDistribute(
+            DistributeSheet(
                 isPresented: isPresented,
                 game: game,
                 centerCoord: centerCoord
