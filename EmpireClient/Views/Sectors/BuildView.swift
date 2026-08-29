@@ -47,34 +47,40 @@ struct BuildView: View {
 
     var buildShipDetails: some View {
         return VStack {
-            Group {
-                Grid(alignment: .leading) {
-                    GridRow {
-                        Text("")
-                        Text("LCM")
-                        Text("HCM")
-                        Text("Avail")
-                        Text("Cost")
-                    }
-                    GridRow {
-                        Text("Available")
-                        Text("\(game[coord]![.lcm], default: "?")")
-                        Text("\(game[coord]![.hcm], default: "?")")
-                        Text("\(game[coord]![.avail], default: "?")")
-                        Text("TODO")
-                    }
-                    GridRow {
-                        Text("Requirement")
-                        let lcmCost = game.shipTypes[deviceType] != nil ? game.shipTypes[deviceType]!.lcmCost * number : 0
-                        let hcmCost = game.shipTypes[deviceType] != nil ? game.shipTypes[deviceType]!.hcmCost * number : 0
-                        let avail = game.shipTypes[deviceType] != nil ? game.shipTypes[deviceType]!.avail * number : 0
-                        let cost = game.shipTypes[deviceType] != nil ? game.shipTypes[deviceType]!.cost * number : 0
 
-                        Text("\(lcmCost)")
-                        Text("\(hcmCost)")
-                        Text("\(avail)")
-                        Text("$\(cost)")
-                    }
+            Grid(alignment: .leading) {
+                GridRow {
+                    Text("")
+                    Text("LCM")
+                    Text("HCM")
+                    Text("Avail")
+                    Text("Cost")
+                }
+                GridRow {
+                    Text("Available")
+                    Text("\(game[coord]![.lcm], default: "?")")
+                    Text("\(game[coord]![.hcm], default: "?")")
+                    Text("\(game[coord]![.avail], default: "?")")
+                    Text("TODO")
+                }
+                GridRow {
+                    Text("Requirement")
+                    let lcmCost =
+                        game.shipTypes[deviceType] != nil
+                        ? game.shipTypes[deviceType]!.lcmCost * number : 0
+                    let hcmCost =
+                        game.shipTypes[deviceType] != nil
+                        ? game.shipTypes[deviceType]!.hcmCost * number : 0
+                    let avail =
+                        game.shipTypes[deviceType] != nil
+                        ? game.shipTypes[deviceType]!.avail * number : 0
+                    let cost =
+                        game.shipTypes[deviceType] != nil
+                        ? game.shipTypes[deviceType]!.cost * number : 0
+                    Text("\(lcmCost)")
+                    Text("\(hcmCost)")
+                    Text("\(avail)")
+                    Text("$\(cost)")
                 }
             }
             HStack {

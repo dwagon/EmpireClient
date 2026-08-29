@@ -5,13 +5,12 @@
 //  Created by Dougal Scott on 29/8/2026.
 //
 
-
 import SwiftUI
 
 struct ItemPicker: View {
     var label: String
     @Binding var item: Item
-    
+
     var body: some View {
         Picker(
             label,

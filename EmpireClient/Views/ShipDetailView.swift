@@ -13,7 +13,6 @@ struct ShipDetailView: View {
 
     @State private var showLoadPopup: Bool = false
 
-
     var body: some View {
         HStack {
             VStack {

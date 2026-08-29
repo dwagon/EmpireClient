@@ -20,7 +20,6 @@ struct ContentView: View {
     @State private var isLoggedIn: Bool = false
     @FocusState private var focused: Bool
 
-
     @State private var content: ContentType = .sector
 
     var profile = loadSettings()
@@ -80,7 +79,6 @@ struct ContentView: View {
         .navigationSplitViewColumnWidth(min: 400, ideal: 800)
     }
 
-
     var loginButton: some View {
         if profile.country.isEmpty || profile.password.isEmpty {
             Button("Set Country / Password first") {}
@@ -98,8 +96,6 @@ struct ContentView: View {
             }
         }
     }
-
-
 
     func keyPressed(_ keys: String) -> KeyPress.Result {
         switch keys {
