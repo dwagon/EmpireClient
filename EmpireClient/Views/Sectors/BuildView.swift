@@ -116,7 +116,7 @@ struct BuildView: View {
 
 }
 
-struct ViewBuild: ViewModifier {
+struct BuildSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
     var coord: MapCoord
@@ -194,7 +194,7 @@ extension View {
         centerCoord: MapCoord
     ) -> some View {
         modifier(
-            ViewBuild(
+            BuildSheet(
                 isPresented: isPresented,
                 game: game,
                 coord: centerCoord

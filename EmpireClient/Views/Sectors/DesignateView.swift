@@ -79,7 +79,7 @@ struct DesignateView: View {
 
 }
 
-struct ViewDesignate: ViewModifier {
+struct DesignateSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
     var centerCoord: MapCoord
@@ -115,7 +115,7 @@ extension View {
         centerCoord: MapCoord
     ) -> some View {
         modifier(
-            ViewDesignate(
+            DesignateSheet(
                 isPresented: isPresented,
                 game: game,
                 centerCoord: centerCoord

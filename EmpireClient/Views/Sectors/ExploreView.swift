@@ -115,7 +115,7 @@ struct ExploreView: View {
     }
 }
 
-struct ViewExplore: ViewModifier {
+struct ExploreSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
     var centerCoord: MapCoord
@@ -162,7 +162,7 @@ extension View {
         centerCoord: MapCoord
     ) -> some View {
         modifier(
-            ViewExplore(
+            ExploreSheet(
                 isPresented: isPresented,
                 game: game,
                 centerCoord: centerCoord
