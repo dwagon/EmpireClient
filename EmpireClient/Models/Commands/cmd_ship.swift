@@ -34,6 +34,7 @@ extension Game {
             } else {
                 ship = ships[shipNum]!
             }
+            ship.number = shipNum
             ship.tech = Int(bits[lastBit - 1])!
             ship.mob = Int(bits[lastBit - 2])!
             ship.landUnits = Int(bits[lastBit - 3])!
