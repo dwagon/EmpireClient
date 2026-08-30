@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ShipDetailView: View {
     @State var game: Game
+    @Binding var centerCoord: MapCoord
     @State private var selectedShip: Ship.ID?
 
     @State private var showLoadPopup: Bool = false
@@ -41,6 +42,9 @@ struct ShipDetailView: View {
                         ideal: 30,
                         max: 60
                     )
+                }
+                .onChange(of: selectedShip) {
+                    centerCoord = game.ships[selectedShip!]!.coords
                 }
 
                 if selectedShip != nil {
@@ -115,6 +119,7 @@ struct ShipDetailView: View {
     @Previewable @State var game = DataLoader.loadSampleGame(
         name: "Game_ShipView"
     )
-    ShipDetailView(game: game)
+    @Previewable @State var centerCoord = MapCoord(x: 0, y: 0)
+    ShipDetailView(game: game, centerCoord: $centerCoord)
 
 }

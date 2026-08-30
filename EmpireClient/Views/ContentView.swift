@@ -38,7 +38,7 @@ struct ContentView: View {
                 loginButton
                 Spacer()
             } else {
-                contentView
+                displayMapView
             }
         } detail: {
             Spacer()
@@ -56,24 +56,22 @@ struct ContentView: View {
         }
     }
 
-    var contentView: some View {
-        VStack {
-            MapView(
-                gameMap: game.gameMap,
-                centerCoord: $centerCoord,
-                ships: game.ships
-            )
-        }
+    var displayMapView: some View {
+        MapView(
+            gameMap: game.gameMap,
+            centerCoord: $centerCoord,
+            ships: game.ships
+        )
         .navigationSplitViewColumnWidth(min: 300, ideal: 400)
     }
 
     var detailView: some View {
-        VStack {
+        Group {
             switch content {
             case .sector:
                 SectorDetailView(game: game, centerCoord: centerCoord)
             case .ship:
-                ShipDetailView(game: game)
+                ShipDetailView(game: game, centerCoord: $centerCoord)
             }
         }
         .navigationSplitViewColumnWidth(min: 400, ideal: 800)
@@ -82,8 +80,7 @@ struct ContentView: View {
     var loginButton: some View {
         if profile.country.isEmpty || profile.password.isEmpty {
             Button("Set Country / Password first") {}
-        }
-        else {
+        } else {
             Button("Login") {
                 Task {
                     await game.login(
