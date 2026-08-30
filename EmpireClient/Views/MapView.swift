@@ -90,7 +90,7 @@ struct MapView: View {
             return defaultColour
         case .ship:
             for (_, ship) in ships
-            where ship.coords == MapCoord(cell.coordinates) {
+            where ship.coords == screenToMapCoord(cell.coordinates) {
                 return foundColour
             }
             return defaultColour
