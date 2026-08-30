@@ -45,7 +45,6 @@ struct MapView: View {
                 hexmap: hexmap,
                 cellText: cellText,
                 cellFillColour: cellColour,
-                cellEdgeColour: edgeColour,
                 hexGesture: hexGesture
             )
             Picker("", selection: $displayUnitMapStyle) {
@@ -74,34 +73,23 @@ struct MapView: View {
         }
     }
 
-    func edgeColour(_ cell: Cell) -> GraphicsContext.Shading {
-        let defaultColour: GraphicsContext.Shading = .color(
-            red: 0.65,
-            green: 0.9,
-            blue: 1.0
-        )
-        let foundColour: GraphicsContext.Shading = .color(
-            red: 1.0,
-            green: 0.1,
-            blue: 0.1
-        )
+    func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
+        let foundColour: GraphicsContext.Shading = .color(.red)
         switch displayUnitMapStyle {
         case .none:
-            return defaultColour
+            break
         case .ship:
             for (_, ship) in ships
-            where ship.coords == MapCoord(cell.coordinates) {
+            where ship.coords == screenToMapCoord(cell.coordinates) {
                 return foundColour
             }
-            return defaultColour
         case .plane:
-            return defaultColour
+            // TODO
+            break
         case .land:
-            return defaultColour
+            // TODO
+            break
         }
-    }
-
-    func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
         switch displayResourceMapStyle {
         case .normal:
             return cellColourNormal(cell)
@@ -121,7 +109,7 @@ struct MapView: View {
     func cellColourNormal(_ cell: Cell) -> GraphicsContext.Shading {
         do {
             if cell == hexmap.cellAt(try CubeCoordinates(x: 0, y: 0, z: 0))! {
-                return .color(Color.red)
+                return .color(Color.orange)
             }
         } catch { print("cellColour: No center of hexmap") }
         let mapCoord = screenToMapCoord(cell.coordinates)
