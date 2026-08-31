@@ -52,9 +52,7 @@ struct AssaultShipView: View {
     func hexGesture(location: CGPoint) {
         if let cell = try? hexmap.cellAt(location.hexPoint) {
             destination = cubeToDoubleWidth(
-                from: cell.coordinates,
-                orientation: MapConfig.orientation,
-                offsetLayout: MapConfig.offsetLayout
+                from: cell.coordinates
             )
             destination.x += shipLocation.x
             destination.y += shipLocation.y

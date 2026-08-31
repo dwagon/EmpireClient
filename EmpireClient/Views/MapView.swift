@@ -178,9 +178,7 @@ struct MapView: View {
     func hexGesture(location: CGPoint) {
         if let cell = try? hexmap.cellAt(location.hexPoint) {
             let newCoord = cubeToDoubleWidth(
-                from: cell.coordinates,
-                orientation: MapConfig.orientation,
-                offsetLayout: MapConfig.offsetLayout
+                from: cell.coordinates
             )
             centerCoord.x += newCoord.x
             centerCoord.y += newCoord.y
