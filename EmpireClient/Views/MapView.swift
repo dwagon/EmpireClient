@@ -120,31 +120,7 @@ struct MapView: View {
     }
 
     func cellColourNormal(_ cell: Cell) -> GraphicsContext.Shading {
-        do {
-            if cell == hexmap.cellAt(try CubeCoordinates(x: 0, y: 0, z: 0))! {
-                return .color(Color.orange)
-            }
-        } catch { print("cellColour: No center of hexmap") }
-        let mapCoord = screenToMapCoord(
-            cell.coordinates,
-            centerCoord: centerCoord
-        )
-        if let sector = gameMap[mapCoord] {
-            if sector.owned {
-                return .color(Color.mint)
-            }
-            switch sector.desig.desig {
-            case .sea:
-                return .color(Color.blue)
-            case .wilderness:
-                return .color(Color.green)
-            case .mountain:
-                return .color(Color.gray)
-            default:
-                return .color(Color.clear)
-            }
-        }
-        return .color(Color.clear)
+        return mapCellColour(cell: cell, gameMap: gameMap, hexmap: hexmap, center: centerCoord)
     }
 
     func cellColourBySector(_ cell: Cell, mapkey: MapKey)

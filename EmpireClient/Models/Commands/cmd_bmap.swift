@@ -24,13 +24,9 @@ import Foundation
 
 extension Game {
     func cmd_bmap() async {
-        let result = await client.run_cmd("bmap #")
+        let result = await client.run_cmd("map *")
         guard result != [] else {
-            print("bmap returned empty")
-            return
-        }
-        if result.contains("\"bmap\" is not a legal command") {
-            log("Need to break sanctuary before running bmap")
+            print("map returned empty")
             return
         }
 
@@ -95,7 +91,7 @@ func get_lower_x(_ msg: [String]) -> Int {
     units = Int(String(secondLine[secondLine.startIndex]))!
 
     lowerX = tens * 10 + units
-    if firstChar == "-" {
+    if firstLine.contains("-") {
         lowerX = -lowerX
     }
     return lowerX
