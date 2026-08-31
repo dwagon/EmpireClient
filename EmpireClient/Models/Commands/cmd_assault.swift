@@ -8,11 +8,15 @@
 import Foundation
 
 extension Game {
-    func cmd_assault(sector: MapCoord, shipNum: String) async {
-        let result = await client.run_cmd("assault \(sector) \(shipNum)")
+    func cmd_assault(sector: MapCoord, shipNum: String) async -> [String]{
+        let cmdString = "assault \(sector.toString()) \(shipNum)"
+        log(cmdString)
+        let result = await client.run_cmd(cmdString)
+        log(result)
         guard result != [] else {
             print("assault returned empty")
-            return
+            return []
         }
+        return result
     }
 }

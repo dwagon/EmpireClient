@@ -92,11 +92,11 @@ struct ShipDetailView: View {
                 Text("Fire: \(shipType.fire)")
                 Text("Range: \(shipType.range)")
             }
+            Text("Capabilities: \(shipType.cargo)")
             HStack {
                 Text("Civ: \(ship.civ)")
                 Text("Mil: \(ship.mil)")
                 Text("UW: \(ship.uw)")
-                Text("Cargo: \(shipType.cargo)")
             }
             HStack {
                 Text("Land Units: \(ship.landUnits) / \(shipType.landUnits)")

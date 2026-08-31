@@ -13,6 +13,7 @@ struct AssaultShipView: View {
     var shipLocation: MapCoord
     var gameMap: Map
     @Binding var destination: MapCoord
+    @Binding var response: [String]
 
     @Environment(\.dismiss) var dismiss
 
@@ -29,13 +30,19 @@ struct AssaultShipView: View {
                 .font(
                     .title
                 )
-            DrawHex(
-                hexmap: hexmap,
-                cellText: cellText,
-                cellFillColour: cellColour,
-                hexGesture: hexGesture
-            ).scaledToFit()
-            Text("Assault \(destination.toString()) from ship \(shipNum)")
+            if response.isEmpty {
+                DrawHex(
+                    hexmap: hexmap,
+                    cellText: cellText,
+                    cellFillColour: cellColour,
+                    hexGesture: hexGesture
+                ).scaledToFit()
+                Text("Assault \(destination.toString()) from ship \(shipNum)")
+            }
+            else {
+                Text("Assault Response")
+                Text(response.joined(separator: "\n"))
+            }
             HStack {
                 Button("Cancel", role: .cancel) {
                     dismiss()
@@ -84,6 +91,7 @@ struct AssaultShipSheet: ViewModifier {
     var shipId: Ship.ID?
     @State var shipLocation: MapCoord = MapCoord(x: 0, y: 0)
     @State var destination: MapCoord = MapCoord(x: 0, y: 0)
+    @State var response: [String] = []
 
     func body(content: Content) -> some View {
         if let shipId {
@@ -93,7 +101,7 @@ struct AssaultShipSheet: ViewModifier {
                 ) {
                     isPresented = false
                     Task {
-                        await game.cmd_assault(
+                        response = await game.cmd_assault(
                             sector: destination,
                             shipNum: game.ships[shipId]!.number,
                         )
@@ -103,7 +111,8 @@ struct AssaultShipSheet: ViewModifier {
                         shipNum: game.ships[shipId]!.number,
                         shipLocation: game.ships[shipId]!.coords,
                         gameMap: game.gameMap,
-                        destination: $destination
+                        destination: $destination,
+                        response: $response
                     )
                 }
         } else {
@@ -130,11 +139,13 @@ extension View {
 
 #Preview {
     @Previewable @State var coord = MapCoord(x: 0, y: 0)
+    @Previewable @State var response: [String] = []
 
     AssaultShipView(
         shipNum: "2",
         shipLocation: MapCoord(x: 2, y: 0),
         gameMap: Map(),
-        destination: $coord
+        destination: $coord,
+        response: $response
     )
 }
