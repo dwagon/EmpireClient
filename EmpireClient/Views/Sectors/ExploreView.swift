@@ -88,28 +88,6 @@ struct ExploreView: View {
         return .color(Color.clear)
     }
 
-    func directionString(_ cell: Cell) -> String {
-        let coord = cell.coordinates
-        switch (coord.x, coord.y) {
-        case (1, 0):
-            return "u"
-        case (1, -1):
-            return "j"
-        case (0, -1):
-            return "n"
-        case (0, 0):
-            return "h"
-        case (0, 1):
-            return "y"
-        case (-1, 1):
-            return "g"
-        case (-1, 0):
-            return "b"
-        default:
-            return "\(coord.x),\(coord.y)"
-        }
-    }
-
     func cellText(_ cell: Cell) -> String {
         return directionString(cell)
     }

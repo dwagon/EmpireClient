@@ -13,6 +13,7 @@ struct ShipDetailView: View {
     @State private var selectedShip: Ship.ID?
 
     @State private var showLoadPopup: Bool = false
+    @State private var showAssaultPopup: Bool = false
 
     var body: some View {
         HStack {
@@ -58,11 +59,13 @@ struct ShipDetailView: View {
         }
         .navigationSplitViewColumnWidth(min: 400, ideal: 800)
         .loadShip(isPresented: $showLoadPopup, game: game, shipId: selectedShip)
+        .assaultShip(isPresented: $showAssaultPopup, game: game, shipId: selectedShip)
     }
 
     var shipButtonBar: some View {
         VStack {
             loadButton
+            assaultButton
         }
     }
 
@@ -111,6 +114,12 @@ struct ShipDetailView: View {
     var loadButton: some View {
         Button("Load") {
             showLoadPopup = true
+        }
+    }
+
+    var assaultButton: some View {
+        Button("Assault") {
+            showAssaultPopup = true
         }
     }
 }

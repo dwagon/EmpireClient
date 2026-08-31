@@ -65,7 +65,10 @@ struct MapView: View {
     }
 
     func cellText(_ cell: Cell) -> String {
-        let mapCoord = screenToMapCoord(cell.coordinates)
+        let mapCoord = screenToMapCoord(
+            cell.coordinates,
+            centerCoord: centerCoord
+        )
         if let sector = gameMap[mapCoord] {
             return sector.symbol
         } else {
@@ -74,21 +77,8 @@ struct MapView: View {
     }
 
     func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
-        let foundColour: GraphicsContext.Shading = .color(.red)
-        switch displayUnitMapStyle {
-        case .none:
-            break
-        case .ship:
-            for (_, ship) in ships
-            where ship.coords == screenToMapCoord(cell.coordinates) {
-                return foundColour
-            }
-        case .plane:
-            // TODO
-            break
-        case .land:
-            // TODO
-            break
+        if let unitColour = cellColourUnit(cell) {
+            return unitColour
         }
         switch displayResourceMapStyle {
         case .normal:
@@ -106,13 +96,39 @@ struct MapView: View {
         }
     }
 
+    /// If we are colouring cells by unit return the colour
+    func cellColourUnit(_ cell: Cell) -> GraphicsContext.Shading? {
+        let foundColour: GraphicsContext.Shading = .color(.red)
+        switch displayUnitMapStyle {
+        case .none:
+            return nil
+        case .ship:
+            for (_, ship) in ships
+            where ship.coords
+                == screenToMapCoord(cell.coordinates, centerCoord: centerCoord)
+            {
+                return foundColour
+            }
+        case .plane:
+            // TODO
+            break
+        case .land:
+            // TODO
+            break
+        }
+        return nil
+    }
+
     func cellColourNormal(_ cell: Cell) -> GraphicsContext.Shading {
         do {
             if cell == hexmap.cellAt(try CubeCoordinates(x: 0, y: 0, z: 0))! {
                 return .color(Color.orange)
             }
         } catch { print("cellColour: No center of hexmap") }
-        let mapCoord = screenToMapCoord(cell.coordinates)
+        let mapCoord = screenToMapCoord(
+            cell.coordinates,
+            centerCoord: centerCoord
+        )
         if let sector = gameMap[mapCoord] {
             if sector.owned {
                 return .color(Color.mint)
@@ -134,7 +150,10 @@ struct MapView: View {
     func cellColourBySector(_ cell: Cell, mapkey: MapKey)
         -> GraphicsContext.Shading
     {
-        let mapCoord = screenToMapCoord(cell.coordinates)
+        let mapCoord = screenToMapCoord(
+            cell.coordinates,
+            centerCoord: centerCoord
+        )
         if let sector = gameMap[mapCoord] {
             if sector.desig.desig == .sea {
                 return .color(Color.blue)
@@ -154,14 +173,6 @@ struct MapView: View {
             }
         }
         return .color(Color.clear)
-    }
-
-    /// Adjust screen coordinates to map coordinates
-    func screenToMapCoord(_ coord: CubeCoordinates) -> MapCoord {
-        var adjusted = MapCoord(coord)
-        adjusted.x += centerCoord.x
-        adjusted.y += centerCoord.y
-        return adjusted
     }
 
     func hexGesture(location: CGPoint) {
