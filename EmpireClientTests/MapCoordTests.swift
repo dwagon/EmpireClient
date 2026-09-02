@@ -55,12 +55,20 @@ final class DoubleWidthTests: XCTestCase {
         let cube = try CubeCoordinates(x: 0, y: 0, z: 0)
         XCTAssertEqual(
             cubeToDoubleWidth(
-                from: cube,
-                orientation: pointy,
-                offsetLayout: even
+                from: cube
             ),
             MapCoord(x: 0, y: 0)
         )
+    }
+
+    func test_plusEqual() throws {
+        var a = MapCoord(x: 10, y: 10)
+        let b = MapCoord(x: 1, y: 1)
+        let c = MapCoord(x: -2, y: 2)
+        a += b
+        XCTAssertEqual(a, MapCoord(x: 11, y: 11))
+        a += c
+        XCTAssertEqual(a, MapCoord(x: 9, y: 13))
     }
 
     func test_cubeToDoubleWidth() throws {
@@ -70,9 +78,7 @@ final class DoubleWidthTests: XCTestCase {
         cube = try CubeCoordinates(x: 3, y: -2, z: -1)
         XCTAssertEqual(
             cubeToDoubleWidth(
-                from: cube,
-                orientation: pointy,
-                offsetLayout: even
+                from: cube
             ),
             MapCoord(x: 5, y: -1)
         )
@@ -80,9 +86,7 @@ final class DoubleWidthTests: XCTestCase {
         cube = try CubeCoordinates(x: -1, y: -1, z: 2)
         XCTAssertEqual(
             cubeToDoubleWidth(
-                from: cube,
-                orientation: pointy,
-                offsetLayout: even
+                from: cube
             ),
             MapCoord(x: 0, y: 2)
         )
