@@ -116,7 +116,7 @@ struct ExploreSheet: ViewModifier {
                         destination: destination
                     )
                     await game.cmd_dump()
-                    await game.cmd_bmap()
+                    await game.cmd_map()
                     number = 0
                     destination = ""
                     item = .civ

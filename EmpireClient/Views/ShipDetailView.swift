@@ -13,6 +13,7 @@ struct ShipDetailView: View {
     @State private var selectedShip: Ship.ID?
 
     @State private var showLoadPopup: Bool = false
+    @State private var showNavigatePopup: Bool = false
     @State private var showAssaultPopup: Bool = false
 
     var body: some View {
@@ -45,6 +46,7 @@ struct ShipDetailView: View {
                     )
                 }
                 .onChange(of: selectedShip) {
+                    print("DBG selectedShip=\(selectedShip, default: "nil")")
                     centerCoord = game.ships[selectedShip!]!.coords
                 }
 
@@ -53,19 +55,32 @@ struct ShipDetailView: View {
                     shipDetails
                 }
             }
-            if selectedShip != nil {
-                shipButtonBar
-            }
+            shipButtonBar
         }
         .navigationSplitViewColumnWidth(min: 400, ideal: 800)
         .loadShip(isPresented: $showLoadPopup, game: game, shipId: selectedShip)
-        .assaultShip(isPresented: $showAssaultPopup, game: game, shipId: selectedShip)
+        .assaultShip(
+            isPresented: $showAssaultPopup,
+            game: game,
+            shipId: selectedShip
+        )
+        .navigateShip(
+            isPresented: $showNavigatePopup,
+            game: game,
+            shipId: selectedShip
+        )
+
     }
 
     var shipButtonBar: some View {
         VStack {
-            loadButton
-            assaultButton
+            refreshButton
+
+            if selectedShip != nil {
+                loadButton
+                navigateButton
+                assaultButton
+            }
         }
     }
 
@@ -111,6 +126,15 @@ struct ShipDetailView: View {
         }
     }
 
+    var refreshButton: some View {
+        return
+            Button("Refresh") {
+                Task {
+                    await game.cmd_ship()
+                }
+            }
+    }
+
     var loadButton: some View {
         Button("Load") {
             showLoadPopup = true
@@ -120,6 +144,12 @@ struct ShipDetailView: View {
     var assaultButton: some View {
         Button("Assault") {
             showAssaultPopup = true
+        }
+    }
+
+    var navigateButton: some View {
+        Button("Navigate") {
+            showNavigatePopup = true
         }
     }
 }
