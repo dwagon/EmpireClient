@@ -21,7 +21,7 @@ import Foundation
 extension Game {
     func cmd_prod() async {
         var sector: Sector
-        let result = await client.run_cmd("prod #")
+        let result = await client.runCmd("prod #")
         guard result != [] else {
             print("prod returned empty")
             return

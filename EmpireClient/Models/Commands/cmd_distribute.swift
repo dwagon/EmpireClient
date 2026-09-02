@@ -16,7 +16,7 @@ extension Game {
         let cmdString =
             "distribute \(source.toString()) \(destination.toString())"
         log(cmdString)
-        let result = await client.run_cmd(cmdString)
+        let result = await client.runCmd(cmdString)
         log(result)
     }
 
@@ -27,7 +27,7 @@ extension Game {
     ) async {
         let cmdString = "distribute \(source.toString()) \(destination)"
         log(cmdString)
-        let result = await client.run_cmd(cmdString)
+        let result = await client.runCmd(cmdString)
         log(result)
     }
 
@@ -37,7 +37,7 @@ extension Game {
     ) async {
         let cmdString = "distribute # \(destination.toString())"
         log(cmdString)
-        let result = await client.run_cmd(cmdString)
+        let result = await client.runCmd(cmdString)
         log(result)
     }
 }

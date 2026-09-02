@@ -19,15 +19,15 @@ extension Game {
         let cmdString =
             "build \(device.abbrev) \(sector.toString()) \(type) \(number)"
         log(cmdString)
-        let result = await client.run_cmd(cmdString)
+        let result = await client.runCmd(cmdString)
         log(result)
     }
 
     /// Find out all the details of ships
     func cmd_show_ship() async {
-        let bResult = await client.run_cmd("show ship b")
-        let sResult = await client.run_cmd("show ship s")
-        let cResult = await client.run_cmd("show ship c")
+        let bResult = await client.runCmd("show ship b")
+        let sResult = await client.runCmd("show ship s")
+        let cResult = await client.runCmd("show ship c")
 
         if bResult.isEmpty || sResult.isEmpty || cResult.isEmpty {
             log("Error: Show ship report empty")

@@ -45,7 +45,7 @@ class TCPClient {
         return data
     }
 
-    func run_cmd(_ cmd: String) async -> [String] {
+    func runCmd(_ cmd: String) async -> [String] {
         let cmdStr = cmd.addingPercentEncoding(
             withAllowedCharacters: .urlHostAllowed
         )

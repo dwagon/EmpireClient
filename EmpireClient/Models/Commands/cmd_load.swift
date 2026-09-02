@@ -10,7 +10,7 @@ import Foundation
 extension Game {
     func cmd_load(commodity: Item, shipNum: String, amount: Int) async {
         let cmdString = "load \(commodity) \(shipNum) \(amount)"
-        let result = await client.run_cmd(cmdString)
+        let result = await client.runCmd(cmdString)
         guard result != [] else {
             print("load returned empty")
             return

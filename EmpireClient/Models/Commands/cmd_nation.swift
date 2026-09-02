@@ -21,7 +21,7 @@ import Foundation
 
 extension Game {
     func cmd_nation() async {
-        let result = await client.run_cmd("nation")
+        let result = await client.runCmd("nation")
         guard result != [] else {
             print("nation returned empty")
             return

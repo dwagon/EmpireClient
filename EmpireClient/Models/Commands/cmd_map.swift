@@ -1,6 +1,7 @@
 //
 //  Bmap.swift
 //  EmpireClient
+//  See https://www.empire.cx/infopages/bmap.html
 //
 //  Created by Dougal Scott on 7/8/2026.
 //
@@ -23,8 +24,14 @@
 import Foundation
 
 extension Game {
-    func cmd_map(cmd_arg: String = "*") async {
-        let result = await client.run_cmd("map \(cmd_arg)")
+    func cmd_map(cmdArg: String = "*") async {
+        for cmd in ["bmap", "map"] {
+            await process_map_cmd(cmd: cmd, cmdArg: cmdArg)
+        }
+    }
+
+    func process_map_cmd(cmd: String, cmdArg: String) async {
+        let result = await client.runCmd("\(cmd) \(cmdArg)")
         var minX: Int
         guard result != [] else {
             print("map returned empty")
@@ -34,10 +41,10 @@ extension Game {
         do {
             minX = try get_lower_x(result)
         } catch ParseError.invalidMapData (let line) {
-            print("cmd_map() Failed to parse \(line)")
+            print("cmd_map(\(cmd)) Failed to parse \(line)")
             return
         } catch {
-            print("cmd_map() Failed to fail \(error)")
+            print("cmd_map(\(cmd) Failed to fail \(error)")
             return
         }
 
