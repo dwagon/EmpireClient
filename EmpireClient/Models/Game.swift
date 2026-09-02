@@ -23,7 +23,9 @@ class Game: Decodable {
     }
 
     var shipTable: [Ship] {
-        return Array(ships.values)
+        return Array(ships.values).sorted {
+            $0.number < $1.number
+        }
     }
 
     subscript(key: MapCoord) -> Sector?
@@ -68,7 +70,7 @@ class Game: Decodable {
 
     func get_data() async {
         await cmd_dump()
-        await cmd_bmap()
+        await cmd_map()
         await cmd_nation()
         await cmd_budget()
         await cmd_prod()

@@ -65,9 +65,9 @@ struct SectorDetailView: View {
 
     var sectorButtonBar: some View {
         VStack {
+            refreshButton
             if let sector = game[centerCoord] {
                 if sector.owned {
-                    dumpButton
                     buildButton
                     designateButton
                     distributeButton
@@ -78,7 +78,7 @@ struct SectorDetailView: View {
         }
     }
 
-    var dumpButton: some View {
+    var refreshButton: some View {
         return
             Button("Refresh") {
                 Task {

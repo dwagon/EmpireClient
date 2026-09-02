@@ -1,0 +1,151 @@
+//
+//  AssaultView.swift
+//  EmpireClient
+//
+//  Created by Dougal Scott on 30/8/2026.
+//
+
+import HexGrid
+import SwiftUI
+
+struct AssaultShipView: View {
+    var shipNum: String
+    var shipLocation: MapCoord
+    var gameMap: Map
+    @Binding var destination: MapCoord
+    @Binding var response: [String]
+
+    @Environment(\.dismiss) var dismiss
+
+    var hexmap = HexGrid(
+        shape: .hexagon(3),
+        orientation: MapConfig.orientation,
+        offsetLayout: MapConfig.offsetLayout,
+        hexSize: MapConfig.hexSize
+    )
+
+    var body: some View {
+        VStack {
+            Label("Assault from Ship", systemImage: "arrow.down.right.square")
+                .font(
+                    .title
+                )
+            if response.isEmpty {
+                DrawHex(
+                    hexmap: hexmap,
+                    cellText: cellText,
+                    cellFillColour: cellColour,
+                    hexGesture: hexGesture
+                ).scaledToFit()
+                Text("Assault \(destination.toString()) from ship \(shipNum)")
+            }
+            else {
+                Text("Assault Response")
+                Text(response.joined(separator: "\n"))
+            }
+            HStack {
+                Button("Cancel", role: .cancel) {
+                    dismiss()
+                }
+                .buttonStyle(.automatic)
+                .padding()
+                Button("Assault") {
+                    dismiss()
+                }
+            }
+        }
+    }
+
+    func hexGesture(location: CGPoint) {
+        if let cell = try? hexmap.cellAt(location.hexPoint) {
+            destination = cubeToDoubleWidth(
+                from: cell.coordinates
+            )
+            destination.x += shipLocation.x
+            destination.y += shipLocation.y
+        } else {
+            print("no cell at \(location.hexPoint)")
+        }
+    }
+
+    func cellText(_ cell: Cell) -> String {
+        let mapCoord = screenToMapCoord(
+            cell.coordinates,
+            centerCoord: shipLocation
+        )
+        if let sector = gameMap[mapCoord] {
+            return sector.symbol
+        } else {
+            return "\(mapCoord.toString())"
+        }
+    }
+
+    func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
+        return mapCellColour(cell: cell, gameMap: gameMap, hexmap: hexmap, center: shipLocation)
+    }
+}
+
+struct AssaultShipSheet: ViewModifier {
+    @Binding var isPresented: Bool
+    var game: Game
+    var shipId: Ship.ID?
+    @State var shipLocation: MapCoord = MapCoord(x: 0, y: 0)
+    @State var destination: MapCoord = MapCoord(x: 0, y: 0)
+    @State var response: [String] = []
+
+    func body(content: Content) -> some View {
+        if let shipId {
+            content
+                .sheet(
+                    isPresented: $isPresented
+                ) {
+                    isPresented = false
+                    Task {
+                        response = await game.cmd_assault(
+                            sector: destination,
+                            shipNum: game.ships[shipId]!.number,
+                        )
+                    }
+                } content: {
+                    AssaultShipView(
+                        shipNum: game.ships[shipId]!.number,
+                        shipLocation: game.ships[shipId]!.coords,
+                        gameMap: game.gameMap,
+                        destination: $destination,
+                        response: $response
+                    )
+                }
+        } else {
+            content
+        }
+    }
+}
+
+extension View {
+    func assaultShip(
+        isPresented: Binding<Bool>,
+        game: Game,
+        shipId: Ship.ID?
+    ) -> some View {
+        modifier(
+            AssaultShipSheet(
+                isPresented: isPresented,
+                game: game,
+                shipId: shipId
+            )
+        )
+    }
+}
+
+#Preview {
+    @Previewable @State var coord = MapCoord(x: 0, y: 0)
+    @Previewable @State var response: [String] = []
+
+    AssaultShipView(
+        shipNum: "2",
+        shipLocation: MapCoord(x: 2, y: 0),
+        gameMap: Map(),
+        destination: $coord,
+        response: $response
+    )
+}

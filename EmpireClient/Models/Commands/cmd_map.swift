@@ -23,29 +23,34 @@
 import Foundation
 
 extension Game {
-    func cmd_bmap() async {
-        let result = await client.run_cmd("bmap #")
+    func cmd_map(cmd_arg: String = "*") async {
+        let result = await client.run_cmd("map \(cmd_arg)")
+        var minX: Int
         guard result != [] else {
-            print("bmap returned empty")
-            return
-        }
-        if result.contains("\"bmap\" is not a legal command") {
-            log("Need to break sanctuary before running bmap")
+            print("map returned empty")
             return
         }
 
-        let minX = get_lower_x(result)
+        do {
+            minX = try get_lower_x(result)
+        } catch ParseError.invalidMapData (let line) {
+            print("cmd_map() Failed to parse \(line)")
+            return
+        } catch {
+            print("cmd_map() Failed to fail \(error)")
+            return
+        }
 
         for line in result[2..<result.count - 2] {  // Skip border
             if line.split(separator: " ").count == 2 {
                 continue
             }
-            handle_bmap_line(line, minX: minX)
+            handle_map_line(line, minX: minX)
         }
     }
 
     /// Handle a line of the bmap output that contains map data
-    private func handle_bmap_line(_ line: String, minX: Int) {
+    private func handle_map_line(_ line: String, minX: Int) {
         let y = Int(line.split(separator: " ", maxSplits: 1)[0])
         if y == nil {
             log("Error in map for line '\(line)'")
@@ -60,13 +65,13 @@ extension Game {
                 let x = pos + minX
                 if is_valid_coord(x: x, y: y!) && char != " " {
                     let coord = MapCoord(x: x, y: y!)
-                    set_bmap_sector(coord, to: String(char))
+                    set_map_sector(coord, to: String(char))
                 }
             }
         }
     }
 
-    private func set_bmap_sector(_ coord: MapCoord, to: String) {
+    private func set_map_sector(_ coord: MapCoord, to: String) {
         if let sector = gameMap[coord] {
             sector.desig = Desig(to)
         } else {
@@ -79,7 +84,7 @@ extension Game {
 /// Return the x range from the map string
 /// --------00000000001
 /// 8765432101234567890
-func get_lower_x(_ msg: [String]) -> Int {
+func get_lower_x(_ msg: [String]) throws -> Int {
     var lowerX: Int
     var tens: Int
     var units: Int
@@ -90,12 +95,18 @@ func get_lower_x(_ msg: [String]) -> Int {
     if firstLine.starts(with: "-") {
         tens = 0
     } else {
-        tens = Int(String(firstChar))!
+        let maybe_tens = Int(String(firstChar))
+        if maybe_tens == nil {
+            throw ParseError.invalidMapData(firstLine)
+        }
+        else {
+            tens = maybe_tens!
+        }
     }
     units = Int(String(secondLine[secondLine.startIndex]))!
 
     lowerX = tens * 10 + units
-    if firstChar == "-" {
+    if firstLine.contains("-") {
         lowerX = -lowerX
     }
     return lowerX
