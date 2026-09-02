@@ -14,7 +14,7 @@ import Foundation
 
 extension Game {
     func cmd_ship() async {
-        let result = await client.run_cmd("ship *")
+        let result = await client.runCmd("ship *")
         guard result != [] else {
             log("ship returned empty")
             return

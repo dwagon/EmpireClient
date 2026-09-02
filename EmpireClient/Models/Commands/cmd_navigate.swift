@@ -13,7 +13,7 @@ extension Game {
         let nav_regex = /\<-?\d+.\d:-?\d+.\d: -?\d+,-?\d+\>/
         let cmdString = "navigate \(shipNum) \(destination.toString())"
         log(cmdString)
-        let result = await client.run_cmd(cmdString)
+        let result = await client.runCmd(cmdString)
         log("navigate=\(result)")
         guard result != [] else {
             print("navigate returned empty")
@@ -22,7 +22,7 @@ extension Game {
         print("navigate: \(result)")
         for line in result {
             if let _ = line.firstMatch(of: nav_regex) {
-                _ = await client.run_cmd("h")
+                _ = await client.runCmd("h")
             }
         }
     }

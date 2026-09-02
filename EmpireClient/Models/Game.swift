@@ -57,14 +57,14 @@ class Game: Decodable {
 
     // MARK: -
     func login(country: String, password: String) async {
-        var result = await client.run_cmd("coun \(country)")
+        var result = await client.runCmd("coun \(country)")
         log(result)
-        result = await client.run_cmd("pass \(password)")
+        result = await client.runCmd("pass \(password)")
         if result.contains("\"pass\" is not a legal command") {
-            result = await client.run_cmd("break")
+            result = await client.runCmd("break")
         }
         log(result)
-        result = await client.run_cmd("play")
+        result = await client.runCmd("play")
         log(result)
     }
 

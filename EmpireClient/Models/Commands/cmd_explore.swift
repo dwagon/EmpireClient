@@ -26,7 +26,7 @@ extension Game {
         let cmdString =
         "explo \(itemstr) \(sector.x),\(sector.y) \(number) \(destination)h"
         log(cmdString)
-        let result = await client.run_cmd(cmdString)
+        let result = await client.runCmd(cmdString)
         guard result != [] else {
             log("explo returned empty")
             return

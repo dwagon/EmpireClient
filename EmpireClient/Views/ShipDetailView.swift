@@ -46,7 +46,6 @@ struct ShipDetailView: View {
                     )
                 }
                 .onChange(of: selectedShip) {
-                    print("DBG selectedShip=\(selectedShip, default: "nil")")
                     centerCoord = game.ships[selectedShip!]!.coords
                 }
 

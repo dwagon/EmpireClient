@@ -63,7 +63,7 @@ struct NavigateView: View {
                     shipNum: shipNum,
                     destination: destination!
                 )
-                await game.cmd_map(cmd_arg: shipNum)
+                await game.cmd_map(cmdArg: shipNum)
             }
         } else {
             print("no cell at \(location.hexPoint)")

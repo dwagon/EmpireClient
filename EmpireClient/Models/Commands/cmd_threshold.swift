@@ -16,7 +16,7 @@ extension Game {
     ) async {
         let cmdString = "thresh \(item) \(coord.toString()) \(level)"
         log(cmdString)
-        let result = await client.run_cmd(cmdString)
+        let result = await client.runCmd(cmdString)
         log(result)
     }
 
@@ -26,7 +26,7 @@ extension Game {
     ) async {
         let cmdString = "thresh \(item) # \(level)"
         log(cmdString)
-        let result = await client.run_cmd(cmdString)
+        let result = await client.runCmd(cmdString)
         log(result)
     }
 }
