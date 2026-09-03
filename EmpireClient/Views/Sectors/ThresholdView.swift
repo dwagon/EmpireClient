@@ -7,11 +7,18 @@
 
 import SwiftUI
 
+enum ThresholdType: Hashable {
+    case individual
+    case global
+    case desig(Desig)
+}
+
 struct ThresholdView: View {
+    var game: Game
     var coord: MapCoord
     @Binding var item: Item
     @Binding var level: Double
-    @Binding var isEverywhere: Bool
+    @Binding var threshType: ThresholdType
 
     @Environment(\.dismiss) var dismiss
 
@@ -24,7 +31,20 @@ struct ThresholdView: View {
                 thresholdDetails.padding()
                 Spacer()
             }
-            Text("Set threshold of \(item.displayName) \(isEverywhere ? "everywhere" : "at \(coord.toString())") to \(Int(level))")
+            switch threshType {
+            case .individual:
+                Text(
+                    "Set threshold of \(item.displayName) at \(coord.toString()) to \(Int(level))"
+                )
+            case .global:
+                Text(
+                    "Set threshold of \(item.displayName) everywhere to \(Int(level))"
+                )
+            case .desig(let desig):
+                Text(
+                    "Set threshold of \(item.displayName) all \(desig.name) to \(Int(level))"
+                )
+            }
             HStack {
                 Button("Cancel", role: .cancel) {
                     item = .none
@@ -40,7 +60,19 @@ struct ThresholdView: View {
 
     var thresholdDetails: some View {
         return VStack {
-            Toggle("Set for everywhere not just \(coord.toString())", isOn: $isEverywhere)
+            Picker(
+                "Target",
+                selection: $threshType,
+                content: {
+                    Text("Global").tag(ThresholdType.global)
+                    Text("Just \(coord.toString())").tag(
+                        ThresholdType.individual
+                    )
+                    Text("All \(game.gameMap[coord]!.desig.name)").tag(
+                        ThresholdType.desig(game.gameMap[coord]!.desig)
+                    )
+                }
+            ).pickerStyle(.segmented)
             Picker(
                 "Set",
                 selection: $item,
@@ -69,7 +101,7 @@ struct ThresholdSheet: ViewModifier {
     var centerCoord: MapCoord
     @State private var item: Item = .none
     @State private var level = 0.0
-    @State private var isEverywhere: Bool = true
+    @State private var threshType: ThresholdType = .global
 
     func body(content: Content) -> some View {
         content
@@ -79,17 +111,25 @@ struct ThresholdSheet: ViewModifier {
                 isPresented = false
                 if item != .none {
                     Task {
-                        if isEverywhere {
-                            await game.cmd_threshold(
-                                item: item,
-                                level: Int(level)
-                                )
-                        } else {
+                        switch threshType {
+                        case .individual:
                             await game.cmd_threshold(
                                 item: item,
                                 coord: centerCoord,
                                 level: Int(level)
-                            )}
+                            )
+                        case .global:
+                            await game.cmd_threshold(
+                                item: item,
+                                level: Int(level)
+                            )
+                        case .desig(let desig):
+                            await game.cmd_threshold(
+                                item: item,
+                                desig: desig,
+                                level: Int(level)
+                            )
+                        }
                         await game.cmd_dump()
                         item = .none
                         level = 0.0
@@ -97,10 +137,11 @@ struct ThresholdSheet: ViewModifier {
                 }
             } content: {
                 ThresholdView(
+                    game: game,
                     coord: centerCoord,
                     item: $item,
                     level: $level,
-                    isEverywhere: $isEverywhere
+                    threshType: $threshType
                 )
             }
     }
@@ -123,15 +164,17 @@ extension View {
 }
 
 #Preview {
+    @Previewable var game = Game()
     @Previewable var coord = MapCoord(x: 0, y: 0)
     @Previewable @State var item: Item = .none
     @Previewable @State var level: Double = 0.0
-    @Previewable @State var isEverywhere: Bool = true
+    @Previewable @State var threshType: ThresholdType = .global
 
     ThresholdView(
+        game: game,
         coord: coord,
         item: $item,
         level: $level,
-        isEverywhere: $isEverywhere
+        threshType: $threshType
     )
 }

@@ -100,7 +100,7 @@ var undesignatable: Set<DesigType> = [
     .sea, .mountain, .sanctuary, .wasteland, .wilderness, .plains, .unknown
 ]
 
-struct Desig: Equatable {
+struct Desig: Equatable, Hashable {
     var desig: DesigType
 
     init(_ char: String) {
