@@ -29,4 +29,16 @@ extension Game {
         let result = await client.runCmd(cmdString)
         log(result)
     }
+
+    /// Set thresholds for all sectors of the specified designation
+    func cmd_threshold(
+        item: Item,
+        desig: Desig,
+        level: Int
+    ) async {
+        let cmdString = "thresh \(item) ?des=\(desig.abbrev) # \(level)"
+        log(cmdString)
+        let result = await client.runCmd(cmdString)
+        log(result)
+    }
 }
