@@ -22,12 +22,17 @@ struct UnloadShipView: View {
             HStack {
                     ItemPicker(label: "Unload", item: $item)
                     .padding()
+                VStack(alignment: .leading) {
                     let str = "Unload \(amount) \(item.displayName.capitalized) from Ship \(shipNum)"
                     Stepper(
                         str,
                         value: $amount,
                         in: 1...1000
                     )
+                    TextField("Unload Amount", value: $amount, formatter: NumberFormatter())
+                        .textFieldStyle(.roundedBorder)
+                        .frame(idealWidth: 100, maxWidth: 200)
+                }
             }
             HStack {
                 Button("Cancel", role: .cancel) {
@@ -40,7 +45,7 @@ struct UnloadShipView: View {
                     dismiss()
                 }
             }
-        }
+        }.padding()
     }
 }
 
