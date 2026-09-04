@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct UnoadShipView: View {
+struct UnloadShipView: View {
     var shipNum: String
     @Binding var item: Item
     @Binding var amount: Int
@@ -16,13 +16,13 @@ struct UnoadShipView: View {
 
     var body: some View {
         VStack {
-            Label("Load Ship", systemImage: "square.and.arrow.down").font(
+            Label("Unload Ship", systemImage: "square.and.arrow.up").font(
                 .title
             )
             HStack {
-                    ItemPicker(label: "Load", item: $item)
+                    ItemPicker(label: "Unload", item: $item)
                     .padding()
-                    let str = "Load \(amount) \(item.displayName.capitalized) onto Ship \(shipNum)"
+                    let str = "Unload \(amount) \(item.displayName.capitalized) from Ship \(shipNum)"
                     Stepper(
                         str,
                         value: $amount,
@@ -36,7 +36,7 @@ struct UnoadShipView: View {
                 }
                 .buttonStyle(.automatic)
                 .padding()
-                Button("Load") {
+                Button("Unload") {
                     dismiss()
                 }
             }
@@ -44,7 +44,7 @@ struct UnoadShipView: View {
     }
 }
 
-struct LoadShipSheet: ViewModifier {
+struct UnloadShipSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
     var shipId: Ship.ID?
@@ -61,7 +61,7 @@ struct LoadShipSheet: ViewModifier {
                     isPresented = false
                     if amount > 0 {
                         Task {
-                            await game.cmd_load(
+                            await game.cmd_unload(
                                 commodity: item,
                                 shipNum: game.ships[shipId]!.number,
                                 amount: amount
@@ -70,7 +70,7 @@ struct LoadShipSheet: ViewModifier {
                         }
                     }
                 } content: {
-                    LoadShipView(
+                    UnloadShipView(
                         shipNum: game.ships[shipId]!.number,
                         item: $item,
                         amount: $amount
@@ -84,13 +84,13 @@ struct LoadShipSheet: ViewModifier {
 }
 
 extension View {
-    func loadShip(
+    func unloadShip(
         isPresented: Binding<Bool>,
         game: Game,
         shipId: Ship.ID?
     ) -> some View {
         modifier(
-            LoadShipSheet(
+            UnloadShipSheet(
                 isPresented: isPresented,
                 game: game,
                 shipId: shipId
@@ -103,7 +103,7 @@ extension View {
     @Previewable @State var item: Item = .none
     @Previewable @State var amount: Int = 1
 
-    LoadShipView(
+    UnloadShipView(
         shipNum: "2",
         item: $item,
         amount: $amount,

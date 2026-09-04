@@ -16,7 +16,7 @@ struct NavigateView: View {
     @Environment(\.dismiss) var dismiss
 
     var hexmap = HexGrid(
-        shape: .hexagon(3),
+        shape: .hexagon(4),
         orientation: MapConfig.orientation,
         offsetLayout: MapConfig.offsetLayout,
         hexSize: MapConfig.hexSize

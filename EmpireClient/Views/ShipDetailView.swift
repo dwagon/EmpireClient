@@ -13,6 +13,7 @@ struct ShipDetailView: View {
     @State private var selectedShip: Ship.ID?
 
     @State private var showLoadPopup: Bool = false
+    @State private var showUnloadPopup: Bool = false
     @State private var showNavigatePopup: Bool = false
     @State private var showAssaultPopup: Bool = false
 
@@ -58,6 +59,7 @@ struct ShipDetailView: View {
         }
         .navigationSplitViewColumnWidth(min: 400, ideal: 800)
         .loadShip(isPresented: $showLoadPopup, game: game, shipId: selectedShip)
+        .unloadShip(isPresented: $showUnloadPopup, game: game, shipId: selectedShip)
         .assaultShip(
             isPresented: $showAssaultPopup,
             game: game,
@@ -77,6 +79,7 @@ struct ShipDetailView: View {
 
             if selectedShip != nil {
                 loadButton
+                unloadButton
                 navigateButton
                 assaultButton
             }
@@ -137,6 +140,12 @@ struct ShipDetailView: View {
     var loadButton: some View {
         Button("Load") {
             showLoadPopup = true
+        }
+    }
+
+    var unloadButton: some View {
+        Button("Unload") {
+            showUnloadPopup = true
         }
     }
 
