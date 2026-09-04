@@ -58,7 +58,7 @@ final class GameTests: XCTestCase {
         XCTAssertEqual(ans["fb"]!.planes, 6)
         XCTAssertEqual(ans["fb"]!.helicopters, 5)
         XCTAssertEqual(ans["fb"]!.lightPlanes, 4)
-        XCTAssertEqual(ans["fb"]!.cargo, "300c 10m 900f 15u fish canal")
+        XCTAssertEqual(ans["fb"]!.capabilities, "300c 10m 900f 15u fish canal")
         XCTAssertEqual(ans["frg"]!.name, "frigate")
         XCTAssertEqual(ans["ss"]!.name, "slave ship")
     }

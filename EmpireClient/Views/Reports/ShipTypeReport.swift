@@ -20,7 +20,7 @@ struct ShipTypeReport: View {
                 TableColumn("Name", value: \.name)
                 TableColumn("Speed") { details in Text("\(details.speed)") }
                     .width(min: 40, ideal: 50, max: 60)
-                TableColumn("Capabilities", value: \.cargo)
+                TableColumn("Capabilities", value: \.capabilities)
             }
             .tableStyle(.bordered)
             .border(.blue)
@@ -138,7 +138,7 @@ struct ShipTypeReport: View {
             name: "Some Ship",
             speed: 10,
             range: 10,
-            cargo: "300c 10m 900f 15u fish canal"
+            capabilities: "300c 10m 900f 15u fish canal"
         )
     ]
     ShipTypeReport(shipTypes: ships)

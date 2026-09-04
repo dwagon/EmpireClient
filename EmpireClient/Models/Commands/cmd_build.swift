@@ -102,7 +102,7 @@ func parse_ship_str(buildStr: [String], statsStr: [String], capStr: [String])
         var ship = shipTypes[stype]!
         let startIdx = String.Index(utf16Offset: 25, in: line)
         let newLine = line[startIdx...]
-        ship.cargo = String(newLine).trimmingCharacters(in: .whitespaces)
+        ship.capabilities = String(newLine).trimmingCharacters(in: .whitespaces)
         shipTypes[stype] = ship
     }
 
