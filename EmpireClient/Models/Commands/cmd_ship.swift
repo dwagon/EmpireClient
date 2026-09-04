@@ -41,10 +41,10 @@ extension Game {
             ship.xlPlanes = Int(bits[lastBit - 4])!
             ship.heli = Int(bits[lastBit - 5])!
             ship.planes = Int(bits[lastBit - 6])!
-            ship.food = Int(bits[lastBit - 7])!
-            ship.uw = Int(bits[lastBit - 8])!
-            ship.mil = Int(bits[lastBit - 9])!
-            ship.civ = Int(bits[lastBit - 10])!
+            ship.cargo[.food] = Int(bits[lastBit - 7])!
+            ship.cargo[.uw] = Int(bits[lastBit - 8])!
+            ship.cargo[.mil] = Int(bits[lastBit - 9])!
+            ship.cargo[.civ] = Int(bits[lastBit - 10])!
             ship.eff = Int(bits[lastBit - 11].replacingOccurrences(of: "%", with: ""))!
             if let match = line.firstMatch(of: coordRegex) {
                 ship.coords = MapCoord(String(match.0))!

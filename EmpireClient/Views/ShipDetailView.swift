@@ -40,11 +40,6 @@ struct ShipDetailView: View {
                         ideal: 30,
                         max: 60
                     )
-                    TableColumn("Food") { val in Text("\(val.food)") }.width(
-                        min: 20,
-                        ideal: 30,
-                        max: 60
-                    )
                 }
                 .onChange(of: selectedShip) {
                     centerCoord = game.ships[selectedShip!]!.coords
@@ -59,7 +54,11 @@ struct ShipDetailView: View {
         }
         .navigationSplitViewColumnWidth(min: 400, ideal: 800)
         .loadShip(isPresented: $showLoadPopup, game: game, shipId: selectedShip)
-        .unloadShip(isPresented: $showUnloadPopup, game: game, shipId: selectedShip)
+        .unloadShip(
+            isPresented: $showUnloadPopup,
+            game: game,
+            shipId: selectedShip
+        )
         .assaultShip(
             isPresented: $showAssaultPopup,
             game: game,
@@ -109,11 +108,19 @@ struct ShipDetailView: View {
                 Text("Fire: \(shipType.fire)")
                 Text("Range: \(shipType.range)")
             }
-            Text("Capabilities: \(shipType.cargo)")
+            Text("Capabilities: \(shipType.capabilities)")
+            Divider()
             HStack {
-                Text("Civ: \(ship.civ)")
-                Text("Mil: \(ship.mil)")
-                Text("UW: \(ship.uw)")
+                ForEach(
+                    ship.cargo.sorted(by: {
+                        $0.key.displayName < $1.key.displayName
+                    }),
+                    id: \.key
+                ) { key, value in
+                    Text(
+                        "\(key.displayName.capitalized): \(value, default: "?")"
+                    )
+                }
             }
             HStack {
                 Text("Land Units: \(ship.landUnits) / \(shipType.landUnits)")
@@ -125,7 +132,8 @@ struct ShipDetailView: View {
                     "Extra Light Planes: \(ship.xlPlanes) / \(shipType.lightPlanes)"
                 )
             }
-        }
+        }.padding()
+            .border(.blue)
     }
 
     var refreshButton: some View {
@@ -133,6 +141,7 @@ struct ShipDetailView: View {
             Button("Refresh") {
                 Task {
                     await game.cmd_ship()
+                    await game.cmd_cargo()
                 }
             }
     }

@@ -23,6 +23,7 @@ enum Item: String, CaseIterable, Codable, Hashable {
     case lcm = "l"
     case hcm = "h"
     case radioactives = "r"
+    case petrol = "X"
 
     var displayName: String {
         switch self {
@@ -41,6 +42,7 @@ enum Item: String, CaseIterable, Codable, Hashable {
         case .lcm: "lcm"
         case .hcm: "hcm"
         case .radioactives: "radioactives"
+        case .petrol: "petrol"
         }
     }
 }
