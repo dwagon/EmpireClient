@@ -23,7 +23,7 @@ import HexGrid
 
 extension Game {
     func cmd_dump() async {
-        let result = await client.runCmd("dump #")
+        let result = await client.runCmd("dump *")
         guard result != [] else {
             log("dump returned empty")
             return
