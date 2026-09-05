@@ -9,7 +9,7 @@ import Foundation
 
 extension Game {
     func cmd_cargo() async {
-        let cmdString = "cargo"
+        let cmdString = "cargo *"
         let result = await client.runCmd(cmdString)
         guard result != [] else {
             print("cargo returned empty")

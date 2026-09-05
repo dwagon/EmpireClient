@@ -57,7 +57,7 @@ struct ShipDetailView: View {
         .unloadShip(
             isPresented: $showUnloadPopup,
             game: game,
-            shipId: selectedShip
+            ship: game.ships[selectedShip ?? "0"]
         )
         .assaultShip(
             isPresented: $showAssaultPopup,
@@ -117,19 +117,19 @@ struct ShipDetailView: View {
                     }),
                     id: \.key
                 ) { key, value in
-                    Text(
-                        "\(key.displayName.capitalized): \(value, default: "?")"
-                    )
+                    if value != 0 {
+                        Text(
+                            "\(key.displayName.capitalized): \(value, default: "?")"
+                        )
+                    }
                 }
             }
-            HStack {
-                Text("Land Units: \(ship.landUnits) / \(shipType.landUnits)")
-            }
-            HStack {
-                Text("Helicopters: \(ship.heli) / \(shipType.helicopters)")
-                Text("Light Planes: \(ship.planes) / \(shipType.planes)")
+            VStack {
+                Text(ship.landUnits == 0 ? "" : "Land Units: \(ship.landUnits) / \(shipType.landUnits)")
+                Text(ship.heli == 0 ? "" :"Helicopters: \(ship.heli) / \(shipType.helicopters)")
+                Text(ship.planes == 0 ? "" : "Light Planes: \(ship.planes) / \(shipType.planes)")
                 Text(
-                    "Extra Light Planes: \(ship.xlPlanes) / \(shipType.lightPlanes)"
+                    ship.xlPlanes == 0 ? "" : "Extra Light Planes: \(ship.xlPlanes) / \(shipType.lightPlanes)"
                 )
             }
         }.padding()
@@ -140,6 +140,7 @@ struct ShipDetailView: View {
         return
             Button("Refresh") {
                 Task {
+                    await game.cmd_map()
                     await game.cmd_ship()
                     await game.cmd_cargo()
                 }

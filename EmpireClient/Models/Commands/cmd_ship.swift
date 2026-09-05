@@ -13,8 +13,8 @@
 import Foundation
 
 extension Game {
-    func cmd_ship() async {
-        let result = await client.runCmd("ship *")
+    func cmd_ship(shipNum: String = "*") async {
+        let result = await client.runCmd("ship \(shipNum)")
         guard result != [] else {
             log("ship returned empty")
             return

@@ -8,27 +8,45 @@
 import SwiftUI
 
 struct UnloadShipView: View {
-    var shipNum: String
+    var ship: Ship
     @Binding var item: Item
     @Binding var amount: Int
 
     @Environment(\.dismiss) var dismiss
 
+    var availableCargo: [Item] {
+        return ship.cargo.keys.filter { ship.cargo[$0]! > 0 }
+    }
+
     var body: some View {
         VStack {
-            Label("Unload Ship", systemImage: "square.and.arrow.up").font(
+            Label(
+                "Unload Ship \(ship.number)",
+                systemImage: "square.and.arrow.up"
+            ).font(
                 .title
             )
             HStack {
-                    ItemPicker(label: "Unload", item: $item)
-                    .padding()
-                    let str = "Unload \(amount) \(item.displayName.capitalized) from Ship \(shipNum)"
-                    Stepper(
-                        str,
-                        value: $amount,
-                        in: 1...1000
-                    )
+                ItemPicker(
+                    label: "Unload",
+                    itemList: availableCargo,
+                    item: $item
+                )
+                .padding()
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Amount:")
+                        TextField(
+                            "Unload Amount",
+                            value: $amount,
+                            formatter: NumberFormatter()
+                        )
+                        .textFieldStyle(.roundedBorder)
+                        .frame(idealWidth: 100, maxWidth: 150)
+                    }
+                }
             }
+            Text(item == .none ? "" : "Unload \(amount) \(item.displayName.capitalized)")
             HStack {
                 Button("Cancel", role: .cancel) {
                     amount = 0
@@ -38,22 +56,21 @@ struct UnloadShipView: View {
                 .padding()
                 Button("Unload") {
                     dismiss()
-                }
+                }.disabled(item == .none)
             }
-        }
+        }.padding()
     }
 }
 
 struct UnloadShipSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
-    var shipId: Ship.ID?
+    var ship: Ship?
     @State private var item: Item = .none
     @State private var amount: Int = 1
 
     func body(content: Content) -> some View {
-        if let shipId {
-
+        if let ship {
             content
                 .sheet(
                     isPresented: $isPresented
@@ -63,21 +80,22 @@ struct UnloadShipSheet: ViewModifier {
                         Task {
                             await game.cmd_unload(
                                 commodity: item,
-                                shipNum: game.ships[shipId]!.number,
+                                shipNum: ship.number,
                                 amount: amount
                             )
                             await game.cmd_ship()
+                            amount = 0
+                            item = .none
                         }
                     }
                 } content: {
                     UnloadShipView(
-                        shipNum: game.ships[shipId]!.number,
+                        ship: ship,
                         item: $item,
                         amount: $amount
                     )
                 }
-        }
-        else  {
+        } else {
             content
         }
     }
@@ -87,13 +105,13 @@ extension View {
     func unloadShip(
         isPresented: Binding<Bool>,
         game: Game,
-        shipId: Ship.ID?
+        ship: Ship?
     ) -> some View {
         modifier(
             UnloadShipSheet(
                 isPresented: isPresented,
                 game: game,
-                shipId: shipId
+                ship: ship
             )
         )
     }
@@ -102,11 +120,13 @@ extension View {
 #Preview {
     @Previewable @State var item: Item = .none
     @Previewable @State var amount: Int = 1
+    @Previewable @State var ship: Ship = DataLoader.loadSampleShip(
+        name: "ShipView"
+    )
 
     UnloadShipView(
-        shipNum: "2",
+        ship: ship,
         item: $item,
         amount: $amount,
     )
 }
-
