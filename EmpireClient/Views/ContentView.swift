@@ -28,8 +28,12 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List {
                 Button("Sector") { content = .sector }
+                    .foregroundStyle(content == .sector ? .blue : .secondary)
                 if !game.ships.isEmpty {
                     Button("Ship") { content = .ship }
+                        .foregroundStyle(
+                            content == .ship ? .blue : .secondary
+                        )
                 }
             }
         } content: {
