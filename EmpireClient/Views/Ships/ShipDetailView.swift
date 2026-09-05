@@ -57,7 +57,7 @@ struct ShipDetailView: View {
         .unloadShip(
             isPresented: $showUnloadPopup,
             game: game,
-            shipId: selectedShip
+            ship: game.ships[selectedShip ?? "0"]
         )
         .assaultShip(
             isPresented: $showAssaultPopup,
@@ -140,6 +140,7 @@ struct ShipDetailView: View {
         return
             Button("Refresh") {
                 Task {
+                    await game.cmd_map()
                     await game.cmd_ship()
                     await game.cmd_cargo()
                 }
