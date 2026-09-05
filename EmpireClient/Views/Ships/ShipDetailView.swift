@@ -44,6 +44,9 @@ struct ShipDetailView: View {
                 .onChange(of: selectedShip) {
                     centerCoord = game.ships[selectedShip!]!.coords
                 }
+                .onChange(of: showNavigatePopup) {
+                    centerCoord = game.ships[selectedShip!]!.coords
+                }
 
                 if selectedShip != nil {
                     Divider()
@@ -69,7 +72,6 @@ struct ShipDetailView: View {
             game: game,
             shipId: selectedShip
         )
-
     }
 
     var shipButtonBar: some View {
