@@ -16,29 +16,41 @@ struct LoadShipView: View {
 
     var body: some View {
         VStack {
-            Label("Load Ship", systemImage: "square.and.arrow.down").font(
-                .title
-            )
+            Label("Load Ship \(shipNum)", systemImage: "square.and.arrow.down")
+                .font(
+                    .title
+                )
             HStack {
-                    ItemPicker(label: "Load", item: $item)
+                ItemPicker(label: "Load", item: $item)
                     .padding()
-                    let str = "Load \(amount) \(item.displayName.capitalized) onto Ship \(shipNum)"
-                    Stepper(
-                        str,
-                        value: $amount,
-                        in: 1...1000
-                    )
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Amount:")
+                        TextField(
+                            "Load Amount",
+                            value: $amount,
+                            formatter: NumberFormatter()
+                        )
+                        .textFieldStyle(.roundedBorder)
+                        .frame(idealWidth: 100, maxWidth: 150)
+                    }
+                }
             }
+            Text(
+                item == .none
+                    ? ""
+                    : "Load \(amount) \(item.displayName.capitalized) onto Ship \(shipNum)"
+            )
             HStack {
                 Button("Cancel", role: .cancel) {
                     amount = 0
                     dismiss()
                 }
-                .buttonStyle(.automatic)
-                .padding()
+                    .buttonStyle(.automatic)
+                    .padding()
                 Button("Load") {
                     dismiss()
-                }
+                }.disabled(item == .none)
             }
         }
     }
@@ -67,6 +79,8 @@ struct LoadShipSheet: ViewModifier {
                                 amount: amount
                             )
                             await game.cmd_ship()
+                            amount = 0
+                            item = .none
                         }
                     }
                 } content: {
@@ -76,8 +90,7 @@ struct LoadShipSheet: ViewModifier {
                         amount: $amount
                     )
                 }
-        }
-        else  {
+        } else {
             content
         }
     }
