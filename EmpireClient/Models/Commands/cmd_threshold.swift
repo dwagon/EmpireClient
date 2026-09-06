@@ -14,7 +14,7 @@ extension Game {
         coord: MapCoord,
         level: Int
     ) async {
-        let cmdString = "thresh \(item) \(coord.toString()) \(level)"
+        let cmdString = "thresh \(item.rawValue) \(coord.toString()) \(level)"
         log(cmdString)
         let result = await client.runCmd(cmdString)
         log(result)
@@ -24,7 +24,7 @@ extension Game {
         item: Item,
         level: Int
     ) async {
-        let cmdString = "thresh \(item) # \(level)"
+        let cmdString = "thresh \(item.rawValue) # \(level)"
         log(cmdString)
         let result = await client.runCmd(cmdString)
         log(result)
@@ -36,7 +36,7 @@ extension Game {
         desig: Desig,
         level: Int
     ) async {
-        let cmdString = "thresh \(item) ?des=\(desig.abbrev) # \(level)"
+        let cmdString = "thresh \(item.rawValue) ?des=\(desig.abbrev) # \(level)"
         log(cmdString)
         let result = await client.runCmd(cmdString)
         log(result)
