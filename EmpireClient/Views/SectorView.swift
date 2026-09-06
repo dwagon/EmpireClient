@@ -99,20 +99,20 @@ struct SectorView: View {
             }
             Divider()
             GridRow {
-                Text(verbatim: "\(sector[.civ], default: "?")")
-                Text(verbatim: "\(sector[.mil], default: "?")")
-                Text(verbatim: "\(sector[.uw], default: "?")")
-                Text(verbatim: "\(sector[.food], default: "?")")
-                Text(verbatim: "\(sector[.shell], default: "?")")
-                Text(verbatim: "\(sector[.gun], default: "?")")
-                Text(verbatim: "\(sector[.petrol], default: "?")")
-                Text(verbatim: "\(sector[.iron], default: "?")")
-                Text(verbatim: "\(sector[.dust], default: "?")")
-                Text(verbatim: "\(sector[.bar], default: "?")")
-                Text(verbatim: "\(sector[.oil], default: "?")")
-                Text(verbatim: "\(sector[.lcm], default: "?")")
-                Text(verbatim: "\(sector[.hcm], default: "?")")
-                Text(verbatim: "\(sector[.rad], default: "?")")
+                Text(verbatim: "\(sector.cargo[.civ], default: "?")")
+                Text(verbatim: "\(sector.cargo[.mil], default: "?")")
+                Text(verbatim: "\(sector.cargo[.uw], default: "?")")
+                Text(verbatim: "\(sector.cargo[.food], default: "?")")
+                Text(verbatim: "\(sector.cargo[.shells], default: "?")")
+                Text(verbatim: "\(sector.cargo[.guns], default: "?")")
+                Text(verbatim: "\(sector.cargo[.petrol], default: "?")")
+                Text(verbatim: "\(sector.cargo[.ironOre], default: "?")")
+                Text(verbatim: "\(sector.cargo[.goldDust], default: "?")")
+                Text(verbatim: "\(sector.cargo[.goldBars], default: "?")")
+                Text(verbatim: "\(sector.cargo[.oil], default: "?")")
+                Text(verbatim: "\(sector.cargo[.lcm], default: "?")")
+                Text(verbatim: "\(sector.cargo[.hcm], default: "?")")
+                Text(verbatim: "\(sector.cargo[.radioactives], default: "?")")
             }
         }
     }
@@ -128,9 +128,9 @@ struct SectorView: View {
             Divider()
             GridRow {
                 Text("Amount").bold()
-                Text(verbatim: "\(sector[.civ], default: "?")")
-                Text(verbatim: "\(sector[.mil], default: "?")")
-                Text(verbatim: "\(sector[.uw], default: "?")")
+                Text(verbatim: "\(sector.cargo[.civ], default: "?")")
+                Text(verbatim: "\(sector.cargo[.mil], default: "?")")
+                Text(verbatim: "\(sector.cargo[.uw], default: "?")")
             }
             Divider()
             GridRow {
@@ -183,17 +183,17 @@ struct SectorView: View {
     var amountView: some View {
         GridRow {
             Text("Amount").bold()
-            Text(verbatim: "\(sector[.food], default: "?")")
-            Text(verbatim: "\(sector[.shell], default: "?")")
-            Text(verbatim: "\(sector[.gun], default: "?")")
-            Text(verbatim: "\(sector[.petrol], default: "?")")
-            Text(verbatim: "\(sector[.iron], default: "?")")
-            Text(verbatim: "\(sector[.dust], default: "?")")
-            Text(verbatim: "\(sector[.bar], default: "?")")
-            Text(verbatim: "\(sector[.oil], default: "?")")
-            Text(verbatim: "\(sector[.lcm], default: "?")")
-            Text(verbatim: "\(sector[.hcm], default: "?")")
-            Text(verbatim: "\(sector[.rad], default: "?")")
+            Text(verbatim: "\(sector.cargo[.food], default: "?")")
+            Text(verbatim: "\(sector.cargo[.shells], default: "?")")
+            Text(verbatim: "\(sector.cargo[.guns], default: "?")")
+            Text(verbatim: "\(sector.cargo[.petrol], default: "?")")
+            Text(verbatim: "\(sector.cargo[.ironOre], default: "?")")
+            Text(verbatim: "\(sector.cargo[.goldDust], default: "?")")
+            Text(verbatim: "\(sector.cargo[.goldBars], default: "?")")
+            Text(verbatim: "\(sector.cargo[.oil], default: "?")")
+            Text(verbatim: "\(sector.cargo[.lcm], default: "?")")
+            Text(verbatim: "\(sector.cargo[.hcm], default: "?")")
+            Text(verbatim: "\(sector.cargo[.radioactives], default: "?")")
         }
     }
 

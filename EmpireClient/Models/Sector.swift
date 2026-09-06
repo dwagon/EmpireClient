@@ -13,6 +13,7 @@ class Sector: Identifiable, Hashable {
     var sdes: Desig
     var owned: Bool = false
     var data: [MapKey: MapKeyValue] = [:]
+    var cargo: [Item: Int] = [:]
 
     init(coords: MapCoord) {
         self.coords = coords

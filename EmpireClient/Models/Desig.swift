@@ -92,7 +92,7 @@ let desigDetails: [DesigType: [DesigKey: String]] = [
     .enlistmentCenter: [.name: "Enlistment Center", .abbrev: "e"],
     .headquarters: [.name: "Headquarters", .abbrev: "!"],
     .bank: [.name: "Bank", .abbrev: "b"],
-    .unknown: [.name: "Unknown", .abbrev: "_"],
+    .unknown: [.name: "Unknown", .abbrev: "?"],
 ]
 
 /// Players can't designate sectors of these types
