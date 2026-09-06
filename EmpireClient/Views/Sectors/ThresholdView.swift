@@ -78,7 +78,7 @@ struct ThresholdView: View {
                 selection: $item,
                 content: {
                     ForEach(Item.allCases, id: \.self) { item in
-                        Text(item.displayName).tag(item)
+                        Text(item.displayName.capitalized).tag(item)
                     }
                 }
             )
