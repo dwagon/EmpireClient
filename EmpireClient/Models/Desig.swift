@@ -92,12 +92,12 @@ let desigDetails: [DesigType: [DesigKey: String]] = [
     .enlistmentCenter: [.name: "Enlistment Center", .abbrev: "e"],
     .headquarters: [.name: "Headquarters", .abbrev: "!"],
     .bank: [.name: "Bank", .abbrev: "b"],
-    .unknown: [.name: "Unknown", .abbrev: "_"]
+    .unknown: [.name: "Unknown", .abbrev: "_"],
 ]
 
 /// Players can't designate sectors of these types
 var undesignatable: Set<DesigType> = [
-    .sea, .mountain, .sanctuary, .wasteland, .wilderness, .plains, .unknown
+    .sea, .mountain, .sanctuary, .wasteland, .wilderness, .plains, .unknown,
 ]
 
 struct Desig: Equatable, Hashable {
@@ -106,6 +106,8 @@ struct Desig: Equatable, Hashable {
     init(_ char: String) {
         if char == "?" {
             self.desig = .unknown
+        } else if char == "F" {  // Fleet at sea
+            self.desig = .sea
         } else {
             self.desig =
                 desigDetails.first { item in
@@ -123,7 +125,6 @@ struct Desig: Equatable, Hashable {
             if let abbrev = details[.abbrev] {
                 return abbrev
             }
-
         }
         print("Error: no abbrev for \(desig)")
         return "?"
@@ -141,7 +142,6 @@ struct Desig: Equatable, Hashable {
             if let name = details[.name] {
                 return name
             }
-
         }
         print("Error: no name for \(desig)")
         return "unknown"

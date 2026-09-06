@@ -34,7 +34,6 @@ extension Game {
         let regex = /The treasury has \$(\d+).00/
         for line in lines {
             if let match = line.firstMatch(of: regex) {
-                print("match=\(match)")
                 let budget = match.1
                 return Int(budget) ?? -2
             }
