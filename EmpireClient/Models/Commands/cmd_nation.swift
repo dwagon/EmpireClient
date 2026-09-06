@@ -26,6 +26,19 @@ extension Game {
             print("nation returned empty")
             return
         }
+        treasury = extract_treasury(from: result)
         nationReport = result
+    }
+
+    func extract_treasury(from lines: [String]) -> Int {
+        let regex = /The treasury has \$(\d+).00/
+        for line in lines {
+            if let match = line.firstMatch(of: regex) {
+                print("match=\(match)")
+                let budget = match.1
+                return Int(budget) ?? -2
+            }
+        }
+        return -1
     }
 }

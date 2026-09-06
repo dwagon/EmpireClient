@@ -17,6 +17,7 @@ class Game: Decodable {
     var logs: [String] = []
     var shipTypes: [String: ShipType] = [:]
     var ships: [String: Ship] = [:]
+    var treasury: Int = 0
 
     init() {
         gameMap = Map(xSize: MapConfig.mapWidth, ySize: MapConfig.mapHeight)

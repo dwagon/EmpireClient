@@ -61,7 +61,7 @@ struct BuildView: View {
                     Text("\(game[coord]![.lcm], default: "?")")
                     Text("\(game[coord]![.hcm], default: "?")")
                     Text("\(game[coord]![.avail], default: "?")")
-                    Text("TODO")
+                    Text("$\(game.treasury)")
                 }
                 GridRow {
                     Text("Requirement")
