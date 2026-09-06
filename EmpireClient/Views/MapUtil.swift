@@ -8,7 +8,7 @@
 import HexGrid
 import SwiftUI
 
-func directionString(_ cell: Cell) -> String {
+func directionString(_ cell: Cell) -> String? {
     let coord = cell.coordinates
     switch (coord.x, coord.y) {
     case (1, 0):
@@ -26,7 +26,7 @@ func directionString(_ cell: Cell) -> String {
     case (-1, 0):
         return "b"
     default:
-        return "\(coord.x),\(coord.y)"
+        return nil
     }
 }
 
