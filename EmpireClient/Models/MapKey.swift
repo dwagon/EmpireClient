@@ -20,20 +20,6 @@ enum MapKey: String {
     case work
     case avail
     case terr
-    case civ
-    case mil
-    case uw
-    case food
-    case shell
-    case gun
-    case petrol
-    case iron
-    case dust
-    case bar
-    case oil
-    case lcm
-    case hcm
-    case rad
     case uwDeliver
     case foodDeliver
     case shellDeliver
