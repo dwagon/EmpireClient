@@ -26,6 +26,10 @@ extension Game {
             print("prod returned empty")
             return
         }
+        guard result.count < 3 else {
+            print("prod returned unknown result: \(result)")
+            return
+        }
         for line in result[3..<result.count - 1] {
             let bits = line.split(separator: " ")
             if let coord = MapCoord(String(bits[0])) {

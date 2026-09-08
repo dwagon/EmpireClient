@@ -20,55 +20,13 @@ enum MapKey: String {
     case work
     case avail
     case terr
-    case uwDeliver
-    case foodDeliver
-    case shellDeliver
-    case gunDeliver
-    case petrolDeliver
-    case ironDeliver
-    case dustDeliver
-    case barDeliver
-    case oilDeliver
-    case lcmDeliver
-    case hcmDeliver
-    case radDeliver
-    case uranCutoff
-    case foodCutoff
-    case shellCutoff
-    case gunCutoff
-    case petrolCutoff
-    case ironCutoff
-    case dustCutoff
-    case barCutoff
-    case oilCutoff
-    case lcmCutoff
-    case hcmCutoff
-    case radCutoff
     case distX
     case distY
-    case civDist
-    case milDist
-    case uwDist
-    case foodDist
-    case shellDist
-    case gunDist
-    case petrolDist
-    case ironDist
-    case dustDist
-    case barDist
-    case oilDist
-    case lcmDist
-    case hcmDist
-    case radDist
     case road
     case rail
     case defence
     case fallout
     case coast
-    case civDeliver
-    case milDeliver
-    case civCutoff
-    case milCutoff
     case terr1
     case terr2
     case terr3

@@ -61,9 +61,6 @@ class Game: Decodable {
         var result = await client.runCmd("coun \(country)")
         log(result)
         result = await client.runCmd("pass \(password)")
-        if result.contains("\"pass\" is not a legal command") {
-            result = await client.runCmd("break")
-        }
         log(result)
         result = await client.runCmd("play")
         log(result)

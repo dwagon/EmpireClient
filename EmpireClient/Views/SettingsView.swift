@@ -134,8 +134,8 @@ struct ThresholdSettings: View {
             TableColumn("Guns") { threshold in
                 CellView(threshold: threshold, itemType: .guns)
             }
-            TableColumn("Planes") { threshold in
-                CellView(threshold: threshold, itemType: .planes)
+            TableColumn("Petrol") { threshold in
+                CellView(threshold: threshold, itemType: .petrol)
             }
         }.tableStyle(.bordered)
     }
