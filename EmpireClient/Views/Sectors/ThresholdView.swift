@@ -22,6 +22,15 @@ struct ThresholdView: View {
 
     @Environment(\.dismiss) var dismiss
 
+    var currentLevel: Int {
+        if let sector = game[coord] {
+            if let amount = sector.distribute[item] {
+                return amount
+            }
+        }
+        return 0
+    }
+
     var body: some View {
         VStack {
             Label("Set Threshold", systemImage: "lessthanorequalto").font(
@@ -42,9 +51,10 @@ struct ThresholdView: View {
                 )
             case .desig(let desig):
                 Text(
-                    "Set threshold of \(item.displayName) all \(desig.name) to \(Int(level))"
+                    "Set threshold of \(item.displayName) at all \(desig.name)s to \(Int(level))"
                 )
             }
+            Text(currentLevel == 0 ? "" : "Current Threshold of \(item.displayName) is \(currentLevel)")
             HStack {
                 Button("Cancel", role: .cancel) {
                     item = .none
@@ -73,15 +83,7 @@ struct ThresholdView: View {
                     )
                 }
             ).pickerStyle(.segmented)
-            Picker(
-                "Set",
-                selection: $item,
-                content: {
-                    ForEach(Item.allCases, id: \.self) { item in
-                        Text(item.displayName.capitalized).tag(item)
-                    }
-                }
-            )
+            ItemPicker(label: "Set", item: $item)
             .pickerStyle(.automatic)
             .padding()
             Slider(value: $level, in: 0...1000, step: 10) {
@@ -102,7 +104,6 @@ struct ThresholdSheet: ViewModifier {
     @State private var item: Item = .none
     @State private var level = 0.0
     @State private var threshType: ThresholdType = .global
-
     func body(content: Content) -> some View {
         content
             .sheet(

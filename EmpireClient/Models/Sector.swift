@@ -14,6 +14,9 @@ class Sector: Identifiable, Hashable {
     var owned: Bool = false
     var data: [MapKey: MapKeyValue] = [:]
     var cargo: [Item: Int] = [:]
+    var distribute: [Item: Int] = [:]   // How much to maintain in sector via warehouse
+    var cutoff: [Item: Int] = [:]       // How much to use for delivery
+    var deliver: [Item: String] = [:]   // Direction to deliver resource in
 
     init(coords: MapCoord) {
         self.coords = coords
