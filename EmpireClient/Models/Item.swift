@@ -15,7 +15,7 @@ enum Item: String, CaseIterable, Codable, Hashable {
     case food = "f"
     case shells = "s"
     case guns = "g"
-    case planes = "p"
+    case petrol = "p"
     case ironOre = "i"
     case goldDust = "d"
     case goldBars = "b"
@@ -23,7 +23,6 @@ enum Item: String, CaseIterable, Codable, Hashable {
     case lcm = "l"
     case hcm = "h"
     case radioactives = "r"
-    case petrol = "X"
 
     var displayName: String {
         switch self {
@@ -34,7 +33,7 @@ enum Item: String, CaseIterable, Codable, Hashable {
         case .food: "food"
         case .shells: "shells"
         case .guns: "guns"
-        case .planes: "planes"
+        case .petrol: "petrol"
         case .ironOre: "iron ore"
         case .goldDust: "gold dust"
         case .goldBars: "gold bars"
@@ -42,7 +41,6 @@ enum Item: String, CaseIterable, Codable, Hashable {
         case .lcm: "lcm"
         case .hcm: "hcm"
         case .radioactives: "radioactives"
-        case .petrol: "petrol"
         }
     }
 }
