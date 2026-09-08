@@ -119,7 +119,7 @@ struct SectorView: View {
 
     var populationSection: some View {
         Grid {
-            GridRow {
+            GridRow() {
                 Text("Population").bold()
                 Text("Civilians").bold()
                 Text("Military").bold()
@@ -134,24 +134,24 @@ struct SectorView: View {
             }
             Divider()
             GridRow {
+                Text(verbatim: "Distribution").bold()
+                Text(verbatim: "\(sector.distribute[.civ], default: "?")")
+                Text(verbatim: "\(sector.distribute[.mil], default: "?")")
+                Text(verbatim: "\(sector.distribute[.uw], default: "?")")
+            }
+            Divider()
+            GridRow {
                 Text(verbatim: "Delivery").bold()
-                Text(verbatim: "\(sector[.civDeliver], default: "?")")
-                Text(verbatim: "\(sector[.milDeliver], default: "?")")
-                Text(verbatim: "\(sector[.uwDeliver], default: "?")")
+                Text(verbatim: "\(sector.deliver[.civ], default: "?")")
+                Text(verbatim: "\(sector.deliver[.mil], default: "?")")
+                Text(verbatim: "\(sector.deliver[.uw], default: "?")")
             }
             Divider()
             GridRow {
                 Text(verbatim: "Cutoff").bold()
-                Text(verbatim: "\(sector[.civCutoff], default: "?")")
-                Text(verbatim: "\(sector[.milCutoff], default: "?")")
-                Text(verbatim: "\(sector[.uranCutoff], default: "?")")
-            }
-            Divider()
-            GridRow {
-                Text(verbatim: "Distribution").bold()
-                Text(verbatim: "\(sector[.civDist], default: "?")")
-                Text(verbatim: "\(sector[.milDist], default: "?")")
-                Text(verbatim: "\(sector[.uwDist], default: "?")")
+                Text(verbatim: "\(sector.cutoff[.civ], default: "?")")
+                Text(verbatim: "\(sector.cutoff[.mil], default: "?")")
+                Text(verbatim: "\(sector.cutoff[.uw], default: "?")")
             }
         }
     }
@@ -174,8 +174,8 @@ struct SectorView: View {
             }
             Divider()
             amountView
-            deliverView
             distributeView
+            deliverView
             cutOffView
         }
     }
@@ -200,51 +200,51 @@ struct SectorView: View {
     var deliverView: some View {
         GridRow {
             Text("Deliver").bold()
-            Text(verbatim: "\(sector[.foodDeliver], default: "?")")
-            Text(verbatim: "\(sector[.shellDeliver], default: "?")")
-            Text(verbatim: "\(sector[.gunDeliver], default: "?")")
-            Text(verbatim: "\(sector[.petrolDeliver], default: "?")")
-            Text(verbatim: "\(sector[.ironDeliver], default: "?")")
-            Text(verbatim: "\(sector[.dustDeliver], default: "?")")
-            Text(verbatim: "\(sector[.barDeliver], default: "?")")
-            Text(verbatim: "\(sector[.oilDeliver], default: "?")")
-            Text(verbatim: "\(sector[.lcmDeliver], default: "?")")
-            Text(verbatim: "\(sector[.hcmDeliver], default: "?")")
-            Text(verbatim: "\(sector[.radDeliver], default: "?")")
+            Text(verbatim: "\(sector.deliver[.food], default: "?")")
+            Text(verbatim: "\(sector.deliver[.shells], default: "?")")
+            Text(verbatim: "\(sector.deliver[.guns], default: "?")")
+            Text(verbatim: "\(sector.deliver[.petrol], default: "?")")
+            Text(verbatim: "\(sector.deliver[.ironOre], default: "?")")
+            Text(verbatim: "\(sector.deliver[.goldDust], default: "?")")
+            Text(verbatim: "\(sector.deliver[.goldBars], default: "?")")
+            Text(verbatim: "\(sector.deliver[.oil], default: "?")")
+            Text(verbatim: "\(sector.deliver[.lcm], default: "?")")
+            Text(verbatim: "\(sector.deliver[.hcm], default: "?")")
+            Text(verbatim: "\(sector.deliver[.radioactives], default: "?")")
         }
     }
 
     var distributeView: some View {
         GridRow {
             Text("Distribute").bold()
-            Text(verbatim: "\(sector[.foodDist], default: "?")")
-            Text(verbatim: "\(sector[.shellDist], default: "?")")
-            Text(verbatim: "\(sector[.gunDist], default: "?")")
-            Text(verbatim: "\(sector[.petrolDist], default: "?")")
-            Text(verbatim: "\(sector[.ironDist], default: "?")")
-            Text(verbatim: "\(sector[.dustDist], default: "?")")
-            Text(verbatim: "\(sector[.barDist], default: "?")")
-            Text(verbatim: "\(sector[.oilDist], default: "?")")
-            Text(verbatim: "\(sector[.lcmDist], default: "?")")
-            Text(verbatim: "\(sector[.hcmDist], default: "?")")
-            Text(verbatim: "\(sector[.radDist], default: "?")")
+            Text(verbatim: "\(sector.distribute[.food], default: "?")")
+            Text(verbatim: "\(sector.distribute[.shells], default: "?")")
+            Text(verbatim: "\(sector.distribute[.guns], default: "?")")
+            Text(verbatim: "\(sector.distribute[.petrol], default: "?")")
+            Text(verbatim: "\(sector.distribute[.ironOre], default: "?")")
+            Text(verbatim: "\(sector.distribute[.goldDust], default: "?")")
+            Text(verbatim: "\(sector.distribute[.goldBars], default: "?")")
+            Text(verbatim: "\(sector.distribute[.oil], default: "?")")
+            Text(verbatim: "\(sector.distribute[.lcm], default: "?")")
+            Text(verbatim: "\(sector.distribute[.hcm], default: "?")")
+            Text(verbatim: "\(sector.distribute[.radioactives], default: "?")")
         }
     }
 
     var cutOffView: some View {
         GridRow {
             Text(verbatim: "Cutoff").bold()
-            Text(verbatim: "\(sector[.foodCutoff], default: "?")")
-            Text(verbatim: "\(sector[.shellCutoff], default: "?")")
-            Text(verbatim: "\(sector[.gunCutoff], default: "?")")
-            Text(verbatim: "\(sector[.petrolCutoff], default: "?")")
-            Text(verbatim: "\(sector[.ironCutoff], default: "?")")
-            Text(verbatim: "\(sector[.dustCutoff], default: "?")")
-            Text(verbatim: "\(sector[.barCutoff], default: "?")")
-            Text(verbatim: "\(sector[.oilCutoff], default: "?")")
-            Text(verbatim: "\(sector[.lcmCutoff], default: "?")")
-            Text(verbatim: "\(sector[.hcmCutoff], default: "?")")
-            Text(verbatim: "\(sector[.radCutoff], default: "?")")
+            Text(verbatim: "\(sector.cutoff[.food], default: "?")")
+            Text(verbatim: "\(sector.cutoff[.shells], default: "?")")
+            Text(verbatim: "\(sector.cutoff[.guns], default: "?")")
+            Text(verbatim: "\(sector.cutoff[.petrol], default: "?")")
+            Text(verbatim: "\(sector.cutoff[.ironOre], default: "?")")
+            Text(verbatim: "\(sector.cutoff[.goldDust], default: "?")")
+            Text(verbatim: "\(sector.cutoff[.goldBars], default: "?")")
+            Text(verbatim: "\(sector.cutoff[.oil], default: "?")")
+            Text(verbatim: "\(sector.cutoff[.lcm], default: "?")")
+            Text(verbatim: "\(sector.cutoff[.hcm], default: "?")")
+            Text(verbatim: "\(sector.cutoff[.radioactives], default: "?")")
         }
     }
 
