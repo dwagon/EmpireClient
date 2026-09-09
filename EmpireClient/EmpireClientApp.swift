@@ -34,7 +34,6 @@ struct EmpireClientApp: App {
                 Button("Ship Types", systemImage: "sailboat") {
                     openWindow(id: "ship_types_report")
                 }
-
             }
         }
 

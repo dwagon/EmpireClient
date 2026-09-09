@@ -14,14 +14,19 @@ struct PowerReport: View {
     var body: some View {
         VStack {
             VStack {
-                Text(game.powerReport[0..<3].joined(separator: "\n"))
-                    .multilineTextAlignment(.center)
-                Text(game.powerReport[3...].joined(separator: "\n"))
-                    .multilineTextAlignment(.trailing)
+                if game.powerReport.isEmpty {
+                    EmptyView()
+                } else {
+                    Text(game.powerReport[0..<3].joined(separator: "\n"))
+                        .multilineTextAlignment(.center)
+                    Text(game.powerReport[3...].joined(separator: "\n"))
+                        .multilineTextAlignment(.trailing)
+                }
             }
             .font(
                 .system(.body, design: .monospaced)
             ).border(.blue)
+            .task { await game.cmd_power() }
             HStack {
                 Button("OK") {
                     dismiss()

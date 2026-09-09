@@ -71,11 +71,9 @@ class Game: Decodable {
         await cmd_dump()
         await cmd_map()
         await cmd_nation()
-        await cmd_budget()
-        await cmd_prod()
+            await cmd_prod()
         await cmd_show_ship()
         await cmd_ship()
-        await cmd_power()
     }
 
     enum CodingKeys: String, CodingKey {

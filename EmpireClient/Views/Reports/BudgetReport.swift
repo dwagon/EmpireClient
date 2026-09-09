@@ -23,6 +23,9 @@ struct BudgetReport: View {
                 }
             }
         }
+        .task {
+            await game.cmd_budget()
+        }
 
     }
 }
