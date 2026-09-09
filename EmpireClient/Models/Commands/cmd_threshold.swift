@@ -36,7 +36,19 @@ extension Game {
         desig: Desig,
         level: Int
     ) async {
-        let cmdString = "thresh \(item.rawValue) ?des=\(desig.abbrev) # \(level)"
+        let cmdString =
+            "thresh \(item.rawValue) ?des=\(desig.abbrev) # \(level)"
+        log(cmdString)
+        let result = await client.runCmd(cmdString)
+        log(result)
+    }
+
+    func cmd_threshold(
+        item: String,
+        coord: MapCoord,
+        level: Int
+    ) async {
+        let cmdString = "thresh \(item) \(coord.toString()) \(level)"
         log(cmdString)
         let result = await client.runCmd(cmdString)
         log(result)

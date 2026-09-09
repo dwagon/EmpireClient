@@ -31,6 +31,11 @@ class Map {
         return mapData.contains { $0.key == coordinates }
     }
 
+    /// Return all sectors
+    func allSectors() -> [Sector] {
+        return Array(mapData.values)
+    }
+
     /// Return a list of all instances of a particular sector designation
     func instances(_ desigtype: DesigType) -> [Sector] {
         let desig = Desig(desigtype)
