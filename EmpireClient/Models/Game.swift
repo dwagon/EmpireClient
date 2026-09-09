@@ -14,6 +14,7 @@ class Game: Decodable {
     var client = TCPClient()
     var nationReport: [String] = []
     var budgetReport: [String] = []
+    var powerReport: [String] = []
     var logs: [String] = []
     var shipTypes: [String: ShipType] = [:]
     var ships: [String: Ship] = [:]
@@ -74,6 +75,7 @@ class Game: Decodable {
         await cmd_prod()
         await cmd_show_ship()
         await cmd_ship()
+        await cmd_power()
     }
 
     enum CodingKeys: String, CodingKey {

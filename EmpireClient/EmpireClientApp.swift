@@ -28,6 +28,9 @@ struct EmpireClientApp: App {
                 Button("Budget", systemImage: "dollarsign.gauge.chart.lefthalf.righthalf") {
                     openWindow(id: "budget_report")
                 }
+                Button("Power", systemImage: "powermeter") {
+                    openWindow(id: "power_report")
+                }
                 Button("Ship Types", systemImage: "sailboat") {
                     openWindow(id: "ship_types_report")
                 }
@@ -45,6 +48,10 @@ struct EmpireClientApp: App {
 
         Window("Ship Types Report", id: "ship_types_report") {
             ShipTypeReport(shipTypes: game.shipTypes)
+        }
+
+        Window("Power Report", id: "power_report") {
+            PowerReport(game: game)
         }
     }
 }
