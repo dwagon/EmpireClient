@@ -26,7 +26,7 @@ extension Game {
             print("prod returned empty")
             return
         }
-        guard result.count < 3 else {
+        guard result.count > 3 else {
             print("prod returned unknown result: \(result)")
             return
         }

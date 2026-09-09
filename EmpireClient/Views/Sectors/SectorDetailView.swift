@@ -17,6 +17,8 @@ struct SectorDetailView: View {
     @State private var showDistributePopup: Bool = false
     @State private var showThresholdPopup: Bool = false
     @State private var showBuildPopup: Bool = false
+    @State private var showOptimizePopup: Bool = false
+
 
     var body: some View {
         HStack {
@@ -61,6 +63,11 @@ struct SectorDetailView: View {
             game: game,
             centerCoord: centerCoord
         )
+        .optimize(
+            isPresented: $showOptimizePopup,
+            game: game,
+            centerCoord: centerCoord
+        )
     }
 
     var sectorButtonBar: some View {
@@ -73,6 +80,7 @@ struct SectorDetailView: View {
                     distributeButton
                     exploreButton
                     thresholdButton
+                    optimizeButton
                 }
             }
         }
@@ -114,6 +122,12 @@ struct SectorDetailView: View {
     var designateButton: some View {
         Button("Designate") {
             showDesignatePopup = true
+        }
+    }
+
+    var optimizeButton: some View {
+        Button("Optimize") {
+            showOptimizePopup = true
         }
     }
 }

@@ -39,6 +39,15 @@ enum MapKeyValue: CustomStringConvertible, Equatable {
         }
     }
 
+    func toString() throws -> String {
+        switch self {
+        case .int:
+            throw MapKeyException.invalidType
+        case .str(let string):
+            return string
+        }
+    }
+
     func toDouble() throws -> Double {
         return try Double(self.toInt())
     }
