@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LoadShipView: View {
+    var game: Game
     var shipNum: String
     @Binding var item: Item
     @Binding var amount: Int
@@ -16,6 +17,9 @@ struct LoadShipView: View {
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
+        let shipLocation = game.ships[shipNum]?.coords
+        let available = game.gameMap[shipLocation!]!.cargo[item]
+
         VStack {
             Label("Load Ship \(shipNum)", systemImage: "square.and.arrow.down")
                 .font(
@@ -40,7 +44,7 @@ struct LoadShipView: View {
             Text(
                 item == .none
                     ? ""
-                    : "Load \(amount) \(item.displayName.capitalized) onto Ship \(shipNum)"
+                : "Load \(amount) \(item.displayName.capitalized) (\(available, default: "None") avail) onto Ship \(shipNum)"
             )
             HStack {
                 Button("Cancel", role: .cancel) {
@@ -104,6 +108,7 @@ struct LoadShipSheet: ViewModifier {
                     }
                 } content: {
                     LoadShipView(
+                        game: game,
                         shipNum: game.ships[shipId]!.number,
                         item: $item,
                         amount: $amount,
@@ -133,10 +138,12 @@ extension View {
 }
 
 #Preview {
+    @Previewable @State var game: Game = Game()
     @Previewable @State var item: Item = .none
     @Previewable @State var amount: Int = 1
 
     LoadShipView(
+        game: game,
         shipNum: "2",
         item: $item,
         amount: $amount,
