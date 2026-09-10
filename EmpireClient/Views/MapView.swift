@@ -25,7 +25,7 @@ enum UnitMapStyle {
 }
 
 struct MapView: View {
-    let gameMap: Map
+    let game: Game
     @Binding var centerCoord: MapCoord
     let ships: [String: Ship]
 
@@ -64,12 +64,23 @@ struct MapView: View {
         }
     }
 
+    /// Return a string repr of ships in a cell ("F" if multiple ships, otherwise the ship type)
+    func shipText(_ coord: MapCoord) -> String? {
+        let ships = game.ships.filter({ $0.value.coords == coord })
+        if ships.count > 1 { return "F" }
+        if ships.count == 1 { return Array(ships.values)[0].type }
+        return nil
+    }
+
     func cellText(_ cell: Cell) -> String {
         let mapCoord = screenToMapCoord(
             cell.coordinates,
             centerCoord: centerCoord
         )
-        if let sector = gameMap[mapCoord] {
+        if let sector = game.gameMap[mapCoord] {
+            if let shipText = shipText(mapCoord) {
+                return shipText
+            }
             return sector.symbol
         } else {
             return "\(mapCoord.x),\(mapCoord.y)"
@@ -120,7 +131,12 @@ struct MapView: View {
     }
 
     func cellColourNormal(_ cell: Cell) -> GraphicsContext.Shading {
-        return mapCellColour(cell: cell, gameMap: gameMap, hexmap: hexmap, center: centerCoord)
+        return mapCellColour(
+            cell: cell,
+            gameMap: game.gameMap,
+            hexmap: hexmap,
+            center: centerCoord
+        )
     }
 
     func cellColourBySector(_ cell: Cell, mapkey: MapKey)
@@ -130,7 +146,7 @@ struct MapView: View {
             cell.coordinates,
             centerCoord: centerCoord
         )
-        if let sector = gameMap[mapCoord] {
+        if let sector = game.gameMap[mapCoord] {
             if sector.desig.desig == .sea {
                 return .color(Color.blue)
             }
@@ -168,5 +184,5 @@ struct MapView: View {
 #Preview {
     @Previewable var game = Game()
     @Previewable @State var centerCoord = MapCoord(x: 0, y: 0)
-    MapView(gameMap: game.gameMap, centerCoord: $centerCoord, ships: [:])
+    MapView(game: game, centerCoord: $centerCoord, ships: [:])
 }

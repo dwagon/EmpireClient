@@ -62,7 +62,7 @@ struct ContentView: View {
 
     var displayMapView: some View {
         MapView(
-            gameMap: game.gameMap,
+            game: game,
             centerCoord: $centerCoord,
             ships: game.ships
         )

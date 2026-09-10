@@ -45,8 +45,7 @@ class Game: Decodable {
             for subline in line.split(separator: "\n") {
                 logs.append(String(subline))
             }
-        }
-        else {
+        } else {
             logs.append(line)
         }
     }
@@ -71,17 +70,21 @@ class Game: Decodable {
         await cmd_dump()
         await cmd_map()
         await cmd_nation()
-            await cmd_prod()
+        await cmd_prod()
         await cmd_show_ship()
         await cmd_ship()
     }
 
     enum CodingKeys: String, CodingKey {
-//        case game_map
+        // case game_map
+        // case client
         case nationReport
         case budgetReport
-        case ships
+        // case powerReport
+        // case logs
         case shipTypes
+        case ships
+        // case treasury
     }
 
     required init(from decoder: Decoder) throws {
@@ -92,6 +95,9 @@ class Game: Decodable {
         budgetReport = try values.decode([String].self, forKey: .budgetReport)
         logs = []
         ships = try values.decode([String: Ship].self, forKey: .ships)
-        shipTypes = try values.decode([String: ShipType].self, forKey: .shipTypes)
+        shipTypes = try values.decode(
+            [String: ShipType].self,
+            forKey: .shipTypes
+        )
     }
 }
