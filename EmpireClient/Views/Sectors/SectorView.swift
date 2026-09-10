@@ -142,9 +142,9 @@ struct SectorView: View {
             Divider()
             GridRow {
                 Text(verbatim: "Delivery").bold()
-                Text(verbatim: "\(sector.deliver[.civ], default: "?")")
-                Text(verbatim: "\(sector.deliver[.mil], default: "?")")
-                Text(verbatim: "\(sector.deliver[.uw], default: "?")")
+                DeliveryDirection(dir: sector.deliver[.civ])
+                DeliveryDirection(dir: sector.deliver[.mil])
+                DeliveryDirection(dir: sector.deliver[.uw])
             }
             Divider()
             GridRow {
@@ -200,17 +200,17 @@ struct SectorView: View {
     var deliverView: some View {
         GridRow {
             Text("Deliver").bold()
-            Text(verbatim: "\(sector.deliver[.food], default: "?")")
-            Text(verbatim: "\(sector.deliver[.shells], default: "?")")
-            Text(verbatim: "\(sector.deliver[.guns], default: "?")")
-            Text(verbatim: "\(sector.deliver[.petrol], default: "?")")
-            Text(verbatim: "\(sector.deliver[.ironOre], default: "?")")
-            Text(verbatim: "\(sector.deliver[.goldDust], default: "?")")
-            Text(verbatim: "\(sector.deliver[.goldBars], default: "?")")
-            Text(verbatim: "\(sector.deliver[.oil], default: "?")")
-            Text(verbatim: "\(sector.deliver[.lcm], default: "?")")
-            Text(verbatim: "\(sector.deliver[.hcm], default: "?")")
-            Text(verbatim: "\(sector.deliver[.radioactives], default: "?")")
+            DeliveryDirection(dir: sector.deliver[.food])
+            DeliveryDirection(dir: sector.deliver[.shells])
+            DeliveryDirection(dir: sector.deliver[.guns])
+            DeliveryDirection(dir: sector.deliver[.petrol])
+            DeliveryDirection(dir: sector.deliver[.ironOre])
+            DeliveryDirection(dir: sector.deliver[.goldDust])
+            DeliveryDirection(dir: sector.deliver[.goldBars])
+            DeliveryDirection(dir: sector.deliver[.oil])
+            DeliveryDirection(dir: sector.deliver[.lcm])
+            DeliveryDirection(dir: sector.deliver[.hcm])
+            DeliveryDirection(dir: sector.deliver[.radioactives])
         }
     }
 
@@ -316,6 +316,24 @@ struct SectorView: View {
                     ExpandButton(isExpanded: $resourceCollapse)
                 }
             }
+        }
+    }
+}
+
+struct DeliveryDirection: View {
+    var dir: String?
+
+    var body: some View {
+        if let dir {
+            if let icon = directionIcon(dir) {
+                Image(systemName: icon)
+            }
+            else {
+                Image(systemName: "questionmark")
+            }
+        }
+        else {
+            Image(systemName: "questionmark")
         }
     }
 }

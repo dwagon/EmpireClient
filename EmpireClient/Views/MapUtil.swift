@@ -30,6 +30,32 @@ func directionString(_ cell: Cell) -> String? {
     }
 }
 
+func directionIcon(_ direction: String?) -> String? {
+    if let direction {
+        switch (direction) {
+        case "u":
+            return "arrow.up.right"
+        case "j":
+            return "arrow.right"
+        case "n":
+            return "arrow.down.right"
+        case "h":
+            return "arrow.2.squarepath"
+        case ".":
+            return "arrow.2.squarepath"
+        case "y":
+            return "arrow.up.and.backward"
+        case "g":
+            return "arrow.left"
+        case "b":
+            return "arrow.down.backward"
+        default:
+            return nil
+        }
+    }
+    return nil
+}
+
 // Generic cell colour for maps
 func mapCellColour(cell: Cell, gameMap: Map, hexmap: HexGrid, center: MapCoord) -> GraphicsContext.Shading {
     do {
