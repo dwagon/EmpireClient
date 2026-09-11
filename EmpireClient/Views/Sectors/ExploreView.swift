@@ -72,7 +72,7 @@ struct ExploreView: View {
             let str =
                 "Send \(number) "
                 + ((item == Item.mil) ? "military" : "civilians")
-            let max = game[coord]!.cargo[item] ?? 0
+            let max = game[coord]!.cargo[item] ?? 1
             Stepper(
                 str,
                 value: $number,
