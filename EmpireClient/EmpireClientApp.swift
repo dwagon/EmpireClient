@@ -31,6 +31,9 @@ struct EmpireClientApp: App {
                 Button("Power", systemImage: "powermeter") {
                     openWindow(id: "power_report")
                 }
+                Button("Land Unit Types", systemImage: "car.rear.road.lane.distance.5") {
+                    openWindow(id: "land_types_report")
+                }
                 Button("Ship Types", systemImage: "sailboat") {
                     openWindow(id: "ship_types_report")
                 }
@@ -47,6 +50,10 @@ struct EmpireClientApp: App {
 
         Window("Ship Types Report", id: "ship_types_report") {
             ShipTypeReport(shipTypes: game.shipTypes)
+        }
+
+        Window("Land Unit Types Report", id: "land_types_report") {
+            LandUnitTypeReport(landUnitTypes: game.landTypes)
         }
 
         Window("Power Report", id: "power_report") {
