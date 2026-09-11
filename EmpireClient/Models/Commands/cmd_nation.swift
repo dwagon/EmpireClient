@@ -27,6 +27,7 @@ extension Game {
             return
         }
         treasury = extract_treasury(from: result)
+        techLevel = extract_tech(from: result)
         nationReport = result
     }
 
@@ -39,5 +40,16 @@ extension Game {
             }
         }
         return -1
+    }
+
+    func extract_tech(from lines: [String]) -> Float {
+        let regex = /Technology...* (\d+\.\d+)\s/
+        for line in lines {
+            if let match = line.firstMatch(of: regex) {
+                let tech = match.1
+                return Float(tech) ?? 0.0
+            }
+        }
+        return 0.0
     }
 }
