@@ -20,6 +20,7 @@ class Game: Decodable {
     var landTypes: [String: LandUnitType] = [:]
     var ships: [String: Ship] = [:]
     var treasury: Int = 0
+    var techLevel: Float = 0
 
     init() {
         gameMap = Map(xSize: MapConfig.mapWidth, ySize: MapConfig.mapHeight)
@@ -87,6 +88,7 @@ class Game: Decodable {
         case shipTypes
         case ships
         // case treasury
+        // case techLevel
     }
 
     required init(from decoder: Decoder) throws {
