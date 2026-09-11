@@ -18,27 +18,30 @@ struct ShipDetailView: View {
     @State private var showAssaultPopup: Bool = false
 
     var body: some View {
+        let minColWidth: CGFloat = 60
+        let idealColWidth: CGFloat = 80
+        let maxColWidth: CGFloat = 100
         HStack {
             VStack {
                 Table(game.shipTable, selection: $selectedShip) {
                     TableColumn("Ship #") { val in Text("\(val.number)") }
-                        .width(min: 20, ideal: 30, max: 60)
+                        .width(min: minColWidth, ideal: idealColWidth, max: maxColWidth)
                     TableColumn("Type") { val in
                         Text("\(game.shipTypes[val.type]!.name) (\(val.type))")
                     }
                     TableColumn("Coord") { val in
                         Text("\(val.coords.toString(), default: "unknown")")
-                    }.width(min: 20, ideal: 30, max: 60)
+                    }.width(min: minColWidth, ideal: idealColWidth, max: maxColWidth)
 
                     TableColumn("Mob") { val in Text("\(val.mob)") }.width(
-                        min: 20,
-                        ideal: 30,
-                        max: 60
+                        min: minColWidth,
+                        ideal: idealColWidth,
+                        max: maxColWidth
                     )
                     TableColumn("Eff") { val in Text("\(val.eff)%") }.width(
-                        min: 20,
-                        ideal: 30,
-                        max: 60
+                        min: minColWidth,
+                        ideal: idealColWidth,
+                        max: maxColWidth
                     )
                 }
                 .onChange(of: selectedShip) {

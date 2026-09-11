@@ -163,14 +163,14 @@ struct SectorView: View {
                 Text("Food").bold()
                 Text("Shells").bold()
                 Text("Guns").bold()
-                Text("Petroleum").bold()
+                Text("Petrol").bold()
                 Text("Iron Ore").bold()
                 Text("Gold Dust").bold()
                 Text("Gold Bars").bold()
                 Text("Crude Oil").bold()
-                Text("Light CM").bold()
-                Text("Heavy CM").bold()
-                Text("Radioactives").bold()
+                Text("LCM").bold()
+                Text("HCM").bold()
+                Text("Rads").bold()
             }
             Divider()
             amountView

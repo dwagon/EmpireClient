@@ -8,53 +8,41 @@
 import HexGrid
 import SwiftUI
 
-enum ContentType {
-    case sector
-    case ship
-}
-
 struct ContentView: View {
     @State var game: Game
     @State var centerCoord: MapCoord
-    @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var isLoggedIn: Bool = false
     @FocusState private var focused: Bool
-
-    @State private var content: ContentType = .sector
 
     var profile = loadSettings()
 
     var body: some View {
-        NavigationSplitView(columnVisibility: $columnVisibility) {
-            List {
-                Button("Sector") { content = .sector }
-                    .foregroundStyle(content == .sector ? .blue : .secondary)
-                if !game.ships.isEmpty {
-                    Button("Ship") { content = .ship }
-                        .foregroundStyle(
-                            content == .ship ? .blue : .secondary
-                        )
+        NavigationSplitView(columnVisibility: .constant(.doubleColumn)) {
+            Group {
+                if !isLoggedIn {
+                    loginButton
+                } else {
+                    displayMapView
                 }
-            }
-        } content: {
-            Spacer()
-            if !isLoggedIn {
-                loginButton
-                Spacer()
-            } else {
-                displayMapView
-            }
+            }.navigationSplitViewColumnWidth(800)
+                .toolbar(removing: .sidebarToggle)
         } detail: {
             Spacer()
-            detailView
+            TabView {
+                Tab("Sector Details", systemImage: "info") {
+                    SectorDetailView(game: game, centerCoord: centerCoord)
+                }
+                Tab("Ships", systemImage: "sailboat") {
+                    ShipDetailView(game: game, centerCoord: $centerCoord)
+                }
+            }
         }
-        .navigationSplitViewStyle(.balanced)
         .focusable()
         .onKeyPress { press in
             return keyPressed(press.characters)
         }
         HStack {
-            RawCmdView(game: game).frame(maxWidth: 700)
+            RawCmdView(game: game).frame(maxWidth: 600)
             Spacer()
             LogView(logs: game.logs).scaledToFill()
         }
@@ -67,18 +55,6 @@ struct ContentView: View {
             ships: game.ships
         )
         .navigationSplitViewColumnWidth(min: 300, ideal: 400)
-    }
-
-    var detailView: some View {
-        Group {
-            switch content {
-            case .sector:
-                SectorDetailView(game: game, centerCoord: centerCoord)
-            case .ship:
-                ShipDetailView(game: game, centerCoord: $centerCoord)
-            }
-        }
-        .navigationSplitViewColumnWidth(min: 400, ideal: 800)
     }
 
     var loginButton: some View {
