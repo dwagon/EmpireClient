@@ -10,7 +10,7 @@ import XCTest
 @testable import EmpireClient
 
 @MainActor
-final class test_cmd_ship: XCTestCase {
+final class test_cmd_show_ship: XCTestCase {
     func test_parse_show_ship_str() throws {
         let buildTestString = [
             "Printing for tech level '0'",
