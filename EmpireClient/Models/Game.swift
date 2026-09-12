@@ -32,6 +32,14 @@ class Game: Decodable {
         }
     }
 
+    /// Return if a ship can be built with the current tech
+    func isShipBuildable(_ shipType: String) -> Bool {
+        if let shipType = shipTypes[shipType] {
+            return shipType.tech <= Int(techLevel)
+        }
+        return false
+    }
+
     subscript(key: MapCoord) -> Sector?
     {
         get {
