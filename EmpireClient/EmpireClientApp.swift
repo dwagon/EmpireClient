@@ -49,7 +49,7 @@ struct EmpireClientApp: App {
         }
 
         Window("Ship Types Report", id: "ship_types_report") {
-            ShipTypeReport(shipTypes: game.shipTypes, buildable: game.isShipBuildable)
+            ShipTypeReport(shipTypes: Array(game.shipTypes.values).sorted(by: { $0.name < $1.name}), buildable: game.isShipBuildable)
         }
 
         Window("Land Unit Types Report", id: "land_types_report") {
