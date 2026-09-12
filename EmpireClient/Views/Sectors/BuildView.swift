@@ -86,8 +86,7 @@ struct BuildView: View {
             HStack {
                 Picker("Ship Type to Build", selection: $deviceType) {
                     Text("No ship").tag("")
-                    ForEach(Array(game.shipTypes.keys), id: \.self) {
-                        shipType in
+                    ForEach(Array(game.shipTypes.keys).filter({game.isShipBuildable($0)}), id: \.self) { shipType in
                         let details = game.shipTypes[shipType]!
                         Text("\(details.name)").tag(shipType)
                     }
