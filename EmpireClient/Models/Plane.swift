@@ -16,7 +16,6 @@ struct PlaneType: Identifiable, Codable {
     var avail: Int = 0
     var tech: Int = 0
     var cost: Int = 0
-
     var acc: Int = 0
     var load: Int = 0
     var att: Int = 0
