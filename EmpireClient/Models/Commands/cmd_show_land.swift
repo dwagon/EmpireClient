@@ -29,7 +29,7 @@ extension Game {
 }
 
 func parse_land_str(buildStr: [String], statsStr: [String], capStr: [String])
-    -> [String: LandUnitType]
+    -> [String: LandType]
 {
     //    Printing for tech level '44'
     //                              lcm hcm guns avail tech $
@@ -38,14 +38,14 @@ func parse_land_str(buildStr: [String], statsStr: [String], capStr: [String])
     //    linf light infantry         8   4    0    36   40 $300
     //    tra  train                100  50    0   220   40 $3500
     //    spy  infiltrator           10   5    0    40   40 $750
-    var landTypes: [String: LandUnitType] = [:]
+    var landTypes: [String: LandType] = [:]
 
     for line in buildStr[2..<buildStr.count] {
         let bits = line.split(separator: " ")
         let abbrev = String(bits[0])
         let lastBit = bits.count
         let unitName = extractUnitName(line)
-        var landUnit = LandUnitType(name: unitName)
+        var landUnit = LandType(name: unitName)
         landUnit.abbrev = abbrev
         landUnit.lcmCost = Int(bits[lastBit - 6])!
         landUnit.hcmCost = Int(bits[lastBit - 5])!

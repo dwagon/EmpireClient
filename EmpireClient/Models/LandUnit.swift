@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct LandUnitType: Identifiable, Codable {
+struct LandType: Identifiable, Codable {
     var abbrev: String = ""
     var name: String = ""
     var lcmCost: Int = 0

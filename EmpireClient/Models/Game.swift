@@ -17,7 +17,7 @@ class Game: Decodable {
     var powerReport: [String] = []
     var logs: [String] = []
     var shipTypes: [String: ShipType] = [:]
-    var landTypes: [String: LandUnitType] = [:]
+    var landTypes: [String: LandType] = [:]
     var planeTypes: [String: PlaneType] = [:]
     var ships: [String: Ship] = [:]
     var treasury: Int = 0
