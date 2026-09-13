@@ -34,7 +34,13 @@ struct ContentView: View {
                 }
                 Tab("Ships", systemImage: "sailboat") {
                     ShipDetailView(game: game, centerCoord: $centerCoord)
-                }
+                }.disabled(game.ships.isEmpty)
+                Tab("Land Units", systemImage: "car.rear.road.lane.distance.5") {
+//                    ShipDetailView(game: game, centerCoord: $centerCoord)
+                }.disabled(game.landUnits.isEmpty)
+                Tab("Planes", systemImage: "airplane.up.right") {
+                    PlaneDetailView(game: game, centerCoord: $centerCoord)
+                }.disabled(game.planes.isEmpty)
             }
         }
         .focusable()

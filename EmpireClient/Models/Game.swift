@@ -16,10 +16,16 @@ class Game: Decodable {
     var budgetReport: [String] = []
     var powerReport: [String] = []
     var logs: [String] = []
+
     var shipTypes: [String: ShipType] = [:]
-    var landTypes: [String: LandType] = [:]
-    var planeTypes: [String: PlaneType] = [:]
     var ships: [String: Ship] = [:]
+
+    var landTypes: [String: LandType] = [:]
+    var landUnits: [String: LandType] = [:]
+
+    var planeTypes: [String: PlaneType] = [:]
+    var planes: [String: Plane] = [:]
+    
     var treasury: Int = 0
     var techLevel: Float = 0
 
@@ -29,6 +35,12 @@ class Game: Decodable {
 
     var shipTable: [Ship] {
         return Array(ships.values).sorted {
+            $0.number < $1.number
+        }
+    }
+
+    var planeTable: [Plane] {
+        return Array(planes.values).sorted {
             $0.number < $1.number
         }
     }
