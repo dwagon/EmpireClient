@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct PlaneTypeReport: View {
-    let planeTypes: [String: PlaneType]
+    let planeTypes: [PlaneType]
 
     @Environment(\.dismiss) private var dismiss
     @State private var selectedUnit: PlaneType.ID?
 
     var body: some View {
         VStack {
-            Table(Array(planeTypes.values), selection: $selectedUnit) {
+            Table(planeTypes, selection: $selectedUnit) {
                 TableColumn("Abbrev", value: \.abbrev)
                     .width(min: 30, ideal: 50, max: 60)
                 TableColumn("Name", value: \.name)
@@ -30,8 +30,11 @@ struct PlaneTypeReport: View {
             .border(.blue)
             if let selectedUnit {
                 Spacer()
-                PlaneTypeView(unitType: planeTypes[selectedUnit]!)
-                    .border(.blue).padding()
+                if let plane = planeTypes.first(where: { $0.id == selectedUnit }
+                ) {
+                    PlaneTypeView(planeType: plane)
+                        .border(.blue).padding()
+                }
             }
             HStack {
                 Button("OK") {
@@ -42,7 +45,7 @@ struct PlaneTypeReport: View {
     }
 
     struct PlaneTypeView: View {
-        let unitType: PlaneType
+        let planeType: PlaneType
 
         var body: some View {
             HStack(alignment: .top) {
@@ -54,27 +57,27 @@ struct PlaneTypeReport: View {
                     }
                     GridRow {
                         Text("LCM")
-                        Text("\(unitType.lcmCost)")
+                        Text("\(planeType.lcmCost)")
                     }
                     GridRow {
                         Text("HCM")
-                        Text("\(unitType.hcmCost)")
+                        Text("\(planeType.hcmCost)")
                     }
                     GridRow {
                         Text("Crew")
-                        Text("\(unitType.crewCost)")
+                        Text("\(planeType.crewCost)")
                     }
                     GridRow {
                         Text("Work")
-                        Text("\(unitType.avail)")
+                        Text("\(planeType.avail)")
                     }
                     GridRow {
                         Text("Cost")
-                        Text("$\(unitType.cost)")
+                        Text("$\(planeType.cost)")
                     }
                     GridRow {
                         Text("Tech")
-                        Text("\(unitType.tech)")
+                        Text("\(planeType.tech)")
                     }
                 }
                 Grid(alignment: .leading) {
@@ -85,31 +88,31 @@ struct PlaneTypeReport: View {
                     }
                     GridRow {
                         Text("Accuracy")
-                        Text("\(unitType.acc)")
+                        Text("\(planeType.acc)")
                     }
                     GridRow {
                         Text("Load")
-                        Text("\(unitType.load)")
+                        Text("\(planeType.load)")
                     }
                     GridRow {
                         Text("Attack")
-                        Text("\(unitType.att)")
+                        Text("\(planeType.att)")
                     }
                     GridRow {
                         Text("Defence")
-                        Text("\(unitType.def)")
+                        Text("\(planeType.def)")
                     }
                     GridRow {
                         Text("Range")
-                        Text("\(unitType.ran)")
+                        Text("\(planeType.ran)")
                     }
                     GridRow {
                         Text("Fuel")
-                        Text("\(unitType.fuel)")
+                        Text("\(planeType.fuel)")
                     }
                     GridRow {
                         Text("Stealth")
-                        Text("\(unitType.stealth)%")
+                        Text("\(planeType.stealth)%")
                     }
                 }
             }
@@ -119,7 +122,7 @@ struct PlaneTypeReport: View {
 
 #Preview {
     let units = [
-        "ss": PlaneType(
+        PlaneType(
             abbrev: "su",
             name: "Some Unit",
             lcmCost: 10,

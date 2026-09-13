@@ -8,19 +8,21 @@
 import SwiftUI
 
 struct LandTypeReport: View {
-    let landTypes: [String: LandType]
+    let landTypes: [LandType]
 
     @Environment(\.dismiss) private var dismiss
     @State private var selectedUnit: LandType.ID?
 
     var body: some View {
         VStack {
-            Table(Array(landTypes.values), selection: $selectedUnit) {
+            Table(landTypes, selection: $selectedUnit) {
                 TableColumn("Abbrev", value: \.abbrev)
                     .width(min: 30, ideal: 50, max: 60)
                 TableColumn("Name", value: \.name)
                     .width(min: 60, ideal: 100, max: 120)
                 TableColumn("Speed") { details in Text("\(details.speed)") }
+                    .width(min: 40, ideal: 50, max: 60)
+                TableColumn("Tech") { details in Text("\(details.tech)") }
                     .width(min: 40, ideal: 50, max: 60)
                 TableColumn("Capabilities", value: \.capabilities)
             }
@@ -28,8 +30,10 @@ struct LandTypeReport: View {
             .border(.blue)
             if let selectedUnit {
                 Spacer()
-                LandTypeView(unitType: landTypes[selectedUnit]!)
-                    .border(.blue).padding()
+                if let land = landTypes.first(where: { $0.id == selectedUnit} ) {
+                    LandTypeView(unitType: land)
+                        .border(.blue).padding()
+                }
             }
             HStack {
                 Button("OK") {
@@ -131,8 +135,7 @@ struct LandTypeReport: View {
 }
 
 #Preview {
-    let units = [
-        "ss": LandType(
+    let units = [LandType(
             abbrev: "su",
             name: "Some Unit",
             lcmCost: 10,
