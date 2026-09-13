@@ -78,12 +78,14 @@ struct MapView: View {
             centerCoord: centerCoord
         )
         if let sector = game.gameMap[mapCoord] {
-            if let shipText = shipText(mapCoord) {
-                return shipText
+            if lowPriDesigs.contains(sector.desig.desig) {
+                if let shipText = shipText(mapCoord) {
+                    return shipText
+                }
             }
             return sector.symbol
         } else {
-            return "\(mapCoord.x),\(mapCoord.y)"
+            return "\(mapCoord.toString())"
         }
     }
 
