@@ -68,7 +68,7 @@ struct MapView: View {
     func shipText(_ coord: MapCoord) -> String? {
         let ships = game.ships.filter({ $0.value.coords == coord })
         if ships.count > 1 { return "F" }
-        if ships.count == 1 { return Array(ships.values)[0].type }
+        if ships.count == 1 { return Array(ships.values)[0].abbrev }
         return nil
     }
 

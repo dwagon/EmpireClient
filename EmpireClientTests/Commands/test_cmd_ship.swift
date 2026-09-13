@@ -74,7 +74,7 @@ final class test_cmd_show_ship: XCTestCase {
 
         XCTAssertEqual(g.ships.count, 1)
         XCTAssertTrue(g.ships.keys.contains("0"))
-        XCTAssertEqual(g.ships["0"]!.type, "fb")
+        XCTAssertEqual(g.ships["0"]!.abbrev, "fb")
         XCTAssertEqual(g.ships["0"]!.eff, 100)
         XCTAssertEqual(g.ships["0"]!.mob, 127)
         XCTAssertEqual(g.ships["0"]!.tech, 0)

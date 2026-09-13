@@ -32,9 +32,10 @@ struct PlaneType: Identifiable, Codable {
 
 struct Plane: Identifiable, Codable {
     var number: String = ""
-    var type: String = ""
+    var abbrev: String = ""
     var coords: MapCoord = MapCoord(x: 0, y: 0)
-    var cargo: [Item:Int] = [:]
+    var mob: Int = 0
+    var eff: Int = 0
 
     var id: String {
         return String(self.number)

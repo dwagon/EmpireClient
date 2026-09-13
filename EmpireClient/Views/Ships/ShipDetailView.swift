@@ -27,7 +27,7 @@ struct ShipDetailView: View {
                     TableColumn("Ship #") { val in Text("\(val.number)") }
                         .width(min: minColWidth, ideal: idealColWidth, max: maxColWidth)
                     TableColumn("Type") { val in
-                        Text("\(game.shipTypes[val.type]!.name) (\(val.type))")
+                        Text("\(game.shipTypes[val.abbrev]!.name) (\(val.abbrev))")
                     }
                     TableColumn("Coord") { val in
                         Text("\(val.coords.toString(), default: "unknown")")
@@ -93,7 +93,7 @@ struct ShipDetailView: View {
     var shipDetails: some View {
         let shipNum = selectedShip!
         let ship = game.ships[shipNum]!
-        let shipType = game.shipTypes[ship.type]!
+        let shipType = game.shipTypes[ship.abbrev]!
 
         return VStack(alignment: .leading) {
             HStack {
