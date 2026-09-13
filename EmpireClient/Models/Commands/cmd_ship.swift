@@ -30,7 +30,7 @@ extension Game {
             let lastBit = bits.count
             let shipNum = String(bits[0])
             if ships[shipNum] == nil {
-                ship = Ship(type: String(bits[1]))
+                ship = Ship(abbrev: String(bits[1]))
             } else {
                 ship = ships[shipNum]!
             }

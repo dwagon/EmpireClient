@@ -39,7 +39,7 @@ struct LandType: Identifiable, Codable {
 
 struct LandUnit: Identifiable, Codable {
     var number: String = ""
-    var type: String = ""
+    var abbrev: String = ""
     var coords: MapCoord = MapCoord(x: 0, y: 0)
 
     var id: String {

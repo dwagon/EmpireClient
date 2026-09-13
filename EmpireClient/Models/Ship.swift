@@ -34,7 +34,7 @@ struct ShipType: Identifiable, Codable {
 
 struct Ship: Identifiable, Codable {
     var number: String = ""
-    var type: String = ""
+    var abbrev: String = ""
     var coords: MapCoord = MapCoord(x: 0, y: 0)
     var fleet: String = ""
     var eff: Int = 0
