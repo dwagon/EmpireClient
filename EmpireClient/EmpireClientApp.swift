@@ -33,10 +33,13 @@ struct EmpireClientApp: App {
                 }
                 Button("Land Unit Types", systemImage: "car.rear.road.lane.distance.5") {
                     openWindow(id: "land_types_report")
-                }
+                }.disabled(game.landTypes.isEmpty)
                 Button("Ship Types", systemImage: "sailboat") {
                     openWindow(id: "ship_types_report")
                 }
+                Button("Plane Types", systemImage: "airplane.up.right") {
+                    openWindow(id: "plane_types_report")
+                }.disabled(game.planeTypes.isEmpty)
             }
         }
 
@@ -49,11 +52,15 @@ struct EmpireClientApp: App {
         }
 
         Window("Ship Types Report", id: "ship_types_report") {
-            ShipTypeReport(shipTypes: Array(game.shipTypes.values).sorted(by: { $0.name < $1.name}), buildable: game.isShipBuildable)
+            ShipTypeReport(shipTypes: Array(game.shipTypes.values).sorted(by: { $0.tech < $1.tech}), buildable: game.isShipBuildable)
         }
 
         Window("Land Unit Types Report", id: "land_types_report") {
-            LandUnitTypeReport(landUnitTypes: game.landTypes)
+            LandTypeReport(landTypes: Array(game.landTypes.values).sorted(by: { $0.tech < $1.tech}))
+        }
+
+        Window("Plane Types Report", id: "plane_types_report") {
+            PlaneTypeReport(planeTypes: Array(game.planeTypes.values).sorted(by: { $0.tech < $1.tech}))
         }
 
         Window("Power Report", id: "power_report") {

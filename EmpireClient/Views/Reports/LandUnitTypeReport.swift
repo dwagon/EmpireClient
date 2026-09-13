@@ -1,4 +1,3 @@
-
 //
 //  LandTypeReport.swift
 //  EmpireClient
@@ -8,19 +7,22 @@
 
 import SwiftUI
 
-struct LandUnitTypeReport: View {
-    let landUnitTypes: [String: LandUnitType]
+struct LandTypeReport: View {
+    let landTypes: [LandType]
+
     @Environment(\.dismiss) private var dismiss
-    @State private var selectedUnit: LandUnitType.ID?
+    @State private var selectedUnit: LandType.ID?
 
     var body: some View {
         VStack {
-            Table(Array(landUnitTypes.values), selection: $selectedUnit) {
+            Table(landTypes, selection: $selectedUnit) {
                 TableColumn("Abbrev", value: \.abbrev)
                     .width(min: 30, ideal: 50, max: 60)
                 TableColumn("Name", value: \.name)
                     .width(min: 60, ideal: 100, max: 120)
                 TableColumn("Speed") { details in Text("\(details.speed)") }
+                    .width(min: 40, ideal: 50, max: 60)
+                TableColumn("Tech") { details in Text("\(details.tech)") }
                     .width(min: 40, ideal: 50, max: 60)
                 TableColumn("Capabilities", value: \.capabilities)
             }
@@ -28,8 +30,10 @@ struct LandUnitTypeReport: View {
             .border(.blue)
             if let selectedUnit {
                 Spacer()
-                LandUnitTypeView(unitType: landUnitTypes[selectedUnit]!)
-                    .border(.blue).padding()
+                if let land = landTypes.first(where: { $0.id == selectedUnit} ) {
+                    LandTypeView(unitType: land)
+                        .border(.blue).padding()
+                }
             }
             HStack {
                 Button("OK") {
@@ -39,8 +43,8 @@ struct LandUnitTypeReport: View {
         }
     }
 
-    struct LandUnitTypeView: View {
-        let unitType: LandUnitType
+    struct LandTypeView: View {
+        let unitType: LandType
 
         var body: some View {
             HStack(alignment: .top) {
@@ -131,8 +135,7 @@ struct LandUnitTypeReport: View {
 }
 
 #Preview {
-    let units = [
-        "ss": LandUnitType(
+    let units = [LandType(
             abbrev: "su",
             name: "Some Unit",
             lcmCost: 10,
@@ -158,5 +161,5 @@ struct LandUnitTypeReport: View {
             capabilities: "990m 990s 200g 990p 500i 500d 100b 990f 990o 990l 990h 150r supply train heavy",
         )
     ]
-    LandUnitTypeReport(landUnitTypes: units)
+    LandTypeReport(landTypes: units)
 }
