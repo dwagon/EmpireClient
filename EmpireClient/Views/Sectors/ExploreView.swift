@@ -73,6 +73,7 @@ struct ExploreView: View {
                 "Send \(number) "
                 + ((item == Item.mil) ? "military" : "civilians")
             let max = game[coord]!.cargo[item] ?? 1
+            let _ = print("DBG max=\(max) item=\(item)")
             Stepper(
                 str,
                 value: $number,

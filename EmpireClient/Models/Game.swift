@@ -18,6 +18,7 @@ class Game: Decodable {
     var logs: [String] = []
     var shipTypes: [String: ShipType] = [:]
     var landTypes: [String: LandUnitType] = [:]
+    var planeTypes: [String: PlaneType] = [:]
     var ships: [String: Ship] = [:]
     var treasury: Int = 0
     var techLevel: Float = 0
@@ -83,6 +84,7 @@ class Game: Decodable {
         await cmd_prod()
         await cmd_show_ship()
         await cmd_show_land()
+        await cmd_show_plane()
         await cmd_ship()
     }
 

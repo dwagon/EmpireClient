@@ -1,0 +1,43 @@
+//
+//  Plane.swift
+//  EmpireClient
+//
+//  Created by Dougal Scott on 13/9/2026.
+//
+
+import Foundation
+
+struct PlaneType: Identifiable, Codable {
+    var abbrev: String = ""
+    var name: String = ""
+    var lcmCost: Int = 0
+    var hcmCost: Int = 0
+    var crewCost: Int = 0
+    var avail: Int = 0
+    var tech: Int = 0
+    var cost: Int = 0
+
+    var acc: Int = 0
+    var load: Int = 0
+    var att: Int = 0
+    var def: Int = 0
+    var ran: Int = 0
+    var fuel: Int = 0
+    var stealth: Int = 0
+    var capabilities: String = ""
+
+    var id: String {
+        return self.abbrev
+    }
+}
+
+struct Plane: Identifiable, Codable {
+    var number: String = ""
+    var type: String = ""
+    var coords: MapCoord = MapCoord(x: 0, y: 0)
+    var cargo: [Item:Int] = [:]
+
+    var id: String {
+        return String(self.number)
+    }
+}
