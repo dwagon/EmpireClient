@@ -100,6 +100,11 @@ var undesignatable: Set<DesigType> = [
     .sea, .mountain, .sanctuary, .wasteland, .wilderness, .plains, .unknown,
 ]
 
+/// Desig's that should be overwritten by contents (e.g. ships)
+var lowPriDesigs: Set<DesigType> = [
+.sea, .mountain, .sanctuary, .wasteland, .wilderness, .plains, .unknown,
+]
+
 struct Desig: Equatable, Hashable {
     var desig: DesigType
 
