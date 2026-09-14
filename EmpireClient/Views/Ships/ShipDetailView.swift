@@ -22,9 +22,7 @@ struct ShipDetailView: View {
         let idealColWidth: CGFloat = 80
         let maxColWidth: CGFloat = 100
         HStack {
-            VStack {
-                let _ = print("DBG shipTable=\(game.shipTable)")
-                
+            VStack {                
                 Table(game.shipTable, selection: $selectedShip) {
                     TableColumn("Ship #") { val in Text("\(val.number)") }
                         .width(min: minColWidth, ideal: idealColWidth, max: maxColWidth)

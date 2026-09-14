@@ -29,7 +29,6 @@ extension Game {
         let quotesRegex = /"(.*)"/
 
         for line in input[3..<input.count - 1] {
-            print("DBG line=\(line)")
             let bits = line.split(separator: " ")
             let shipNum = String(bits[0])
             if ships[shipNum] == nil {
@@ -73,7 +72,6 @@ extension Game {
             if let match = line.firstMatch(of: quotesRegex) {
                 ship.name = String(match.1)
             }
-            print("DBG shipNum=\(shipNum) ship=\(ship)")
             ships[shipNum] = ship
         }
     }
