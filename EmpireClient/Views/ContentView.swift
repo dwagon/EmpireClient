@@ -36,7 +36,7 @@ struct ContentView: View {
                     ShipDetailView(game: game, centerCoord: $centerCoord)
                 }.disabled(game.ships.isEmpty)
                 Tab("Land Units", systemImage: "car.rear.road.lane.distance.5") {
-//                    ShipDetailView(game: game, centerCoord: $centerCoord)
+                    LandDetailView(game: game, centerCoord: $centerCoord)
                 }.disabled(game.landUnits.isEmpty)
                 Tab("Planes", systemImage: "airplane.up.right") {
                     PlaneDetailView(game: game, centerCoord: $centerCoord)

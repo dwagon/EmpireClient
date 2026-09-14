@@ -45,6 +45,12 @@ class Game: Decodable {
         }
     }
 
+    var landTable: [LandUnit] {
+        return Array(landUnits.values).sorted {
+            $0.number < $1.number
+        }
+    }
+
     /// Return if a ship can be built with the current tech
     func isShipBuildable(_ shipType: String) -> Bool {
         if let shipType = shipTypes[shipType] {

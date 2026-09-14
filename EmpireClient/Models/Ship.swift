@@ -45,7 +45,7 @@ struct Ship: Identifiable, Codable {
     var mob: Int = 0
     var tech: Int = 0
     var cargo: [Item:Int] = [:]
-    var defence: Int = 0
+    var defense: Int = 0
     var speed: Int = 0
     var visibility: Int = 0
     var range: Int = 0

@@ -14,7 +14,7 @@ extension Game {
             log("ldump returned empty")
             return
         }
-        parse_cmd_sdump(result)
+        parse_cmd_ldump(result)
     }
 
     //    Mon Sep 14 17:29:40 2026
@@ -43,12 +43,12 @@ extension Game {
             lunit.army = String(bits[4])
             lunit.eff = Int(bits[5])!
             lunit.cargo[.mil] = Int(bits[6])
-            lunit.fort = Int(bits[7])!
+            lunit.fortification = Int(bits[7])!
             lunit.mob = Int(bits[8])!
             lunit.cargo[.food] = Int(bits[9])
             // ship.fuel = Int(bits[10])!   // Obsolete
             lunit.tech = Int(bits[11])!
-            lunit.retr = Int(bits[12])!
+            lunit.retreat = Int(bits[12])!
             lunit.react = Int(bits[13])!
             lunit.xl = Int(bits[14])!
             lunit.nland = Int(bits[15])!
@@ -64,17 +64,17 @@ extension Game {
             lunit.cargo[.lcm] = Int(bits[25])
             lunit.cargo[.hcm] = Int(bits[26])
             lunit.cargo[.radioactives] = Int(bits[27])
-            lunit.att = Float(bits[28])!
-            lunit.def = Float(bits[29])!
-            lunit.vul = Int(bits[30])!
-            lunit.spd = Int(bits[31])!
-            lunit.vis = Int(bits[32])!
+            lunit.attack = Float(bits[28])!
+            lunit.defense = Float(bits[29])!
+            lunit.vulnerability = Int(bits[30])!
+            lunit.speed = Int(bits[31])!
+            lunit.visibility = Int(bits[32])!
             lunit.spy = Int(bits[33])!
             lunit.radius = Int(bits[34])!
             lunit.frg = Int(bits[35])!
-            lunit.acc = Int(bits[36])!
-            lunit.dam = Int(bits[37])!
-            lunit.amm = Int(bits[38])!
+            lunit.accuracy = Int(bits[36])!
+            lunit.damage = Int(bits[37])!
+            lunit.ammoUse = Int(bits[38])!
             lunit.aaf = Int(bits[39])!
             lunit.cargo[.uw] = Int(bits[40])
             lunit.cargo[.civ] = Int(bits[41])

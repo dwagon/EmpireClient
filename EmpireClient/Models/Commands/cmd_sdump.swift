@@ -62,7 +62,7 @@ extension Game {
             ship.cargo[.lcm] = Int(bits[24])
             ship.cargo[.hcm] = Int(bits[25])
             ship.cargo[.radioactives] = Int(bits[26])
-            ship.defence = Int(bits[27])!
+            ship.defense = Int(bits[27])!
             ship.speed = Int(bits[28])!
             ship.visibility = Int(bits[29])!
             ship.range = Int(bits[30])!

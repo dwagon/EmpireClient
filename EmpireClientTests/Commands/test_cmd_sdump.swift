@@ -53,7 +53,7 @@ final class test_cmd_sdump: XCTestCase {
         XCTAssertEqual(g.ships["3"]?.cargo[.lcm], 29)
         XCTAssertEqual(g.ships["3"]?.cargo[.hcm], 30)
         XCTAssertEqual(g.ships["3"]?.cargo[.radioactives], 31)
-        XCTAssertEqual(g.ships["3"]?.defence, 32)
+        XCTAssertEqual(g.ships["3"]?.defense, 32)
         XCTAssertEqual(g.ships["3"]?.speed, 33)
         XCTAssertEqual(g.ships["3"]?.visibility, 34)
         XCTAssertEqual(g.ships["3"]?.range, 35)
