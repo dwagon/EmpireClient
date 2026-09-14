@@ -21,7 +21,7 @@ class Game: Decodable {
     var ships: [String: Ship] = [:]
 
     var landTypes: [String: LandType] = [:]
-    var landUnits: [String: LandType] = [:]
+    var landUnits: [String: LandUnit] = [:]
 
     var planeTypes: [String: PlaneType] = [:]
     var planes: [String: Plane] = [:]
@@ -99,6 +99,7 @@ class Game: Decodable {
         await cmd_show_plane()
         await cmd_sdump()
         await cmd_pdump()
+        await cmd_ldump()
     }
 
     enum CodingKeys: String, CodingKey {
