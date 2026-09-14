@@ -37,12 +37,21 @@ struct Plane: Identifiable, Codable {
     var wing: String = ""
     var mob: Int = 0
     var eff: Int = 0
-    var def: Int = 0
+    var attack: Int = 0
+    var defence: Int = 0
+    var accuracy: Int = 0
     var tech: Int = 0
     var range: Int = 0
+    var react: Int = 0
+    var load: Int = 0
     var harden: Int = 0
-    var carry: String = ""
-    var special: String = ""
+    var fuel: Int = 0
+    var ship: String = ""
+    var land: String = ""
+    var launched: String = ""
+    var orbit: String = ""
+    var nuke: String = ""
+    var groundburst: String = ""
 
     var id: String {
         return String(self.number)
