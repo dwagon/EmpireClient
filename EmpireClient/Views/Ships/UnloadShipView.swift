@@ -46,7 +46,7 @@ struct UnloadShipView: View {
                     }
                 }
             }
-            Text(item == .none ? "" : "Unload \(amount) \(item.displayName.capitalized)")
+            Text(item == .none ? "" : "Unload \(amount) of \(ship.cargo[item]!) \(item.displayName.capitalized)")
             HStack {
                 Button("Cancel", role: .cancel) {
                     amount = 0
@@ -84,10 +84,10 @@ struct UnloadShipSheet: ViewModifier {
                                 amount: amount
                             )
                             await game.cmd_sdump()
-                            amount = 0
-                            item = .none
                         }
                     }
+                    amount = 0
+                    item = .none
                 } content: {
                     UnloadShipView(
                         ship: ship,
