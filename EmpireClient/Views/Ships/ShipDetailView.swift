@@ -22,15 +22,25 @@ struct ShipDetailView: View {
         let idealColWidth: CGFloat = 80
         let maxColWidth: CGFloat = 100
         HStack {
-            VStack {
+            VStack {                
                 Table(game.shipTable, selection: $selectedShip) {
                     TableColumn("Ship #") { val in Text("\(val.number)") }
                         .width(min: minColWidth, ideal: idealColWidth, max: maxColWidth)
+
+                    TableColumn("Name") { val in
+                        Text("\(val.name)")
+                    }
+
                     TableColumn("Type") { val in
                         Text("\(game.shipTypes[val.abbrev]!.name) (\(val.abbrev))")
                     }
+                    
                     TableColumn("Coord") { val in
                         Text("\(val.coords.toString(), default: "unknown")")
+                    }.width(min: minColWidth, ideal: idealColWidth, max: maxColWidth)
+
+                    TableColumn("Fleet") { val in
+                        Text("\(val.fleet)")
                     }.width(min: minColWidth, ideal: idealColWidth, max: maxColWidth)
 
                     TableColumn("Mob") { val in Text("\(val.mob)") }.width(
@@ -38,6 +48,7 @@ struct ShipDetailView: View {
                         ideal: idealColWidth,
                         max: maxColWidth
                     )
+                    
                     TableColumn("Eff") { val in Text("\(val.eff)%") }.width(
                         min: minColWidth,
                         ideal: idealColWidth,
@@ -102,16 +113,17 @@ struct ShipDetailView: View {
                 Text("'\(shipType.abbrev)'")
             }
             HStack {
-                Text("Defense: \(shipType.defence)")
-                Text("Speed: \(shipType.speed)")
+                Text("Defense: \(ship.defence)")
+                Text("Speed: \(ship.speed)")
+                Text("Tech: \(ship.tech )")
             }
             HStack {
-                Text("Visibility: \(shipType.visible)")
+                Text("Visibility: \(ship.visibility)")
                 Text("Spy: \(shipType.spy)")
             }
             HStack {
-                Text("Fire: \(shipType.fire)")
-                Text("Range: \(shipType.range)")
+                Text(ship.fire == 0 ? "" : "Fire: \(ship.fire)")
+                Text(ship.range == 0 ? "" : "Range: \(ship.range)")
             }
             Text("Capabilities: \(shipType.capabilities)")
             Divider()
@@ -146,8 +158,7 @@ struct ShipDetailView: View {
             Button("Refresh") {
                 Task {
                     await game.cmd_map()
-                    await game.cmd_ship()
-                    await game.cmd_cargo()
+                    await game.cmd_sdump()
                 }
             }
     }
