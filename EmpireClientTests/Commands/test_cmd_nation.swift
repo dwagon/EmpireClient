@@ -11,7 +11,7 @@ import XCTest
 
 @MainActor
 final class test_cmd_nation: XCTestCase {
-    func test_extract_budget() throws {
+    func test_extract_details() throws {
         let input = [
             "(#1) 1 Nation Report    Sun Sep  6 10:13:20 2026",
             "Nation status is ACTIVE     Bureaucratic Time Units: 597",

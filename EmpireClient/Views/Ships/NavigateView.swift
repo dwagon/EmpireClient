@@ -42,14 +42,13 @@ struct NavigateView: View {
                     destination == nil ? "Navigate to a location from ship \(shipNum)" :
                     "Navigate to \(destination!.toString()) from ship \(shipNum)"
                 )
-            }
+            }.padding()
             HStack {
                 Button("Finish") {
                     dismiss()
                 }
             }.buttonStyle(.automatic)
-
-        }
+        }.padding()
     }
 
     func hexGesture(location: CGPoint) {

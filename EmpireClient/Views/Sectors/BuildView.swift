@@ -47,7 +47,6 @@ struct BuildView: View {
 
     var buildShipDetails: some View {
         return VStack {
-
             Grid(alignment: .leading) {
                 GridRow {
                     Text("")
@@ -86,7 +85,12 @@ struct BuildView: View {
             HStack {
                 Picker("Ship Type to Build", selection: $deviceType) {
                     Text("No ship").tag("")
-                    ForEach(Array(game.shipTypes.keys).filter({game.isShipBuildable($0)}), id: \.self) { shipType in
+                    ForEach(
+                        Array(game.shipTypes.keys).filter({
+                            game.isShipBuildable($0)
+                        }),
+                        id: \.self
+                    ) { shipType in
                         let details = game.shipTypes[shipType]!
                         Text("\(details.name)").tag(shipType)
                     }
@@ -103,7 +107,64 @@ struct BuildView: View {
 
     var buildPlaneDetails: some View {
         return VStack {
-            Text("Unimplemented Plane")
+            Grid(alignment: .leading) {
+                GridRow {
+                    Text("")
+                    Text("LCM")
+                    Text("HCM")
+                    Text("Crew")
+                    Text("Avail")
+                    Text("Cost")
+                }
+                GridRow {
+                    Text("Available")
+                    Text("\(game[coord]!.cargo[.lcm], default: "?")")
+                    Text("\(game[coord]!.cargo[.hcm], default: "?")")
+                    Text("\(game[coord]!.cargo[.mil], default: "?")")
+                    Text("\(game[coord]![.avail], default: "?")")
+                    Text("$\(game.treasury)")
+                }
+                GridRow {
+                    Text("Requirement")
+                    let lcmCost =
+                        game.planeTypes[deviceType] != nil
+                        ? game.planeTypes[deviceType]!.lcmCost * number : 0
+                    let hcmCost =
+                        game.planeTypes[deviceType] != nil
+                        ? game.planeTypes[deviceType]!.hcmCost * number : 0
+                    let crewCost =
+                        game.planeTypes[deviceType] != nil
+                        ? game.planeTypes[deviceType]!.crewCost * number : 0
+                    let avail =
+                        game.planeTypes[deviceType] != nil
+                        ? game.planeTypes[deviceType]!.avail * number : 0
+                    let cost =
+                        game.planeTypes[deviceType] != nil
+                        ? game.planeTypes[deviceType]!.cost * number : 0
+                    Text("\(lcmCost)")
+                    Text("\(hcmCost)")
+                    Text("\(crewCost)")
+                    Text("\(avail)")
+                    Text("$\(cost)")
+                }
+            }
+            HStack {
+                Picker("Plane Type to Build", selection: $deviceType) {
+                    Text("No plane").tag("")
+                    ForEach(Array(game.planeTypes.keys), id: \.self) {
+                        planeType in
+
+                        let details = game.planeTypes[planeType]!
+                        Text("\(details.name)").tag(planeType)
+                    }
+                }.pickerStyle(.menu)
+                Spacer()
+                Picker("Number to Build", selection: $number) {
+                    ForEach(0...10, id: \.self) { number in
+                        Text("\(number)").tag(number)
+                    }
+                }
+            }
         }
     }
 

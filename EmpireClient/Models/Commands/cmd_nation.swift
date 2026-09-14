@@ -43,7 +43,7 @@ extension Game {
     }
 
     func extract_tech(from lines: [String]) -> Float {
-        let regex = /Technology...* (\d+\.\d+)\s/
+        let regex = /Technology.[^\d]+(\d+\.\d+)\s/
         for line in lines {
             if let match = line.firstMatch(of: regex) {
                 let tech = match.1
