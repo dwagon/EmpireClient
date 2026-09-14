@@ -85,7 +85,12 @@ struct BuildView: View {
             HStack {
                 Picker("Ship Type to Build", selection: $deviceType) {
                     Text("No ship").tag("")
-                    ForEach(Array(game.shipTypes.keys).filter({game.isShipBuildable($0)}), id: \.self) { shipType in
+                    ForEach(
+                        Array(game.shipTypes.keys).filter({
+                            game.isShipBuildable($0)
+                        }),
+                        id: \.self
+                    ) { shipType in
                         let details = game.shipTypes[shipType]!
                         Text("\(details.name)").tag(shipType)
                     }
@@ -146,7 +151,9 @@ struct BuildView: View {
             HStack {
                 Picker("Plane Type to Build", selection: $deviceType) {
                     Text("No plane").tag("")
-                    ForEach(Array(game.planeTypes.keys).filter({game.isShipBuildable($0)}), id: \.self) { planeType in
+                    ForEach(Array(game.planeTypes.keys), id: \.self) {
+                        planeType in
+
                         let details = game.planeTypes[planeType]!
                         Text("\(details.name)").tag(planeType)
                     }

@@ -98,6 +98,7 @@ class Game: Decodable {
         await cmd_show_land()
         await cmd_show_plane()
         await cmd_ship()
+        await cmd_plane()
     }
 
     enum CodingKeys: String, CodingKey {

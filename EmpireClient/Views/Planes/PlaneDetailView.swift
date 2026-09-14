@@ -28,7 +28,9 @@ struct PlaneDetailView: View {
                         max: maxColWidth
                     )
                     TableColumn("Type") { val in
-                        Text("\(game.planeTypes[val.abbrev]!.name) (\(val.abbrev))")
+                        Text(
+                            "\(game.planeTypes[val.abbrev]!.name) (\(val.abbrev))"
+                        )
                     }
                     TableColumn("Coord") { val in
                         Text("\(val.coords.toString(), default: "unknown")")
@@ -83,18 +85,14 @@ struct PlaneDetailView: View {
                 Text("\(planeType.name.capitalized)").bold()
                 Text("'\(planeType.abbrev)'")
             }
-            //            HStack {
-            //                Text("Defense: \(planeType.defence)")
-            //                Text("Speed: \(planeType.speed)")
-            //            }
-            //            HStack {
-            //                Text("Visibility: \(planeType.visible)")
-            //                Text("Spy: \(planeType.spy)")
-            //            }
-            //            HStack {
-            //                Text("Fire: \(planeType.fire)")
-            //                Text("Range: \(planeType.range)")
-            //            }
+            HStack {
+                Text("Range: \(planeType.ran)")
+                Text("Fuel: \(planeType.fuel)")
+            }
+            HStack {
+                Text("Attack: \(planeType.att)")
+                Text("Defense: \(planeType.def)")
+            }
             Text("Capabilities: \(planeType.capabilities)")
             Divider()
         }.padding()
@@ -106,7 +104,7 @@ struct PlaneDetailView: View {
             Button("Refresh") {
                 Task {
                     await game.cmd_map()
-                    // await game.cmd_plane()
+                    await game.cmd_plane()
                 }
             }
     }

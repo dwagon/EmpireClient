@@ -34,8 +34,15 @@ struct Plane: Identifiable, Codable {
     var number: String = ""
     var abbrev: String = ""
     var coords: MapCoord = MapCoord(x: 0, y: 0)
+    var wing: String = ""
     var mob: Int = 0
     var eff: Int = 0
+    var def: Int = 0
+    var tech: Int = 0
+    var range: Int = 0
+    var harden: Int = 0
+    var carry: String = ""
+    var special: String = ""
 
     var id: String {
         return String(self.number)
