@@ -113,7 +113,7 @@ struct ShipDetailView: View {
                 Text("'\(shipType.abbrev)'")
             }
             HStack {
-                Text("Defense: \(ship.defence)")
+                Text("Defense: \(ship.defense)")
                 Text("Speed: \(ship.speed)")
                 Text("Tech: \(ship.tech )")
             }

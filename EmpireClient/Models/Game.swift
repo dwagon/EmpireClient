@@ -21,7 +21,7 @@ class Game: Decodable {
     var ships: [String: Ship] = [:]
 
     var landTypes: [String: LandType] = [:]
-    var landUnits: [String: LandType] = [:]
+    var landUnits: [String: LandUnit] = [:]
 
     var planeTypes: [String: PlaneType] = [:]
     var planes: [String: Plane] = [:]
@@ -41,6 +41,12 @@ class Game: Decodable {
 
     var planeTable: [Plane] {
         return Array(planes.values).sorted {
+            $0.number < $1.number
+        }
+    }
+
+    var landTable: [LandUnit] {
+        return Array(landUnits.values).sorted {
             $0.number < $1.number
         }
     }
@@ -99,6 +105,7 @@ class Game: Decodable {
         await cmd_show_plane()
         await cmd_sdump()
         await cmd_pdump()
+        await cmd_ldump()
     }
 
     enum CodingKeys: String, CodingKey {

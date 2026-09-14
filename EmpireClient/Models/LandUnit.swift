@@ -41,6 +41,30 @@ struct LandUnit: Identifiable, Codable {
     var number: String = ""
     var abbrev: String = ""
     var coords: MapCoord = MapCoord(x: 0, y: 0)
+    var army: String = ""
+    var eff: Int = 0
+    var fortification: Int = 0
+    var mob: Int = 0
+    var tech: Int = 0
+    var retreat: Int = 0
+    var react: Int = 0
+    var xl: Int = 0
+    var nland: Int = 0
+    var land: String = ""
+    var ship: String = ""
+    var cargo: [Item: Int] = [:]
+    var attack: Float = 0
+    var defense: Float = 0
+    var vulnerability: Int = 0
+    var speed: Int = 0
+    var visibility: Int = 0
+    var spy: Int = 0
+    var radius: Int = 0
+    var frg: Int = 0
+    var accuracy: Int = 0
+    var damage: Int = 0
+    var ammoUse: Int = 0
+    var aaf: Int = 0
 
     var id: String {
         return String(self.number)

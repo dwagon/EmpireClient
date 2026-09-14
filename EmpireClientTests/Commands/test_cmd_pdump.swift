@@ -42,7 +42,5 @@ final class test_cmd_pdump: XCTestCase {
         XCTAssertEqual(g.planes["0"]?.orbit, "N")
         XCTAssertEqual(g.planes["0"]?.nuke, "N/A")
         XCTAssertEqual(g.planes["0"]?.groundburst, "G")
-
-
     }
 }
