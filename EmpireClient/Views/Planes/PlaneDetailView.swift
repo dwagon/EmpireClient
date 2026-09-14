@@ -40,6 +40,12 @@ struct PlaneDetailView: View {
                         max: maxColWidth
                     )
 
+                    TableColumn("Wing") { val in Text("\(val.wing)") }.width(
+                        min: minColWidth,
+                        ideal: idealColWidth,
+                        max: maxColWidth
+                    )
+
                     TableColumn("Mob") { val in Text("\(val.mob)") }.width(
                         min: minColWidth,
                         ideal: idealColWidth,
@@ -86,12 +92,14 @@ struct PlaneDetailView: View {
                 Text("'\(planeType.abbrev)'")
             }
             HStack {
-                Text("Range: \(planeType.ran)")
-                Text("Fuel: \(planeType.fuel)")
+                Text("Range: \(plane.range)")
+                Text("React: \(plane.react)")
+                Text("Fuel: \(plane.fuel)")
             }
             HStack {
-                Text("Attack: \(planeType.att)")
-                Text("Defense: \(planeType.def)")
+                Text("Attack: \(plane.attack)")
+                Text("Defense: \(plane.defence)")
+                Text("Accuracy: \(plane.accuracy)")
             }
             Text("Capabilities: \(planeType.capabilities)")
             Divider()
@@ -104,7 +112,7 @@ struct PlaneDetailView: View {
             Button("Refresh") {
                 Task {
                     await game.cmd_map()
-                    await game.cmd_plane()
+                    await game.cmd_pdump()
                 }
             }
     }

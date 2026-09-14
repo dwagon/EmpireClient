@@ -21,7 +21,7 @@ final class test_cmd_sdump: XCTestCase {
         "4 ships",
     ]
 
-    func test_parse_ship() throws {
+    func test_parse_sdump() throws {
         let g: Game = Game()
         g.parse_cmd_sdump(testInput)
         XCTAssertEqual(g.ships.count, 4)
