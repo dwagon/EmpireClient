@@ -62,24 +62,4 @@ final class test_cmd_show_ship: XCTestCase {
         XCTAssertEqual(ans["frg"]!.name, "frigate")
         XCTAssertEqual(ans["ss"]!.name, "slave ship")
     }
-
-    func test_parse_ship_cmd() throws {
-        let g = Game()
-        let result = [
-            "shp#     ship type       x,y   fl   eff civ mil  uw  fd pn he xl ln mob tech",
-            "   0 fb   fishing boa    4,0       100%   1   2   3   4  0  0  0  0 127    0",
-            " 1 ship",
-        ]
-        g.parse_ship_cmd(result)
-
-        XCTAssertEqual(g.ships.count, 1)
-        XCTAssertTrue(g.ships.keys.contains("0"))
-        XCTAssertEqual(g.ships["0"]!.abbrev, "fb")
-        XCTAssertEqual(g.ships["0"]!.eff, 100)
-        XCTAssertEqual(g.ships["0"]!.mob, 127)
-        XCTAssertEqual(g.ships["0"]!.tech, 0)
-        XCTAssertEqual(g.ships["0"]!.coords, MapCoord(x: 4, y: 0))
-        XCTAssertEqual(g.ships["0"]!.cargo[.civ], 1)
-        XCTAssertEqual(g.ships["0"]!.cargo[.mil], 2)
-    }
 }

@@ -101,7 +101,7 @@ struct LoadShipSheet: ViewModifier {
                                 shipNum: game.ships[shipId]!.number,
                                 amount: amount
                             )
-                            await game.cmd_ship()
+                            await game.cmd_sdump()
                             amount = 0
                             item = .none
                         }

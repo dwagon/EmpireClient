@@ -97,7 +97,7 @@ class Game: Decodable {
         await cmd_show_ship()
         await cmd_show_land()
         await cmd_show_plane()
-        await cmd_ship()
+        await cmd_sdump()
         await cmd_plane()
     }
 
