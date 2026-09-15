@@ -21,7 +21,7 @@ struct UnloadShipView: View {
     var body: some View {
         VStack {
             Label(
-                "Unload Ship \(ship.number)",
+                "Unload Ship \(ship.number) \(ship.name)",
                 systemImage: "square.and.arrow.up"
             ).font(
                 .title
@@ -46,7 +46,11 @@ struct UnloadShipView: View {
                     }
                 }
             }
-            Text(item == .none ? "" : "Unload \(amount) of \(ship.cargo[item]!) \(item.displayName.capitalized)")
+            Text(
+                item == .none
+                    ? ""
+                    : "Unload \(amount) of \(ship.cargo[item]!) \(item.displayName.capitalized)"
+            )
             HStack {
                 Button("Cancel", role: .cancel) {
                     amount = 0
@@ -76,7 +80,7 @@ struct UnloadShipSheet: ViewModifier {
                     isPresented: $isPresented
                 ) {
                     isPresented = false
-                    if amount > 0 {
+                    if amount > 0 && item != .none {
                         Task {
                             await game.cmd_unload(
                                 commodity: item,
@@ -86,8 +90,6 @@ struct UnloadShipSheet: ViewModifier {
                             await game.cmd_sdump()
                         }
                     }
-                    amount = 0
-                    item = .none
                 } content: {
                     UnloadShipView(
                         ship: ship,
