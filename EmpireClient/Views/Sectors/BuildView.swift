@@ -11,6 +11,8 @@ struct BuildView: View {
     let game: Game
     let coord: MapCoord
     let buildType: BuildType
+    let maxUnits = 20
+
     @Binding var deviceType: String
     @Binding var number: Int
     @Environment(\.dismiss) var dismiss
@@ -29,7 +31,6 @@ struct BuildView: View {
                 default:
                     Text("Unknown \(buildType.name)")
                 }
-
             }.padding()
             HStack {
                 Button("Cancel", role: .cancel) {
@@ -97,7 +98,7 @@ struct BuildView: View {
                 }.pickerStyle(.menu)
                 Spacer()
                 Picker("Number to Build", selection: $number) {
-                    ForEach(0...10, id: \.self) { number in
+                    ForEach(0...maxUnits, id: \.self) { number in
                         Text("\(number)").tag(number)
                     }
                 }
@@ -160,7 +161,7 @@ struct BuildView: View {
                 }.pickerStyle(.menu)
                 Spacer()
                 Picker("Number to Build", selection: $number) {
-                    ForEach(0...10, id: \.self) { number in
+                    ForEach(0...maxUnits, id: \.self) { number in
                         Text("\(number)").tag(number)
                     }
                 }
@@ -170,10 +171,108 @@ struct BuildView: View {
 
     var buildLandUnitDetails: some View {
         return VStack {
-            Text("Unimplemented Landunit")
+            Grid(alignment: .leading) {
+                GridRow {
+                    Text("")
+                    Text("LCM")
+                    Text("HCM")
+                    Text("Gun")
+                    Text("Avail")
+                    Text("Cost")
+                }
+                GridRow {
+                    Text("Available")
+                    Text("\(game[coord]!.cargo[.lcm], default: "?")")
+                    Text("\(game[coord]!.cargo[.hcm], default: "?")")
+                    Text("\(game[coord]!.cargo[.guns], default: "?")")
+                    Text("\(game[coord]![.avail], default: "?")")
+                    Text("$\(game.treasury)")
+                }
+                GridRow {
+                    Text("Requirement")
+                    let lcmCost =
+                        game.landTypes[deviceType] != nil
+                        ? game.landTypes[deviceType]!.lcmCost * number : 0
+                    let hcmCost =
+                        game.landTypes[deviceType] != nil
+                        ? game.landTypes[deviceType]!.hcmCost * number : 0
+                    let gunCost =
+                        game.landTypes[deviceType] != nil
+                        ? game.landTypes[deviceType]!.gunCost * number : 0
+                    let avail =
+                        game.landTypes[deviceType] != nil
+                        ? game.landTypes[deviceType]!.avail * number : 0
+                    let cost =
+                        game.landTypes[deviceType] != nil
+                        ? game.landTypes[deviceType]!.cost * number : 0
+                    Text("\(lcmCost)")
+                    Text("\(hcmCost)")
+                    Text("\(gunCost)")
+                    Text("\(avail)")
+                    Text("$\(cost)")
+                }
+            }
+            HStack {
+                Picker("Unit Type to Build", selection: $deviceType) {
+                    Text("No unit").tag("")
+                    ForEach(
+                        Array(game.landTypes.keys),
+                        id: \.self
+                    ) { unitType in
+                        let details = game.landTypes[unitType]!
+                        Text("\(details.name)").tag(unitType)
+                    }
+                }.pickerStyle(.menu)
+                Spacer()
+                Picker("Number to Build", selection: $number) {
+                    ForEach(0...maxUnits, id: \.self) { number in
+                        Text("\(number)").tag(number)
+                    }
+                }
+            }
         }
     }
 
+}
+
+/// Call out to build the thing
+func buildThing(game: Game, number: Int, device: BuildType, type: String, coord: MapCoord) {
+    Task {
+        if number != 0 && type != "" {
+            await game.cmd_build(
+                device: device,
+                type: type,
+                sector: coord,
+                number: number
+            )
+            switch device {
+            case .ship:
+                await game.cmd_sdump()
+            case .land:
+                await game.cmd_ldump()
+            case .plane:
+                await game.cmd_pdump()
+            default:
+                break
+            }
+        }
+    }
+}
+
+/// Return what you can build at this desig
+func getBuildType(_ desigType: DesigType) -> BuildType {
+    var buildType: BuildType = .nothing
+    switch desigType {
+    case .harbor:
+        buildType = .ship
+    case .airfield:
+        buildType = .plane
+    case .headquarters:
+        buildType = .land
+    default:
+        buildType = .nothing
+    }
+    return buildType
 }
 
 struct BuildSheet: ViewModifier {
@@ -190,59 +289,15 @@ struct BuildSheet: ViewModifier {
                 isPresented: $isPresented
             ) {
                 isPresented = false
-                Task {
-                    var device: BuildType
-                    if number != 0 && type != "" {
-                        switch game[coord]!.desig.desig {
-                        case .harbor:
-                            device = .ship
-                        case .airfield:
-                            device = .plane
-                        case .headquarters:
-                            device = .land
-                        default:
-                            return
-                        }
-                        await game.cmd_build(
-                            device: device,
-                            type: type,
-                            sector: coord,
-                            number: number
-                        )
-                    }
-                }
+                buildThing(game: game, number: number, device: getBuildType(game[coord]!.desig.desig), type: type, coord: coord)
             } content: {
-                switch game[coord]!.desig.desig {
-                case .harbor:
-                    BuildView(
-                        game: game,
-                        coord: coord,
-                        buildType: .ship,
-                        deviceType: $type,
-                        number: $number
-                    )
-                case .airfield:
-                    BuildView(
-                        game: game,
-                        coord: coord,
-                        buildType: .plane,
-                        deviceType: $type,
-                        number: $number
-                    )
-                case .headquarters:
-                    BuildView(
-                        game: game,
-                        coord: coord,
-                        buildType: .land,
-                        deviceType: $type,
-                        number: $number
-                    )
-                default:
-                    let _ = game.log(
-                        "Unimplemented build at \(game[coord]!.desig.name)"
-                    )
-                    EmptyView()
-                }
+                BuildView(
+                    game: game,
+                    coord: coord,
+                    buildType: getBuildType(game[coord]!.desig.desig),
+                    deviceType: $type,
+                    number: $number
+                )
             }
     }
 }
