@@ -8,11 +8,19 @@
 import HexGrid
 import SwiftUI
 
+enum TabChosen {
+    case sector
+    case ship
+    case plane
+    case land
+}
+
 struct ContentView: View {
     @State var game: Game
     @State var centerCoord: MapCoord
     @State private var isLoggedIn: Bool = false
     @FocusState private var focused: Bool
+    @State private var tabSelection: TabChosen = .sector
 
     var profile = loadSettings()
 
@@ -23,22 +31,32 @@ struct ContentView: View {
                     loginButton
                 } else {
                     displayMapView
+                        .simultaneousGesture(
+                            TapGesture()
+                            .onEnded {
+                                tabSelection = .sector
+                            }
+                        )
                 }
             }.navigationSplitViewColumnWidth(800)
                 .toolbar(removing: .sidebarToggle)
         } detail: {
             Spacer()
-            TabView {
-                Tab("Sector Details", systemImage: "info") {
+            TabView(selection: $tabSelection) {
+                Tab("Sector Details", systemImage: "info", value: .sector) {
                     SectorDetailView(game: game, centerCoord: centerCoord)
                 }
-                Tab("Ships", systemImage: "sailboat") {
+                Tab("Ships", systemImage: "sailboat", value: .ship) {
                     ShipDetailView(game: game, centerCoord: $centerCoord)
                 }.disabled(game.ships.isEmpty)
-                Tab("Land Units", systemImage: "car.rear.road.lane.distance.5") {
+                Tab(
+                    "Land Units",
+                    systemImage: "car.rear.road.lane.distance.5",
+                    value: .land
+                ) {
                     LandDetailView(game: game, centerCoord: $centerCoord)
                 }.disabled(game.landUnits.isEmpty)
-                Tab("Planes", systemImage: "airplane.up.right") {
+                Tab("Planes", systemImage: "airplane.up.right", value: .plane) {
                     PlaneDetailView(game: game, centerCoord: $centerCoord)
                 }.disabled(game.planes.isEmpty)
             }
@@ -53,6 +71,7 @@ struct ContentView: View {
             LogView(logs: game.logs).scaledToFill()
         }
     }
+
 
     var displayMapView: some View {
         MapView(
