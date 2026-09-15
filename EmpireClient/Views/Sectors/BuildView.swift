@@ -236,21 +236,9 @@ struct BuildView: View {
 }
 
 /// Call out to build the thing
-func buildThing(game: Game, number: Int, type: String, coord: MapCoord) {
+func buildThing(game: Game, number: Int, device: BuildType, type: String, coord: MapCoord) {
     Task {
-        var device: BuildType
-
         if number != 0 && type != "" {
-            switch game[coord]!.desig.desig {
-            case .harbor:
-                device = .ship
-            case .airfield:
-                device = .plane
-            case .headquarters:
-                device = .land
-            default:
-                return
-            }
             await game.cmd_build(
                 device: device,
                 type: type,
@@ -271,6 +259,22 @@ func buildThing(game: Game, number: Int, type: String, coord: MapCoord) {
     }
 }
 
+/// Return what you can build at this desig
+func getBuildType(_ desigType: DesigType) -> BuildType {
+    var buildType: BuildType = .nothing
+    switch desigType {
+    case .harbor:
+        buildType = .ship
+    case .airfield:
+        buildType = .plane
+    case .headquarters:
+        buildType = .land
+    default:
+        buildType = .nothing
+    }
+    return buildType
+}
+
 struct BuildSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
@@ -285,39 +289,15 @@ struct BuildSheet: ViewModifier {
                 isPresented: $isPresented
             ) {
                 isPresented = false
-                buildThing(game: game, number: number, type: type, coord: coord)
+                buildThing(game: game, number: number, device: getBuildType(game[coord]!.desig.desig), type: type, coord: coord)
             } content: {
-                switch game[coord]!.desig.desig {
-                case .harbor:
-                    BuildView(
-                        game: game,
-                        coord: coord,
-                        buildType: .ship,
-                        deviceType: $type,
-                        number: $number
-                    )
-                case .airfield:
-                    BuildView(
-                        game: game,
-                        coord: coord,
-                        buildType: .plane,
-                        deviceType: $type,
-                        number: $number
-                    )
-                case .headquarters:
-                    BuildView(
-                        game: game,
-                        coord: coord,
-                        buildType: .land,
-                        deviceType: $type,
-                        number: $number
-                    )
-                default:
-                    let _ = game.log(
-                        "Unimplemented build at \(game[coord]!.desig.name)"
-                    )
-                    EmptyView()
-                }
+                BuildView(
+                    game: game,
+                    coord: coord,
+                    buildType: getBuildType(game[coord]!.desig.desig),
+                    deviceType: $type,
+                    number: $number
+                )
             }
     }
 }
