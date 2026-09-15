@@ -12,6 +12,9 @@ struct LandDetailView: View {
     @Binding var centerCoord: MapCoord
     @State private var selectedUnit: Plane.ID?
 
+    @State private var showMarchPopup: Bool = false
+
+
     var body: some View {
         let minColWidth: CGFloat = 60
         let idealColWidth: CGFloat = 80
@@ -35,6 +38,12 @@ struct LandDetailView: View {
                     TableColumn("Coord") { val in
                         Text("\(val.coords.toString(), default: "unknown")")
                     }.width(
+                        min: minColWidth,
+                        ideal: idealColWidth,
+                        max: maxColWidth
+                    )
+
+                    TableColumn("Mil") { val in Text("\(val.cargo[.mil], default: "?")") }.width(
                         min: minColWidth,
                         ideal: idealColWidth,
                         max: maxColWidth
@@ -68,6 +77,7 @@ struct LandDetailView: View {
             landButtonBar
         }
         .navigationSplitViewColumnWidth(min: 400, ideal: 800)
+        .marchUnit(isPresented: $showMarchPopup, game: game, unitId: selectedUnit)
     }
 
     var landButtonBar: some View {
@@ -75,8 +85,14 @@ struct LandDetailView: View {
             refreshButton
 
             if selectedUnit != nil {
-                // TODO
+                marchButton
             }
+        }
+    }
+
+    var marchButton: some View {
+        Button("March") {
+            showMarchPopup = true
         }
     }
 
