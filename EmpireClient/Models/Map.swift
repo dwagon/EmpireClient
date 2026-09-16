@@ -12,6 +12,7 @@ class Map {
     private var mapData: [MapCoord: Sector] = [:]
     private var xSize: Int
     private var ySize: Int
+    var updated = Date()
 
     init(xSize: Int = 64, ySize: Int = 32) {
         self.xSize = xSize

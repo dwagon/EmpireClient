@@ -52,7 +52,7 @@ struct DistributeSheet: ViewModifier {
                             source: centerCoord,
                             destination: "."
                         )
-                        await game.cmd_dump()
+                        await game.cmd_dump(centerCoord.toString())
                     }
                 case .ignore:
                     break
