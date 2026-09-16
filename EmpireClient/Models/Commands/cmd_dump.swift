@@ -22,8 +22,8 @@ import Foundation
 import HexGrid
 
 extension Game {
-    func cmd_dump() async {
-        let result = await client.runCmd("dump *")
+    func cmd_dump(_ location: String = "*") async {
+        let result = await client.runCmd("dump \(location)")
         guard result != [] else {
             log("dump returned empty")
             return
@@ -37,6 +37,7 @@ extension Game {
             return
         }
         parse_cmd_dump(result)
+        gameMap.updated = Date()
     }
 
     func parse_cmd_dump(_ input: [String]) {

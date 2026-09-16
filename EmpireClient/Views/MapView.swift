@@ -24,13 +24,26 @@ enum UnitMapStyle {
     case land
 }
 
+enum ExtraMapStyle {
+    case none
+    case distribution
+}
+
+var colourChoices: [GraphicsContext.Shading] = [
+    .color(.brown), .color(.pink), .color(.gray), .color(.orange),
+    .color(.green),
+    .color(.yellow), .color(.teal),
+]
+
 struct MapView: View {
     let game: Game
     @Binding var centerCoord: MapCoord
     let ships: [String: Ship]
+    @State var distroMap: [MapCoord: GraphicsContext.Shading] = [:]
 
     @State var displayResourceMapStyle: ResourceMapStyle = .normal
     @State var displayUnitMapStyle: UnitMapStyle = .none
+    @State var displayExtraMapStyle: ExtraMapStyle = .none
 
     var hexmap = HexGrid(
         shape: .hexagon(MapConfig.mapRadius),
@@ -47,6 +60,7 @@ struct MapView: View {
                 cellFillColour: cellColour,
                 hexGesture: hexGesture
             )
+
             Picker("", selection: $displayUnitMapStyle) {
                 Text("Normal").tag(UnitMapStyle.none)
                 Text("Ship").tag(UnitMapStyle.ship)
@@ -61,6 +75,27 @@ struct MapView: View {
                 Text("Oil").tag(ResourceMapStyle.oil)
                 Text("Uranium").tag(ResourceMapStyle.uranium)
             }.pickerStyle(.segmented)
+            Picker("", selection: $displayExtraMapStyle) {
+                Text("Normal").tag(ExtraMapStyle.none)
+                Text("Distribution").tag(ExtraMapStyle.distribution)
+            }.pickerStyle(.segmented)
+        }.onChange(of: game.gameMap.updated) {
+            setDistroMap()
+        }
+    }
+
+    func setDistroMap() {
+        for sector in game.gameMap.allSectors().filter({ $0.owned }) {
+            if let distX = sector[.distX], let distY = sector[.distY] {
+                if let distro = MapCoord(x: distX, y: distY) {
+                    if distro == sector.coords {
+                        continue
+                    }
+                    if !distroMap.contains(where: { $0.key == distro }) {
+                        distroMap[distro] = colourChoices.popLast()
+                    }
+                }
+            }
         }
     }
 
@@ -95,7 +130,12 @@ struct MapView: View {
         }
         switch displayResourceMapStyle {
         case .normal:
-            return cellColourNormal(cell)
+            switch displayExtraMapStyle {
+            case .none:
+                return cellColourNormal(cell)
+            case .distribution:
+                return cellColourByDistribution(cell)
+            }
         case .fertility:
             return cellColourBySector(cell, mapkey: .fert)
         case .mine:
@@ -107,6 +147,33 @@ struct MapView: View {
         case .gold:
             return cellColourBySector(cell, mapkey: .gold)
         }
+    }
+
+    /// Return a colour based on what hex we distribute to
+    func cellColourByDistribution(_ cell: Cell)
+        -> GraphicsContext.Shading
+    {
+        let mapCoord = screenToMapCoord(
+            cell.coordinates,
+            centerCoord: centerCoord
+        )
+        if let sector = game.gameMap[mapCoord] {
+            if sector.desig.desig == .sea {
+                return .color(Color.blue)
+            }
+            if let distX = sector[.distX], let distY = sector[.distY] {
+                let distDest = MapCoord(x: distX, y: distY)
+                if distroMap.contains(where: { $0.key == distDest }) {
+                    return distroMap[distDest!]!
+                }
+            }
+            /// Owned but no distribution point
+            if sector.owned {
+                return .color(Color.red)
+            }
+        }
+
+        return .color(Color.clear)
     }
 
     /// If we are colouring cells by unit return the colour
