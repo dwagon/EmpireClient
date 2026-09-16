@@ -27,6 +27,7 @@ enum UnitMapStyle {
 enum ExtraMapStyle {
     case none
     case distribution
+    case efficiency
 }
 
 var colourChoices: [GraphicsContext.Shading] = [
@@ -78,6 +79,7 @@ struct MapView: View {
             Picker("", selection: $displayExtraMapStyle) {
                 Text("Normal").tag(ExtraMapStyle.none)
                 Text("Distribution").tag(ExtraMapStyle.distribution)
+                Text("Efficiency").tag(ExtraMapStyle.efficiency)
             }.pickerStyle(.segmented)
         }.onChange(of: game.gameMap.updated) {
             setDistroMap()
@@ -135,6 +137,9 @@ struct MapView: View {
                 return cellColourNormal(cell)
             case .distribution:
                 return cellColourByDistribution(cell)
+            case .efficiency:
+                return cellColourbyEfficiency(cell)
+
             }
         case .fertility:
             return cellColourBySector(cell, mapkey: .fert)
@@ -147,6 +152,35 @@ struct MapView: View {
         case .gold:
             return cellColourBySector(cell, mapkey: .gold)
         }
+    }
+
+    func cellColourbyEfficiency(_ cell: Cell) -> GraphicsContext.Shading {
+        let mapCoord = screenToMapCoord(
+            cell.coordinates,
+            centerCoord: centerCoord
+        )
+        if let sector = game.gameMap[mapCoord] {
+            if sector.desig.desig == .sea {
+                return .color(Color.blue)
+            }
+            if !sector.owned {
+                return .color(Color.mint)
+            }
+            do {
+                if let val = sector[.eff] {
+                    let valRatio = try (val.toDouble() / 100.0)
+                    return .color(
+                        .sRGB,
+                        red: valRatio,
+                        green: valRatio,
+                        blue: valRatio
+                    )
+                }
+            } catch {
+                return .color(Color.clear)
+            }
+        }
+        return .color(.clear)
     }
 
     /// Return a colour based on what hex we distribute to
