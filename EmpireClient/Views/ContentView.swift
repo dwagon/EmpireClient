@@ -77,7 +77,9 @@ struct ContentView: View {
         MapView(
             game: game,
             centerCoord: $centerCoord,
-            ships: game.ships
+            ships: game.ships,
+            landUnits: game.landUnits,
+            planes: game.planes
         )
         .navigationSplitViewColumnWidth(min: 300, ideal: 400)
     }

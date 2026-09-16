@@ -40,6 +40,8 @@ struct MapView: View {
     let game: Game
     @Binding var centerCoord: MapCoord
     let ships: [String: Ship]
+    let landUnits: [String: LandUnit]
+    let planes: [String: Plane]
     @State var distroMap: [MapCoord: GraphicsContext.Shading] = [:]
 
     @State var displayResourceMapStyle: ResourceMapStyle = .normal
@@ -224,11 +226,19 @@ struct MapView: View {
                 return foundColour
             }
         case .plane:
-            // TODO
-            break
+            for (_, unit) in planes
+            where unit.coords
+                == screenToMapCoord(cell.coordinates, centerCoord: centerCoord)
+            {
+                return foundColour
+            }
         case .land:
-            // TODO
-            break
+            for (_, unit) in landUnits
+            where unit.coords
+                == screenToMapCoord(cell.coordinates, centerCoord: centerCoord)
+            {
+                return foundColour
+            }
         }
         return nil
     }
@@ -287,5 +297,11 @@ struct MapView: View {
 #Preview {
     @Previewable var game = Game()
     @Previewable @State var centerCoord = MapCoord(x: 0, y: 0)
-    MapView(game: game, centerCoord: $centerCoord, ships: [:])
+    MapView(
+        game: game,
+        centerCoord: $centerCoord,
+        ships: [:],
+        landUnits: [:],
+        planes: [:]
+    )
 }
