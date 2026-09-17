@@ -60,9 +60,15 @@ struct PlaneDetailView: View {
                 .onChange(of: selectedPlane) {
                     centerCoord = game.planes[selectedPlane!]!.coords
                 }
-                if selectedPlane != nil {
-                    Divider()
-                    planeDetails
+                if let planeNum = selectedPlane {
+                    if let _ = game.planes[planeNum] {
+                        Divider()
+                        planeDetails
+                    }
+                    else {
+                        Divider()
+                        Text("Plane doesn't exist")
+                    }
                 }
             }
             planeButtonBar

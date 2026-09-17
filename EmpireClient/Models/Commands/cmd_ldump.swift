@@ -28,6 +28,7 @@ extension Game {
     //    1 unit
     func parse_cmd_ldump(_ input: [String]) {
         var lunit: LandUnit
+        var exists: Set<String> = []
 
         for line in input[3..<input.count - 1] {
             let bits = line.split(separator: " ")
@@ -80,6 +81,14 @@ extension Game {
             lunit.cargo[.civ] = Int(bits[41])
 
             landUnits[lunitNum] = lunit
+            exists.insert(lunitNum)
+        }
+
+        // Remove units that weren't in the dump
+        for lunit in landUnits.keys {
+            if !exists.contains(lunit) {
+                landUnits.removeValue(forKey: lunit)
+            }
         }
     }
 }

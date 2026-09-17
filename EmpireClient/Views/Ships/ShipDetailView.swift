@@ -63,8 +63,13 @@ struct ShipDetailView: View {
                 }
 
                 if selectedShip != nil {
-                    Divider()
-                    shipDetails
+                    if let shipNum = selectedShip, let _ = game.ships[shipNum] {
+                        Divider()
+                        shipDetails
+                    }
+                    else {
+                        Text("Ship doesn't exist")
+                    }
                 }
             }
             shipButtonBar
