@@ -89,11 +89,11 @@ struct BuildView: View {
                     ForEach(
                         Array(game.shipTypes.keys).filter({
                             game.isShipBuildable($0)
-                        }),
+                        }).sorted(by: {game.shipTypes[$0]!.abbrev < game.shipTypes[$1]!.abbrev}),
                         id: \.self
                     ) { shipType in
                         let details = game.shipTypes[shipType]!
-                        Text("\(details.name)").tag(shipType)
+                        Text("\(details.name) (\(details.abbrev))").tag(shipType)
                     }
                 }.pickerStyle(.menu)
                 Spacer()
@@ -152,11 +152,16 @@ struct BuildView: View {
             HStack {
                 Picker("Plane Type to Build", selection: $deviceType) {
                     Text("No plane").tag("")
-                    ForEach(Array(game.planeTypes.keys), id: \.self) {
-                        planeType in
 
+                    ForEach(
+                        Array(game.planeTypes.keys).sorted(by: {
+                            game.planeTypes[$0]!.abbrev
+                                < game.planeTypes[$1]!.abbrev
+                        }),
+                        id: \.self
+                    ) { planeType in
                         let details = game.planeTypes[planeType]!
-                        Text("\(details.name)").tag(planeType)
+                        Text("\(details.name) (\(details.abbrev))").tag(planeType)
                     }
                 }.pickerStyle(.menu)
                 Spacer()
@@ -216,11 +221,13 @@ struct BuildView: View {
                 Picker("Unit Type to Build", selection: $deviceType) {
                     Text("No unit").tag("")
                     ForEach(
-                        Array(game.landTypes.keys),
+                        Array(game.landTypes.keys).sorted(by: {
+                            game.landTypes[$0]!.abbrev < game.landTypes[$1]!.abbrev
+                        }),
                         id: \.self
                     ) { unitType in
                         let details = game.landTypes[unitType]!
-                        Text("\(details.name)").tag(unitType)
+                        Text("\(details.name) (\(details.abbrev))").tag(unitType)
                     }
                 }.pickerStyle(.menu)
                 Spacer()
@@ -236,7 +243,13 @@ struct BuildView: View {
 }
 
 /// Call out to build the thing
-func buildThing(game: Game, number: Int, device: BuildType, type: String, coord: MapCoord) {
+func buildThing(
+    game: Game,
+    number: Int,
+    device: BuildType,
+    type: String,
+    coord: MapCoord
+) {
     Task {
         if number != 0 && type != "" {
             await game.cmd_build(
@@ -289,7 +302,13 @@ struct BuildSheet: ViewModifier {
                 isPresented: $isPresented
             ) {
                 isPresented = false
-                buildThing(game: game, number: number, device: getBuildType(game[coord]!.desig.desig), type: type, coord: coord)
+                buildThing(
+                    game: game,
+                    number: number,
+                    device: getBuildType(game[coord]!.desig.desig),
+                    type: type,
+                    coord: coord
+                )
             } content: {
                 BuildView(
                     game: game,
