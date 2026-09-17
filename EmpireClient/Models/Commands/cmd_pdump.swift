@@ -14,6 +14,9 @@ extension Game {
             log("pdump returned empty")
             return
         }
+        guard !result.contains("command failed") else {
+            return
+        }
         parse_cmd_pdump(result)
     }
 
@@ -24,6 +27,7 @@ extension Game {
     //    1 plane
     func parse_cmd_pdump(_ input: [String]) {
         var plane: Plane
+        var exists: Set<String> = []
 
         for line in input[3..<input.count - 1] {
             let bits = line.split(separator: " ")
@@ -55,6 +59,14 @@ extension Game {
             plane.nuke = String(bits[20])
             plane.groundburst = String(bits[21])
             planes[planeNum] = plane
+            exists.insert(planeNum)
+        }
+
+        // Remove ships that weren't in the dump
+        for planeNum in planes.keys {
+            if !exists.contains(planeNum) {
+                planes.removeValue(forKey: planeNum)
+            }
         }
     }
 }

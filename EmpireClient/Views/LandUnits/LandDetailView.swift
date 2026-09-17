@@ -69,9 +69,14 @@ struct LandDetailView: View {
                 .onChange(of: selectedUnit) {
                     centerCoord = game.landUnits[selectedUnit!]!.coords
                 }
-                if selectedUnit != nil {
-                    Divider()
-                    landDetails
+                if let selectedUnit {
+                    if let _ = game.landUnits[selectedUnit] {
+                        Divider()
+                        landDetails
+                    }
+                    else {
+                        Text("Unit doesn't exist")
+                    }
                 }
             }
             landButtonBar

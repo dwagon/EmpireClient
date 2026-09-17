@@ -27,6 +27,7 @@ extension Game {
     func parse_cmd_sdump(_ input: [String]) {
         var ship: Ship
         let quotesRegex = /"(.*)"/
+        var exists: Set<String> = []
 
         for line in input[3..<input.count - 1] {
             let bits = line.split(separator: " ")
@@ -73,6 +74,14 @@ extension Game {
                 ship.name = String(match.1)
             }
             ships[shipNum] = ship
+            exists.insert(shipNum)
+        }
+
+        // Remove ships that weren't in the dump
+        for shipNum in ships.keys {
+            if !exists.contains(shipNum) {
+                ships.removeValue(forKey: shipNum)
+            }
         }
     }
 }
