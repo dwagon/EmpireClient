@@ -79,12 +79,14 @@ struct LoadShipSheet: ViewModifier {
 
         if let shipId {
             if let shipLocation = game.ships[shipId]?.coords {
-                let available = game.gameMap[shipLocation]!.cargo.filter({
-                    $0.value > 0
-                })
-                var items = Array(available.keys)
-                items.insert(.none, at: 0)
-                self.itemList = items
+                if let sector = game.gameMap[shipLocation] {
+                    let available = sector.cargo.filter({
+                        $0.value > 0
+                    })
+                    var items = Array(available.keys)
+                    items.insert(.none, at: 0)
+                    self.itemList = items
+                }
             }
         }
     }
