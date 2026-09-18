@@ -16,39 +16,54 @@ struct ShipDetailView: View {
     @State private var showUnloadPopup: Bool = false
     @State private var showNavigatePopup: Bool = false
     @State private var showAssaultPopup: Bool = false
+    @State private var showNamePopup: Bool = false
 
     var body: some View {
         let minColWidth: CGFloat = 60
         let idealColWidth: CGFloat = 80
         let maxColWidth: CGFloat = 100
         HStack {
-            VStack {                
+            VStack {
                 Table(game.shipTable, selection: $selectedShip) {
                     TableColumn("Ship #") { val in Text("\(val.number)") }
-                        .width(min: minColWidth, ideal: idealColWidth, max: maxColWidth)
+                        .width(
+                            min: minColWidth,
+                            ideal: idealColWidth,
+                            max: maxColWidth
+                        )
 
                     TableColumn("Name") { val in
                         Text("\(val.name)")
                     }
 
                     TableColumn("Type") { val in
-                        Text("\(game.shipTypes[val.abbrev]!.name) (\(val.abbrev))")
+                        Text(
+                            "\(game.shipTypes[val.abbrev]!.name) (\(val.abbrev))"
+                        )
                     }
-                    
+
                     TableColumn("Coord") { val in
                         Text("\(val.coords.toString(), default: "unknown")")
-                    }.width(min: minColWidth, ideal: idealColWidth, max: maxColWidth)
+                    }.width(
+                        min: minColWidth,
+                        ideal: idealColWidth,
+                        max: maxColWidth
+                    )
 
                     TableColumn("Fleet") { val in
                         Text("\(val.fleet)")
-                    }.width(min: minColWidth, ideal: idealColWidth, max: maxColWidth)
+                    }.width(
+                        min: minColWidth,
+                        ideal: idealColWidth,
+                        max: maxColWidth
+                    )
 
                     TableColumn("Mob") { val in Text("\(val.mob)") }.width(
                         min: minColWidth,
                         ideal: idealColWidth,
                         max: maxColWidth
                     )
-                    
+
                     TableColumn("Eff") { val in Text("\(val.eff)%") }.width(
                         min: minColWidth,
                         ideal: idealColWidth,
@@ -63,11 +78,10 @@ struct ShipDetailView: View {
                 }
 
                 if selectedShip != nil {
-                    if let shipNum = selectedShip, let _ = game.ships[shipNum] {
+                    if let shipNum = selectedShip, game.ships[shipNum] != nil {
                         Divider()
                         shipDetails
-                    }
-                    else {
+                    } else {
                         Text("Ship doesn't exist")
                     }
                 }
@@ -91,6 +105,11 @@ struct ShipDetailView: View {
             game: game,
             shipId: selectedShip
         )
+        .nameShip(
+            isPresented: $showNamePopup,
+            game: game,
+            shipId: selectedShip
+        )
     }
 
     var shipButtonBar: some View {
@@ -102,6 +121,7 @@ struct ShipDetailView: View {
                 unloadButton
                 navigateButton
                 assaultButton
+                nameButton
             }
         }
     }
@@ -147,11 +167,25 @@ struct ShipDetailView: View {
                 }
             }
             VStack {
-                Text(ship.landUnits == 0 ? "" : "Land Units: \(ship.landUnits) / \(shipType.landUnits)")
-                Text(ship.heli == 0 ? "" :"Helicopters: \(ship.heli) / \(shipType.helicopters)")
-                Text(ship.planes == 0 ? "" : "Light Planes: \(ship.planes) / \(shipType.planes)")
                 Text(
-                    ship.xlPlanes == 0 ? "" : "Extra Light Planes: \(ship.xlPlanes) / \(shipType.lightPlanes)"
+                    ship.landUnits == 0
+                        ? ""
+                        : "Land Units: \(ship.landUnits) / \(shipType.landUnits)"
+                )
+                Text(
+                    ship.heli == 0
+                        ? ""
+                        : "Helicopters: \(ship.heli) / \(shipType.helicopters)"
+                )
+                Text(
+                    ship.planes == 0
+                        ? ""
+                        : "Light Planes: \(ship.planes) / \(shipType.planes)"
+                )
+                Text(
+                    ship.xlPlanes == 0
+                        ? ""
+                        : "Extra Light Planes: \(ship.xlPlanes) / \(shipType.lightPlanes)"
                 )
             }
         }.padding()
@@ -189,6 +223,12 @@ struct ShipDetailView: View {
     var navigateButton: some View {
         Button("Navigate") {
             showNavigatePopup = true
+        }
+    }
+
+    var nameButton: some View {
+        Button("Name") {
+            showNamePopup = true
         }
     }
 }

@@ -8,13 +8,13 @@
 import Foundation
 
 extension Game {
-    func cmd_sdump(shipNum: String = "*") async {
-        let result = await client.runCmd("sdump \(shipNum)")
+    func cmd_sdump(_ arg: String = "*") async {
+        let result = await client.runCmd("sdump \(arg)")
         guard result != [] else {
             log("sdump returned empty")
             return
         }
-        parse_cmd_sdump(result)
+        parse_cmd_sdump(result, trimMissing: arg == "*")
     }
 
     // DUMP SHIPS 1789346151
@@ -24,7 +24,7 @@ extension Game {
     // 2 fb   -12 -6 ~ 100 300 10 0 900 0 0 0 0 -28 0 0 0 0 0 0 0 0 0 0 0 0 10 10 15 0 0 1 -3 ""
     // 3 oe   0 6 ~ 100 10 0 0 100 0 0 0 0 127 0 105 0 0 0 0 0 0 1 0 0 0 11 29 12 0 0 -1 5 ""
     // 4 ships
-    func parse_cmd_sdump(_ input: [String]) {
+    func parse_cmd_sdump(_ input: [String], trimMissing: Bool = true) {
         var ship: Ship
         let quotesRegex = /"(.*)"/
         var exists: Set<String> = []
@@ -79,7 +79,7 @@ extension Game {
 
         // Remove ships that weren't in the dump
         for shipNum in ships.keys {
-            if !exists.contains(shipNum) {
+            if !exists.contains(shipNum) && trimMissing {
                 ships.removeValue(forKey: shipNum)
             }
         }
