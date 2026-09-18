@@ -19,7 +19,6 @@ struct ContentView: View {
     @State var game: Game
     @State var centerCoord: MapCoord
     @State private var isLoggedIn: Bool = false
-    @FocusState private var focused: Bool
     @State private var tabSelection: TabChosen = .sector
 
     var profile = loadSettings()
@@ -61,17 +60,13 @@ struct ContentView: View {
                 }.disabled(game.planes.isEmpty)
             }
         }
-        .focusable()
-        .onKeyPress { press in
-            return keyPressed(press.characters)
-        }
+
         HStack {
             RawCmdView(game: game).frame(maxWidth: 600)
             Spacer()
             LogView(logs: game.logs).scaledToFill()
         }
     }
-
 
     var displayMapView: some View {
         MapView(
@@ -99,30 +94,6 @@ struct ContentView: View {
                 isLoggedIn = game.nationReport.count >= 0
             }
         }
-    }
-
-    func keyPressed(_ keys: String) -> KeyPress.Result {
-        switch keys {
-        case "j":
-            centerCoord.x += 2
-        case "g":
-            centerCoord.x -= 2
-        case "y":
-            centerCoord.x -= 1
-            centerCoord.y -= 1
-        case "u":
-            centerCoord.x += 1
-            centerCoord.y -= 1
-        case "b":
-            centerCoord.x -= 1
-            centerCoord.y += 1
-        case "n":
-            centerCoord.x += 1
-            centerCoord.y += 1
-        default:
-            return .ignored
-        }
-        return .handled
     }
 }
 
