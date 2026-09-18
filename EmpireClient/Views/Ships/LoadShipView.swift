@@ -13,6 +13,7 @@ struct LoadShipView: View {
     @Binding var item: Item
     @Binding var amount: Int
     var itemList: [Item]
+    var onButton: () -> Void
 
     @Environment(\.dismiss) var dismiss
 
@@ -44,7 +45,7 @@ struct LoadShipView: View {
             Text(
                 item == .none
                     ? ""
-                : "Load \(amount) \(item.displayName.capitalized) (\(available, default: "None") avail) onto Ship \(shipNum)"
+                    : "Load \(amount) \(item.displayName.capitalized) (\(available, default: "None") avail) onto Ship \(shipNum)"
             )
             HStack {
                 Button("Cancel", role: .cancel) {
@@ -55,6 +56,7 @@ struct LoadShipView: View {
                 .padding()
                 Button("Load") {
                     dismiss()
+                    onButton()
                 }.disabled(item == .none)
             }
         }
@@ -88,36 +90,38 @@ struct LoadShipSheet: ViewModifier {
     }
 
     func body(content: Content) -> some View {
-        if let shipId {
-            content
-                .sheet(
-                    isPresented: $isPresented
-                ) {
-                    isPresented = false
-                    if amount > 0 {
-                        Task {
-                            await game.cmd_load(
-                                commodity: item,
-                                shipNum: game.ships[shipId]!.number,
-                                amount: amount
-                            )
-                            await game.cmd_sdump()
-                            amount = 0
-                            item = .none
-                        }
-                    }
-                } content: {
+        content
+            .sheet(
+                isPresented: $isPresented
+            ) {
+                if let shipId, let ship = game.ships[shipId] {
                     LoadShipView(
                         game: game,
-                        shipNum: game.ships[shipId]!.number,
+                        shipNum: ship.number,
                         item: $item,
                         amount: $amount,
                         itemList: itemList
-                    )
+                    ) {
+                        if amount > 0 {
+                            Task {
+                                await game.cmd_load(
+                                    commodity: item,
+                                    shipNum: ship.number,
+                                    amount: amount
+                                )
+                                await game.cmd_sdump(ship.number)
+                                await game.cmd_dump(ship.coords)
+
+                            }
+                        }
+                    }
+                    .onAppear {
+                        amount = 0
+                        item = .none
+                    }
                 }
-        } else {
-            content
-        }
+            }
+
     }
 }
 
@@ -148,5 +152,7 @@ extension View {
         item: $item,
         amount: $amount,
         itemList: [.civ, .mil]
-    )
+    ) {
+        let _ = print("loaded")
+    }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 struct DesignateView: View {
     var sector: Sector
     @Binding var designation: String
+    var onButton: () -> Void
 
     @Environment(\.dismiss) var dismiss
 
@@ -25,15 +26,16 @@ struct DesignateView: View {
                 Spacer()
             }
             HStack {
+                Button("Cancel", role: .cancel) {
+                    dismiss()
+                }
+                .padding()
                 Button("Designate") {
+                    onButton()
                     dismiss()
                 }
                 .buttonStyle(.automatic)
-                .padding()
-                Button("Cancel", role: .cancel) {
-                    designation = ""
-                    dismiss()
-                }
+
             }
         }
     }
@@ -90,19 +92,21 @@ struct DesignateSheet: ViewModifier {
             .sheet(
                 isPresented: $isPresented
             ) {
-                isPresented = false
-                if designation != "" {
-                    Task {
-                        await game.cmd_designate(
-                            coord: centerCoord,
-                            designation: designation
-                        )
-                        await game.cmd_dump()
-                    }
-                }
-            } content: {
                 if let sector = game[centerCoord] {
-                    DesignateView(sector: sector, designation: $designation)
+                    DesignateView(sector: sector, designation: $designation) {
+                        if designation != "" {
+                            Task {
+                                await game.cmd_designate(
+                                    coord: centerCoord,
+                                    designation: designation
+                                )
+                                await game.cmd_dump(centerCoord)
+                            }
+                        }
+                    }
+                    .onAppear {
+                        designation = ""
+                    }
                 }
             }
     }
@@ -131,5 +135,7 @@ extension View {
     DesignateView(
         sector: sector,
         designation: $designation
-    )
+    ) {
+        print("Designate sector \(sector) to \(designation)")
+    }
 }

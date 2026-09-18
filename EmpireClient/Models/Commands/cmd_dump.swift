@@ -40,6 +40,10 @@ extension Game {
         gameMap.updated = Date()
     }
 
+    func cmd_dump(_ location: MapCoord) async {
+        await cmd_dump(location.toString())
+    }
+
     func parse_cmd_dump(_ input: [String]) {
         var sector: Sector
 

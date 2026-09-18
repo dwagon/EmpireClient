@@ -11,7 +11,8 @@ import SwiftUI
 struct NavigateView: View {
     var shipNum: String
     var game: Game
-    @State var destination: MapCoord? = nil
+    @Binding var destination: MapCoord?
+    var onButton: () -> Void
 
     @Environment(\.dismiss) var dismiss
 
@@ -45,6 +46,7 @@ struct NavigateView: View {
             }.padding()
             HStack {
                 Button("Finish") {
+                    onButton()
                     dismiss()
                 }
             }.buttonStyle(.automatic)
@@ -57,14 +59,7 @@ struct NavigateView: View {
                 from: cell.coordinates
             )
             destination! += game.ships[shipNum]!.coords
-            Task {
-                await game.cmd_navigate(
-                    shipNum: shipNum,
-                    destination: destination!
-                )
-                await game.cmd_sdump(shipNum)
-                await game.cmd_map(cmdArg: shipNum)
-            }
+
         } else {
             print("no cell at \(location.hexPoint)")
         }
@@ -97,26 +92,35 @@ struct NavigateShipSheet: ViewModifier {
     var game: Game
     var shipId: Ship.ID?
     @State var shipLocation: MapCoord = MapCoord(x: 0, y: 0)
-    @State var destination: MapCoord = MapCoord(x: 0, y: 0)
+    @State var destination: MapCoord?
     @State var response: [String] = []
 
     func body(content: Content) -> some View {
-        if let shipId {
-            content
+        content
                 .sheet(
                     isPresented: $isPresented
                 ) {
-                    isPresented = false
-                } content: {
-                    NavigateView(
-                        shipNum: game.ships[shipId]!.number,
-                        game: game
-                    )
+                    if let shipId, let ship = game.ships[shipId] {
+                        NavigateView(
+                            shipNum: game.ships[shipId]!.number,
+                            game: game,
+                            destination: $destination
+                        ) {
+                            Task {
+                                await game.cmd_navigate(
+                                    shipNum: ship.number,
+                                    destination: destination!
+                                )
+                                await game.cmd_sdump(ship.number)
+                                await game.cmd_map(cmdArg: ship.number)
+                            }
+                        }
+                        .onAppear {
+                            destination = nil
+                        }
+                    }
                 }
-        } else {
-            content
         }
-    }
 }
 
 extension View {
@@ -134,7 +138,3 @@ extension View {
         )
     }
 }
-
-//#Preview {
-//    NavigateView()
-//}

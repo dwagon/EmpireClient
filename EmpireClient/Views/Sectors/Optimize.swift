@@ -17,6 +17,7 @@ enum OptimizeType: Hashable {
 struct OptimizeView: View {
     var sector: Sector
     @Binding var optimizeType: OptimizeType
+    var onButton: () -> Void
 
     @Environment(\.dismiss) var dismiss
 
@@ -42,11 +43,11 @@ struct OptimizeView: View {
             }
             HStack {
                 Button("Cancel", role: .cancel) {
-                    optimizeType = .none
                     dismiss()
                 }
                 .padding()
                 Button("Optimize") {
+                    onButton()
                     dismiss()
                 }
             }.buttonStyle(.automatic)
@@ -85,25 +86,25 @@ struct OptimizeSheet: ViewModifier {
             .sheet(
                 isPresented: $isPresented
             ) {
-                isPresented = false
-                Task {
-                    switch optimizeType {
-                    case .none:
-                        break
-                    case .individual:
-                        game.optimize(coord: centerCoord)
-                    case .global:
-                        game.optimize()
-                    case .desig(let desig):
-                        game.optimize(desig: desig)
-                    }
-                    await game.cmd_dump()
-                }
-            } content: {
                 OptimizeView(
                     sector: game[centerCoord]!,
                     optimizeType: $optimizeType
                 )
+                {
+                    Task {
+                        switch optimizeType {
+                        case .none:
+                            break
+                        case .individual:
+                            game.optimize(coord: centerCoord)
+                        case .global:
+                            game.optimize()
+                        case .desig(let desig):
+                            game.optimize(desig: desig)
+                        }
+                        await game.cmd_dump()
+                    }
+                }
             }
     }
 }
@@ -132,5 +133,7 @@ extension View {
     OptimizeView(
         sector: game[coord]!,
         optimizeType: $optimizeType
-    )
+    ) {
+        print("Optimize \(coord)")
+    }
 }

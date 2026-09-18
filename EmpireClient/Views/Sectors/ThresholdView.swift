@@ -19,6 +19,7 @@ struct ThresholdView: View {
     @Binding var item: Item
     @Binding var level: Double
     @Binding var threshType: ThresholdType
+    var onButton: () -> Void
 
     @Environment(\.dismiss) var dismiss
 
@@ -57,11 +58,11 @@ struct ThresholdView: View {
             Text(currentLevel == 0 ? "" : "Current Threshold of \(item.displayName) is \(currentLevel)")
             HStack {
                 Button("Cancel", role: .cancel) {
-                    item = .none
                     dismiss()
                 }
                 .padding()
                 Button("Set Threshold") {
+                    onButton()
                     dismiss()
                 }
             }.buttonStyle(.automatic)
@@ -97,6 +98,31 @@ struct ThresholdView: View {
     }
 }
 
+func doThreshold(game: Game, threshType: ThresholdType, coord: MapCoord, item: Item, level: Int) {
+    Task {
+        switch threshType {
+        case .individual:
+            await game.cmd_threshold(
+                item: item,
+                coord: coord,
+                level: level
+            )
+        case .global:
+            await game.cmd_threshold(
+                item: item,
+                level: level
+            )
+        case .desig(let desig):
+            await game.cmd_threshold(
+                item: item,
+                desig: desig,
+                level: level
+            )
+        }
+        await game.cmd_dump()
+    }
+}
+
 struct ThresholdSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
@@ -104,46 +130,27 @@ struct ThresholdSheet: ViewModifier {
     @State private var item: Item = .none
     @State private var level = 0.0
     @State private var threshType: ThresholdType = .global
+
     func body(content: Content) -> some View {
         content
             .sheet(
                 isPresented: $isPresented
             ) {
-                isPresented = false
-                if item != .none {
-                    Task {
-                        switch threshType {
-                        case .individual:
-                            await game.cmd_threshold(
-                                item: item,
-                                coord: centerCoord,
-                                level: Int(level)
-                            )
-                        case .global:
-                            await game.cmd_threshold(
-                                item: item,
-                                level: Int(level)
-                            )
-                        case .desig(let desig):
-                            await game.cmd_threshold(
-                                item: item,
-                                desig: desig,
-                                level: Int(level)
-                            )
-                        }
-                        await game.cmd_dump()
-                        item = .none
-                        level = 0.0
-                    }
-                }
-            } content: {
                 ThresholdView(
                     game: game,
                     coord: centerCoord,
                     item: $item,
                     level: $level,
                     threshType: $threshType
-                )
+                ) {
+                    if item != .none {
+                        doThreshold(game: game, threshType: threshType, coord: centerCoord, item: item, level: Int(level))
+                    }
+                }
+            }
+            .onAppear {
+                item = .none
+                threshType = .global
             }
     }
 }
@@ -177,5 +184,7 @@ extension View {
         item: $item,
         level: $level,
         threshType: $threshType
-    )
+    ) {
+        print("Threshold \(item) to \(level)")
+    }
 }
