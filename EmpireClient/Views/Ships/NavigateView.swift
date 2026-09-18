@@ -62,7 +62,7 @@ struct NavigateView: View {
                     shipNum: shipNum,
                     destination: destination!
                 )
-                await game.cmd_sdump(shipNum: shipNum)
+                await game.cmd_sdump(shipNum)
                 await game.cmd_map(cmdArg: shipNum)
             }
         } else {
