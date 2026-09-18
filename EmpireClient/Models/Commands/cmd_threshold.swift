@@ -24,7 +24,7 @@ extension Game {
         item: Item,
         level: Int
     ) async {
-        let cmdString = "thresh \(item.rawValue) # \(level)"
+        let cmdString = "thresh \(item.rawValue) * \(level)"
         log(cmdString)
         let result = await client.runCmd(cmdString)
         log(result)
@@ -37,7 +37,7 @@ extension Game {
         level: Int
     ) async {
         let cmdString =
-            "thresh \(item.rawValue) ?des=\(desig.abbrev) # \(level)"
+            "thresh \(item.rawValue) ?des=\(desig.abbrev) * \(level)"
         log(cmdString)
         let result = await client.runCmd(cmdString)
         log(result)

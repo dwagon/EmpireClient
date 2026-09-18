@@ -12,7 +12,7 @@ struct NameShipView: View {
     var shipNum: String
     @Binding var name: String
     @FocusState private var focused: Bool
-    var onName: () -> Void
+    var onButton: () -> Void
 
     @Environment(\.dismiss) var dismiss
 
@@ -46,7 +46,7 @@ struct NameShipView: View {
                 .buttonStyle(.automatic)
                 .padding()
                 Button("Name") {
-                    onName()
+                    onButton()
                     dismiss()
                 }
             }

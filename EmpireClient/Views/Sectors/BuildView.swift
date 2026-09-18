@@ -12,10 +12,10 @@ struct BuildView: View {
     let coord: MapCoord
     let buildType: BuildType
     let maxUnits = 20
-
     @Binding var deviceType: String
     @Binding var number: Int
     @Environment(\.dismiss) var dismiss
+    var onButton: () -> Void
 
     var body: some View {
         VStack {
@@ -34,12 +34,12 @@ struct BuildView: View {
             }.padding()
             HStack {
                 Button("Cancel", role: .cancel) {
-                    number = 0
                     dismiss()
                 }
                 .buttonStyle(.automatic)
                 .padding()
                 Button("Build") {
+                    onButton()
                     dismiss()
                 }
             }
@@ -89,11 +89,16 @@ struct BuildView: View {
                     ForEach(
                         Array(game.shipTypes.keys).filter({
                             game.isShipBuildable($0)
-                        }).sorted(by: {game.shipTypes[$0]!.abbrev < game.shipTypes[$1]!.abbrev}),
+                        }).sorted(by: {
+                            game.shipTypes[$0]!.abbrev
+                                < game.shipTypes[$1]!.abbrev
+                        }),
                         id: \.self
                     ) { shipType in
                         let details = game.shipTypes[shipType]!
-                        Text("\(details.name) (\(details.abbrev))").tag(shipType)
+                        Text("\(details.name) (\(details.abbrev))").tag(
+                            shipType
+                        )
                     }
                 }.pickerStyle(.menu)
                 Spacer()
@@ -161,7 +166,9 @@ struct BuildView: View {
                         id: \.self
                     ) { planeType in
                         let details = game.planeTypes[planeType]!
-                        Text("\(details.name) (\(details.abbrev))").tag(planeType)
+                        Text("\(details.name) (\(details.abbrev))").tag(
+                            planeType
+                        )
                     }
                 }.pickerStyle(.menu)
                 Spacer()
@@ -222,12 +229,15 @@ struct BuildView: View {
                     Text("No unit").tag("")
                     ForEach(
                         Array(game.landTypes.keys).sorted(by: {
-                            game.landTypes[$0]!.abbrev < game.landTypes[$1]!.abbrev
+                            game.landTypes[$0]!.abbrev
+                                < game.landTypes[$1]!.abbrev
                         }),
                         id: \.self
                     ) { unitType in
                         let details = game.landTypes[unitType]!
-                        Text("\(details.name) (\(details.abbrev))").tag(unitType)
+                        Text("\(details.name) (\(details.abbrev))").tag(
+                            unitType
+                        )
                     }
                 }.pickerStyle(.menu)
                 Spacer()
@@ -269,6 +279,7 @@ func buildThing(
                 break
             }
         }
+        await game.cmd_dump(coord)
     }
 }
 
@@ -301,22 +312,26 @@ struct BuildSheet: ViewModifier {
             .sheet(
                 isPresented: $isPresented
             ) {
-                isPresented = false
-                buildThing(
-                    game: game,
-                    number: number,
-                    device: getBuildType(game[coord]!.desig.desig),
-                    type: type,
-                    coord: coord
-                )
-            } content: {
+                let buildType = getBuildType(game[coord]!.desig.desig)
                 BuildView(
                     game: game,
                     coord: coord,
-                    buildType: getBuildType(game[coord]!.desig.desig),
+                    buildType: buildType,
                     deviceType: $type,
                     number: $number
-                )
+                ) {
+                    buildThing(
+                        game: game,
+                        number: number,
+                        device: buildType,
+                        type: type,
+                        coord: coord
+                    )
+                }
+                .onAppear {
+                    type = ""
+                    number = 1
+                }
             }
     }
 }

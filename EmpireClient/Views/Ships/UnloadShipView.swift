@@ -11,6 +11,7 @@ struct UnloadShipView: View {
     var ship: Ship
     @Binding var item: Item
     @Binding var amount: Int
+    var onButton: () -> Void
 
     @Environment(\.dismiss) var dismiss
 
@@ -53,12 +54,12 @@ struct UnloadShipView: View {
             )
             HStack {
                 Button("Cancel", role: .cancel) {
-                    amount = 0
                     dismiss()
                 }
                 .buttonStyle(.automatic)
                 .padding()
                 Button("Unload") {
+                    onButton()
                     dismiss()
                 }.disabled(item == .none)
             }
@@ -69,51 +70,54 @@ struct UnloadShipView: View {
 struct UnloadShipSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
-    var ship: Ship?
+    var shipId: Ship.ID?
     @State private var item: Item = .none
     @State private var amount: Int = 1
 
     func body(content: Content) -> some View {
-        if let ship {
-            content
-                .sheet(
-                    isPresented: $isPresented
-                ) {
-                    isPresented = false
-                    if amount > 0 && item != .none {
-                        Task {
-                            await game.cmd_unload(
-                                commodity: item,
-                                shipNum: ship.number,
-                                amount: amount
-                            )
-                            await game.cmd_sdump()
-                        }
-                    }
-                } content: {
+        content
+            .sheet(
+                isPresented: $isPresented
+            ) {
+                if let shipId, let ship = game.ships[shipId] {
                     UnloadShipView(
                         ship: ship,
                         item: $item,
                         amount: $amount
-                    )
+                    ) {
+                        if amount > 0 && item != .none {
+                            Task {
+                                await game.cmd_unload(
+                                    commodity: item,
+                                    shipNum: ship.number,
+                                    amount: amount
+                                )
+                                await game.cmd_sdump(ship.number)
+                                await game.cmd_dump(ship.coords)
+                            }
+                        }
+                    }
+                    .onAppear {
+                        item = .none
+                        amount = 0
+                    }
                 }
-        } else {
-            content
-        }
+            }
     }
+
 }
 
 extension View {
     func unloadShip(
         isPresented: Binding<Bool>,
         game: Game,
-        ship: Ship?
+        shipId: Ship.ID?
     ) -> some View {
         modifier(
             UnloadShipSheet(
                 isPresented: isPresented,
                 game: game,
-                ship: ship
+                shipId: shipId
             )
         )
     }
@@ -130,5 +134,7 @@ extension View {
         ship: ship,
         item: $item,
         amount: $amount,
-    )
+    ) {
+        print("Unload \(amount) x \(item) from \(ship)")
+    }
 }

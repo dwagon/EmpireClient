@@ -14,6 +14,7 @@ struct AssaultShipView: View {
     var gameMap: Map
     @Binding var destination: MapCoord
     @Binding var response: [String]
+    var onButton: () -> Void
 
     @Environment(\.dismiss) var dismiss
 
@@ -38,8 +39,7 @@ struct AssaultShipView: View {
                     hexGesture: hexGesture
                 ).scaledToFit()
                 Text("Assault \(destination.toString()) from ship \(shipNum)")
-            }
-            else {
+            } else {
                 Text("Assault Response")
                 Text(response.joined(separator: "\n"))
             }
@@ -50,6 +50,7 @@ struct AssaultShipView: View {
                 .buttonStyle(.automatic)
                 .padding()
                 Button("Assault") {
+                    onButton()
                     dismiss()
                 }
             }
@@ -81,7 +82,12 @@ struct AssaultShipView: View {
     }
 
     func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
-        return mapCellColour(cell: cell, gameMap: gameMap, hexmap: hexmap, center: shipLocation)
+        return mapCellColour(
+            cell: cell,
+            gameMap: gameMap,
+            hexmap: hexmap,
+            center: shipLocation
+        )
     }
 }
 
@@ -94,30 +100,29 @@ struct AssaultShipSheet: ViewModifier {
     @State var response: [String] = []
 
     func body(content: Content) -> some View {
-        if let shipId {
-            content
-                .sheet(
-                    isPresented: $isPresented
-                ) {
-                    isPresented = false
-                    Task {
-                        response = await game.cmd_assault(
-                            sector: destination,
-                            shipNum: game.ships[shipId]!.number,
-                        )
-                    }
-                } content: {
+        content
+            .sheet(
+                isPresented: $isPresented
+            ) {
+                if let shipId, let ship = game.ships[shipId] {
                     AssaultShipView(
-                        shipNum: game.ships[shipId]!.number,
-                        shipLocation: game.ships[shipId]!.coords,
+                        shipNum: ship.number,
+                        shipLocation: ship.coords,
                         gameMap: game.gameMap,
                         destination: $destination,
                         response: $response
-                    )
+                    ) {
+                        Task {
+                            response = await game.cmd_assault(
+                                sector: destination,
+                                shipNum: ship.number,
+                            )
+                            await game.cmd_dump()
+                            await game.cmd_sdump(ship.number)
+                        }
+                    }
                 }
-        } else {
-            content
-        }
+            }
     }
 }
 
@@ -147,5 +152,7 @@ extension View {
         gameMap: Map(),
         destination: $coord,
         response: $response
-    )
+    ) {
+        let _ = print("response=\(response)")
+    }
 }

@@ -15,6 +15,7 @@ struct ExploreView: View {
     @Binding var number: Int
     @Binding var destination: String?
     @State var destinationCell: Cell?
+    var onButton: () -> Void
 
     @Environment(\.dismiss) var dismiss
 
@@ -40,15 +41,14 @@ struct ExploreView: View {
             }
             HStack {
                 Button("Cancel", role: .cancel) {
-                    number = 0
                     dismiss()
                 }
-
-                .buttonStyle(.automatic)
                 .padding()
                 Button("Explore") {
+                    onButton()
                     dismiss()
                 }.disabled(destination == nil)
+                    .buttonStyle(.automatic)
             }
         }
     }
@@ -131,31 +131,32 @@ struct ExploreSheet: ViewModifier {
             .sheet(
                 isPresented: $isPresented
             ) {
-                isPresented = false
-                if number > 0 {
-                    Task {
-                        if let destination {
-                            await game.cmd_explo(
-                                item: item,
-                                sector: centerCoord,
-                                number: number,
-                                destination: destination
-                            )
-                            await game.cmd_dump()
-                            await game.cmd_map()
-                        }
-                        number = 0
-                        item = .civ
-                    }
-                }
-            } content: {
                 ExploreView(
                     game: game,
                     coord: centerCoord,
                     item: $item,
                     number: $number,
                     destination: $destination
-                )
+                ) {
+                    if let destination {
+                        if number > 0 {
+                            Task {
+                                await game.cmd_explo(
+                                    item: item,
+                                    sector: centerCoord,
+                                    number: number,
+                                    destination: destination
+                                )
+                                await game.cmd_dump()
+                                await game.cmd_map()
+                            }
+                        }
+                    }
+                }
+                .onAppear {
+                    number = 0
+                    item = .civ
+                }
             }
     }
 }
@@ -189,5 +190,9 @@ extension View {
         item: $item,
         number: $number,
         destination: $destination
-    )
+    ) {
+        print(
+            "Explore \(item) x \(number) to \(destination, default: "unknown")"
+        )
+    }
 }

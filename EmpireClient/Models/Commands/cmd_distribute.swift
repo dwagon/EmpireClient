@@ -35,7 +35,17 @@ extension Game {
     func cmd_distribute(
         destination: MapCoord
     ) async {
-        let cmdString = "distribute # \(destination.toString())"
+        let cmdString = "distribute * \(destination.toString())"
+        log(cmdString)
+        let result = await client.runCmd(cmdString)
+        log(result)
+    }
+
+    /// Manual everywhere with '#'
+    func cmd_distribute(
+        destination: String
+    ) async {
+        let cmdString = "distribute * \(destination)"
         log(cmdString)
         let result = await client.runCmd(cmdString)
         log(result)

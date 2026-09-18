@@ -93,7 +93,7 @@ struct ShipDetailView: View {
         .unloadShip(
             isPresented: $showUnloadPopup,
             game: game,
-            ship: game.ships[selectedShip ?? "0"]
+            shipId: selectedShip
         )
         .assaultShip(
             isPresented: $showAssaultPopup,
