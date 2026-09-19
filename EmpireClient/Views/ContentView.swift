@@ -59,6 +59,24 @@ struct ContentView: View {
                     PlaneDetailView(game: game, centerCoord: $centerCoord)
                 }.disabled(game.planes.isEmpty)
             }
+            .onChange(of: tabSelection) { oldTab, newTab in
+                switch newTab {
+                case .land:
+                    Task {
+                        await game.cmd_ldump()
+                    }
+                case .ship:
+                    Task {
+                        await game.cmd_sdump()
+                    }
+                case .plane:
+                    Task {
+                        await game.cmd_pdump()
+                    }
+                case .sector:
+                    break
+                }
+            }
         }
 
         HStack {
