@@ -62,7 +62,7 @@ struct MarchView: View {
                     unit: unitNum,
                     destination: destination!
                 )
-                await game.cmd_ldump(unitNum: unitNum)
+                await game.cmd_ldump(unitNum)
             }
         } else {
             print("no cell at \(location.hexPoint)")
