@@ -8,13 +8,13 @@
 import Foundation
 
 extension Game {
-    func cmd_ldump(unitNum: String = "*") async {
-        let result = await runCmd("ldump \(unitNum)", suppressLog: true)
+    func cmd_ldump(_ arg: String = "*") async {
+        let result = await runCmd("ldump \(arg)", suppressLog: true)
         guard result != [] else {
             log("ldump returned empty")
             return
         }
-        parse_cmd_ldump(result)
+        parse_cmd_ldump(result, trimMissing: arg == "*")
     }
 
     //    Mon Sep 14 17:29:40 2026
@@ -26,7 +26,7 @@ extension Game {
     //          uw civ
     //    0 cav  -1 1 ~ 10 0 0 0 0 0 119 42 0 0 0 -1 -1 0 0 0 0 0 0 0 0 0 0 1.65 0.69 71 38 18 4 3 0 0 0 0 0 0 0
     //    1 unit
-    func parse_cmd_ldump(_ input: [String]) {
+    func parse_cmd_ldump(_ input: [String], trimMissing: Bool = true) {
         var lunit: LandUnit
         var exists: Set<String> = []
 
@@ -86,7 +86,7 @@ extension Game {
 
         // Remove units that weren't in the dump
         for lunit in landUnits.keys {
-            if !exists.contains(lunit) {
+            if !exists.contains(lunit) && trimMissing {
                 landUnits.removeValue(forKey: lunit)
             }
         }

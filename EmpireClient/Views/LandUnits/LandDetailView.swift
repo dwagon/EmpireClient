@@ -13,7 +13,7 @@ struct LandDetailView: View {
     @State private var selectedUnit: Plane.ID?
 
     @State private var showMarchPopup: Bool = false
-
+    @State private var showLLandPopup: Bool = false
 
     var body: some View {
         let minColWidth: CGFloat = 60
@@ -83,6 +83,7 @@ struct LandDetailView: View {
         }
         .navigationSplitViewColumnWidth(min: 400, ideal: 800)
         .marchUnit(isPresented: $showMarchPopup, game: game, unitId: selectedUnit)
+        .loadLandUnit(isPresented: $showLLandPopup, game: game, unitId: selectedUnit)
     }
 
     var landButtonBar: some View {
@@ -91,6 +92,7 @@ struct LandDetailView: View {
 
             if selectedUnit != nil {
                 marchButton
+                loadLandButton
             }
         }
     }
@@ -98,6 +100,12 @@ struct LandDetailView: View {
     var marchButton: some View {
         Button("March") {
             showMarchPopup = true
+        }
+    }
+
+    var loadLandButton: some View {
+        Button("Load") {
+            showLLandPopup = true
         }
     }
 
@@ -133,6 +141,7 @@ struct LandDetailView: View {
                 Text("Damage: \(unit.damage)")
             }
             Text("Capabilities: \(unitType.capabilities)")
+            Divider()
             HStack {
                 ForEach(
                     unit.cargo.sorted(by: {
@@ -147,7 +156,6 @@ struct LandDetailView: View {
                     }
                 }
             }
-            Divider()
         }.padding()
             .border(.blue)
     }
