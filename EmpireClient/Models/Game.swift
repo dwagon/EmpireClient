@@ -95,9 +95,9 @@ class Game: Decodable {
         await cmd_map()
         await cmd_nation()
         await cmd_prod()
-        await cmd_show_ship()
-        await cmd_show_land()
-        await cmd_show_plane()
+        shipTypes = await cmd_show_ship()
+        landTypes = await cmd_show_land()
+        planeTypes = await cmd_show_plane()
     }
 
     enum CodingKeys: String, CodingKey {
