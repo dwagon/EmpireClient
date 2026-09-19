@@ -90,14 +90,17 @@ class Game: Decodable {
         let _ = await runCmd("play")
     }
 
-    func get_data() async {
-        await cmd_dump()
-        await cmd_map()
+    func get_initial_data() async {
         await cmd_nation()
         await cmd_prod()
         shipTypes = await cmd_show_ship()
         landTypes = await cmd_show_land()
         planeTypes = await cmd_show_plane()
+    }
+
+    func get_data() async {
+        await cmd_dump()
+        await cmd_map()
     }
 
     enum CodingKeys: String, CodingKey {
