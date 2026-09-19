@@ -9,7 +9,7 @@ import Foundation
 
 extension Game {
     func cmd_sdump(_ arg: String = "*") async {
-        let result = await client.runCmd("sdump \(arg)")
+        let result = await runCmd("sdump \(arg)", suppressLog: true)
         guard result != [] else {
             log("sdump returned empty")
             return

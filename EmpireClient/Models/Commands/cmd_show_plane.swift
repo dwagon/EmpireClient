@@ -10,9 +10,9 @@ import Foundation
 extension Game {
     /// Find out all the details of ships
     func cmd_show_plane() async {
-        let bResult = await client.runCmd("show plane b")
-        let sResult = await client.runCmd("show plane s")
-        let cResult = await client.runCmd("show plane c")
+        let bResult = await runCmd("show plane b", suppressLog: true)
+        let sResult = await runCmd("show plane s", suppressLog: true)
+        let cResult = await runCmd("show plane c", suppressLog: true)
 
         if bResult.isEmpty || sResult.isEmpty || cResult.isEmpty {
             log("Error: Show plane report empty")

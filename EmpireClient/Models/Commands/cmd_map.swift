@@ -31,7 +31,7 @@ extension Game {
     }
 
     func process_map_cmd(cmd: String, cmdArg: String) async {
-        let result = await client.runCmd("\(cmd) \(cmdArg)")
+        let result = await runCmd("\(cmd) \(cmdArg)", suppressLog: true)
         var minX: Int
         guard result != [] else {
             print("map returned empty")

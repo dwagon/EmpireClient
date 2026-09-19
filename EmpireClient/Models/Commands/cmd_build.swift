@@ -16,10 +16,6 @@ extension Game {
         sector: MapCoord,
         number: Int = 1
     ) async {
-        let cmdString =
-            "build \(device.abbrev) \(sector.toString()) \(type) \(number)"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
-        log(result)
+        let _ = await runCmd("build \(device.abbrev) \(sector.toString()) \(type) \(number)")
     }
 }

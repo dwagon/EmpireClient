@@ -17,7 +17,7 @@ import Foundation
 
 extension Game {
     func cmd_power() async {
-        let result = await client.runCmd("power")
+        let result = await runCmd("power", suppressLog: true)
         guard result != [] else {
             print("power returned empty")
             return
