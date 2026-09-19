@@ -13,14 +13,10 @@ extension Game {
         unit: String,
         destination: MapCoord
     ) async {
-        let cmdString =
-            "march \(unit) \(destination.toString())"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
+        let result = await runCmd("march \(unit) \(destination.toString())")
         guard result != [] else {
             log("march returned empty")
             return
         }
-        log(result)
     }
 }

@@ -14,20 +14,14 @@ extension Game {
         coord: MapCoord,
         level: Int
     ) async {
-        let cmdString = "thresh \(item.rawValue) \(coord.toString()) \(level)"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
-        log(result)
+        let _ = await runCmd("thresh \(item.rawValue) \(coord.toString()) \(level)")
     }
 
     func cmd_threshold(
         item: Item,
         level: Int
     ) async {
-        let cmdString = "thresh \(item.rawValue) * \(level)"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
-        log(result)
+        let _ = await runCmd("thresh \(item.rawValue) * \(level)")
     }
 
     /// Set thresholds for all sectors of the specified designation
@@ -36,11 +30,7 @@ extension Game {
         desig: Desig,
         level: Int
     ) async {
-        let cmdString =
-            "thresh \(item.rawValue) ?des=\(desig.abbrev) * \(level)"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
-        log(result)
+        let _ = await runCmd("thresh \(item.rawValue) ?des=\(desig.abbrev) * \(level)")
     }
 
     func cmd_threshold(
@@ -48,9 +38,6 @@ extension Game {
         coord: MapCoord,
         level: Int
     ) async {
-        let cmdString = "thresh \(item) \(coord.toString()) \(level)"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
-        log(result)
+        let _ = await runCmd("thresh \(item) \(coord.toString()) \(level)")
     }
 }

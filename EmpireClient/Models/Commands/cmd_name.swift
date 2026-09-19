@@ -13,10 +13,6 @@ extension Game {
         ship: String,
         name: String
     ) async {
-        let cmdString =
-            "name \(ship) \"\(name)\""
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
-        log(result)
+        let _ = await runCmd("name \(ship) \"\(name)\"")
     }
 }

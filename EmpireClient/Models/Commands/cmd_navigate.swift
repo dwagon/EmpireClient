@@ -11,18 +11,15 @@ extension Game {
 
     func cmd_navigate(shipNum: String, destination: MapCoord) async {
         let nav_regex = /\<-?\d+.\d:-?\d+.\d: -?\d+,-?\d+\>/
-        let cmdString = "navigate \(shipNum) \(destination.toString())"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
-        log("navigate=\(result)")
+
+        let result = await runCmd("navigate \(shipNum) \(destination.toString())")
         guard result != [] else {
             print("navigate returned empty")
             return
         }
-        print("navigate: \(result)")
         for line in result {
             if let _ = line.firstMatch(of: nav_regex) {
-                _ = await client.runCmd("h")
+                _ = await runCmd("h")
             }
         }
     }

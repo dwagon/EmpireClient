@@ -15,7 +15,7 @@ class Game: Decodable {
     var nationReport: [String] = []
     var budgetReport: [String] = []
     var powerReport: [String] = []
-    var logs: [String] = []
+    var logs: [Log] = []
 
     var shipTypes: [String: ShipType] = [:]
     var ships: [String: Ship] = [:]
@@ -25,7 +25,7 @@ class Game: Decodable {
 
     var planeTypes: [String: PlaneType] = [:]
     var planes: [String: Plane] = [:]
-    
+
     var treasury: Int = 0
     var techLevel: Float = 0
 
@@ -69,30 +69,25 @@ class Game: Decodable {
         }
     }
 
-    func log(_ line: String) {
-        if line.contains("\n") {
-            for subline in line.split(separator: "\n") {
-                logs.append(String(subline))
-            }
+    func runCmd(_ cmdString: String, suppressLog: Bool = false) async
+        -> [String]
+    {
+        var result: [String]
+        if suppressLog {
+            result = await client.runCmd(cmdString)
         } else {
-            logs.append(line)
+            log(cmdString, logType: .cmd)
+            result = await client.runCmd(cmdString)
+            log(result, logType: .result)
         }
-    }
-
-    func log(_ lines: [String]) {
-        for line in lines {
-            log(line)
-        }
+        return result
     }
 
     // MARK: -
     func login(country: String, password: String) async {
-        var result = await client.runCmd("coun \(country)")
-        log(result)
-        result = await client.runCmd("pass \(password)")
-        log(result)
-        result = await client.runCmd("play")
-        log(result)
+        let _ = await runCmd("coun \(country)")
+        let _ = await runCmd("pass \(password)", suppressLog: true)
+        let _ = await runCmd("play")
     }
 
     func get_data() async {

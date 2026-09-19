@@ -9,7 +9,7 @@ import Foundation
 
 extension Game {
     func cmd_pdump(planeNum: String = "*") async {
-        let result = await client.runCmd("pdump \(planeNum)")
+        let result = await runCmd("pdump \(planeNum)", suppressLog: true)
         guard result != [] else {
             log("pdump returned empty")
             return

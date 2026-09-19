@@ -107,12 +107,14 @@ struct NavigateShipSheet: ViewModifier {
                             destination: $destination
                         ) {
                             Task {
-                                await game.cmd_navigate(
-                                    shipNum: ship.number,
-                                    destination: destination!
-                                )
-                                await game.cmd_sdump(ship.number)
-                                await game.cmd_map(cmdArg: ship.number)
+                                if let destination {
+                                    await game.cmd_navigate(
+                                        shipNum: ship.number,
+                                        destination: destination
+                                    )
+                                    await game.cmd_sdump(ship.number)
+                                    await game.cmd_map(cmdArg: ship.number)
+                                }
                             }
                         }
                         .onAppear {

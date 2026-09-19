@@ -9,7 +9,7 @@ import Foundation
 
 extension Game {
     func cmd_ldump(unitNum: String = "*") async {
-        let result = await client.runCmd("ldump \(unitNum)")
+        let result = await runCmd("ldump \(unitNum)", suppressLog: true)
         guard result != [] else {
             log("ldump returned empty")
             return

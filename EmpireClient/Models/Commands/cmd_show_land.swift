@@ -11,9 +11,9 @@ import Foundation
 extension Game {
     /// Find out all the details of ships
     func cmd_show_land() async {
-        let bResult = await client.runCmd("show land b")
-        let sResult = await client.runCmd("show land s")
-        let cResult = await client.runCmd("show land c")
+        let bResult = await runCmd("show land b", suppressLog: true)
+        let sResult = await runCmd("show land s", suppressLog: true)
+        let cResult = await runCmd("show land c", suppressLog: true)
 
         if bResult.isEmpty || sResult.isEmpty || cResult.isEmpty {
             log("Error: Show land report empty")

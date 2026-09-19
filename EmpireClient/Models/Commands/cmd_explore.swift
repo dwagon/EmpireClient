@@ -24,14 +24,10 @@ extension Game {
             return
         }
         // Annoyingly you can't specify the destination as a coord if you don't own the destination (as in you are exploring)!
-        let cmdString =
-            "explo \(itemstr) \(sector.toString()) \(number) \(destination)h"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
+        let result = await runCmd("explo \(itemstr) \(sector.toString()) \(number) \(destination)h")
         guard result != [] else {
             log("explo returned empty")
             return
         }
-        log(result)
     }
 }

@@ -13,11 +13,7 @@ extension Game {
         source: MapCoord,
         destination: MapCoord
     ) async {
-        let cmdString =
-            "distribute \(source.toString()) \(destination.toString())"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
-        log(result)
+        let _ = await runCmd("distribute \(source.toString()) \(destination.toString())")
     }
 
     /// Can be used to stop distribution if destination is '.' or 'h'
@@ -25,29 +21,20 @@ extension Game {
         source: MapCoord,
         destination: String
     ) async {
-        let cmdString = "distribute \(source.toString()) \(destination)"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
-        log(result)
+        let _ = await runCmd("distribute \(source.toString()) \(destination)")
     }
 
     /// Set everywhere with '#'
     func cmd_distribute(
         destination: MapCoord
     ) async {
-        let cmdString = "distribute * \(destination.toString())"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
-        log(result)
+        let _ = await runCmd("distribute * \(destination.toString())")
     }
 
     /// Manual everywhere with '#'
     func cmd_distribute(
         destination: String
     ) async {
-        let cmdString = "distribute * \(destination)"
-        log(cmdString)
-        let result = await client.runCmd(cmdString)
-        log(result)
+        let _ = await runCmd("distribute * \(destination)")
     }
 }
