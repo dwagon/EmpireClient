@@ -36,7 +36,7 @@ struct EmpireClientApp: App {
                 }.disabled(game.landTypes.isEmpty)
                 Button("Ship Types", systemImage: "sailboat") {
                     openWindow(id: "ship_types_report")
-                }
+                }.disabled(game.shipTypes.isEmpty)
                 Button("Plane Types", systemImage: "airplane.up.right") {
                     openWindow(id: "plane_types_report")
                 }.disabled(game.planeTypes.isEmpty)

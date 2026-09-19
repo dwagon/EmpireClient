@@ -9,17 +9,17 @@ import Foundation
 
 extension Game {
     /// Find out all the details of ships
-    func cmd_show_ship() async {
+    func cmd_show_ship() async -> [String: ShipType] {
         let bResult = await runCmd("show ship b", suppressLog: true)
         let sResult = await runCmd("show ship s", suppressLog: true)
         let cResult = await runCmd("show ship c", suppressLog: true)
 
         if bResult.isEmpty || sResult.isEmpty || cResult.isEmpty {
             log("Error: Show ship report empty")
-            return
+            return [:]
         }
 
-        shipTypes = parse_ship_str(
+        return parse_ship_str(
             buildStr: bResult,
             statsStr: sResult,
             capStr: cResult

@@ -10,17 +10,17 @@ import Foundation
 
 extension Game {
     /// Find out all the details of ships
-    func cmd_show_land() async {
+    func cmd_show_land() async -> [String: LandType]{
         let bResult = await runCmd("show land b", suppressLog: true)
         let sResult = await runCmd("show land s", suppressLog: true)
         let cResult = await runCmd("show land c", suppressLog: true)
 
         if bResult.isEmpty || sResult.isEmpty || cResult.isEmpty {
             log("Error: Show land report empty")
-            return
+            return [:]
         }
 
-        landTypes = parse_land_str(
+        return parse_land_str(
             buildStr: bResult,
             statsStr: sResult,
             capStr: cResult
