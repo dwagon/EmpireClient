@@ -11,8 +11,7 @@ import SwiftUI
 struct NavigateView: View {
     var shipNum: String
     var game: Game
-    @Binding var destination: MapCoord?
-    var onButton: () -> Void
+    @State var destination: MapCoord?
 
     @Environment(\.dismiss) var dismiss
 
@@ -41,17 +40,30 @@ struct NavigateView: View {
                     hexGesture: hexGesture
                 ).scaledToFit()
                 Text(
-                    destination == nil ? "Navigate to a location from ship \(shipNum)" :
-                    "Navigate to \(destination!.toString()) from ship \(shipNum)"
+                    destination == nil
+                        ? "Navigate to a location from ship \(shipNum)"
+                        : "Navigate to \(destination!.toString()) from ship \(shipNum)"
                 )
             }.padding()
             HStack {
                 Button("Finish") {
-                    onButton()
                     dismiss()
                 }
             }.buttonStyle(.automatic)
         }.padding()
+    }
+
+    func navigateToLocation(_ destination: MapCoord?) {
+        Task {
+            if let destination {
+                await game.cmd_navigate(
+                    shipNum: shipNum,
+                    destination: destination
+                )
+                await game.cmd_sdump(shipNum)
+                await game.cmd_map(cmdArg: shipNum)
+            }
+        }
     }
 
     func hexGesture(location: CGPoint) {
@@ -60,7 +72,7 @@ struct NavigateView: View {
                 from: cell.coordinates
             )
             destination! += game.ships[shipNum]!.coords
-
+            navigateToLocation(destination)
         } else {
             print("no cell at \(location.hexPoint)")
         }
@@ -92,38 +104,20 @@ struct NavigateShipSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
     var shipId: Ship.ID?
-    @State var shipLocation: MapCoord = MapCoord(x: 0, y: 0)
-    @State var destination: MapCoord?
-    @State var response: [String] = []
 
     func body(content: Content) -> some View {
         content
-                .sheet(
-                    isPresented: $isPresented
-                ) {
-                    if let shipId, let ship = game.ships[shipId] {
-                        NavigateView(
-                            shipNum: game.ships[shipId]!.number,
-                            game: game,
-                            destination: $destination
-                        ) {
-                            Task {
-                                if let destination {
-                                    await game.cmd_navigate(
-                                        shipNum: ship.number,
-                                        destination: destination
-                                    )
-                                    await game.cmd_sdump(ship.number)
-                                    await game.cmd_map(cmdArg: ship.number)
-                                }
-                            }
-                        }
-                        .onAppear {
-                            destination = nil
-                        }
-                    }
+            .sheet(
+                isPresented: $isPresented
+            ) {
+                if let shipId, let ship = game.ships[shipId] {
+                    NavigateView(
+                        shipNum: ship.number,
+                        game: game,
+                    )
                 }
-        }
+            }
+    }
 }
 
 extension View {

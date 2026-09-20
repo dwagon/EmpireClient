@@ -40,8 +40,9 @@ struct MarchView: View {
                     hexGesture: hexGesture
                 ).scaledToFit()
                 Text(
-                    destination == nil ? "March unit \(unitNum) to a location" :
-                    "March \(unitNum) to \(destination!.toString())"
+                    destination == nil
+                        ? "March unit \(unitNum) to a location"
+                        : "March \(unitNum) to \(destination!.toString())"
                 )
             }.padding()
             HStack {
@@ -96,23 +97,19 @@ struct MarchUnitSheet: ViewModifier {
     @Binding var isPresented: Bool
     var game: Game
     var unitId: LandUnit.ID?
-    
+
     func body(content: Content) -> some View {
-        if let unitId {
-            content
-                .sheet(
-                    isPresented: $isPresented
-                ) {
-                    isPresented = false
-                } content: {
+        content
+            .sheet(
+                isPresented: $isPresented
+            ) {
+                if let unitId, let unit = game.landUnits[unitId] {
                     MarchView(
-                        unitNum: game.landUnits[unitId]!.number,
+                        unitNum: unit.number,
                         game: game
                     )
                 }
-        } else {
-            content
-        }
+            }
     }
 }
 
