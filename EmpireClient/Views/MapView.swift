@@ -47,9 +47,10 @@ struct MapView: View {
     @State var displayResourceMapStyle: ResourceMapStyle = .normal
     @State var displayUnitMapStyle: UnitMapStyle = .none
     @State var displayExtraMapStyle: ExtraMapStyle = .none
+    let radius: Int = 20
 
     var hexmap = HexGrid(
-        shape: .hexagon(MapConfig.mapRadius),
+        shape: .hexagon(20),
         orientation: MapConfig.orientation,
         offsetLayout: MapConfig.offsetLayout,
         hexSize: MapConfig.hexSize
@@ -59,6 +60,7 @@ struct MapView: View {
         VStack {
             DrawHex(
                 hexmap: hexmap,
+                radius: radius,
                 cellText: cellText,
                 cellFillColour: cellColour,
                 hexGesture: hexGesture
