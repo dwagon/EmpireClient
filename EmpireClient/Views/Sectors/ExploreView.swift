@@ -32,6 +32,7 @@ struct ExploreView: View {
             HStack {
                 DrawHex(
                     hexmap: hexmap,
+                    radius: 4,
                     cellText: cellText,
                     cellFillColour: cellColour,
                     hexGesture: hexGesture

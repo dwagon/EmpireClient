@@ -147,15 +147,17 @@ struct GeneralSettings: View {
 
     var body: some View {
         Text("General Settings")
-        HStack {
-            Text("Country:")
-            TextField("Country", text: $profile.country)
-                .disableAutocorrection(true)
-        }
-        HStack {
-            Text("Password:")
-            TextField("Password", text: $profile.password)
-                .disableAutocorrection(true)
+        VStack(alignment: .leading) {
+            HStack {
+                Text("Country:")
+                TextField("Country", text: $profile.country)
+                    .disableAutocorrection(true)
+            }
+            HStack {
+                Text("Password:")
+                TextField("Password", text: $profile.password)
+                    .disableAutocorrection(true)
+            }
         }
     }
 }

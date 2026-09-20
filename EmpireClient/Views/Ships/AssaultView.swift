@@ -34,6 +34,7 @@ struct AssaultShipView: View {
             if response.isEmpty {
                 DrawHex(
                     hexmap: hexmap,
+                    radius: 3,
                     cellText: cellText,
                     cellFillColour: cellColour,
                     hexGesture: hexGesture

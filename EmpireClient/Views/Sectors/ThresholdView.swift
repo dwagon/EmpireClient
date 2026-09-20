@@ -65,6 +65,7 @@ struct ThresholdView: View {
                     onButton()
                     dismiss()
                 }
+                .disabled(item == .none)
             }.buttonStyle(.automatic)
         }
     }
@@ -150,6 +151,7 @@ struct ThresholdSheet: ViewModifier {
             }
             .onAppear {
                 item = .none
+                level = 0
                 threshType = .global
             }
     }

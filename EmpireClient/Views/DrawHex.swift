@@ -10,6 +10,7 @@ import SwiftUI
 
 struct DrawHex: View {
     var hexmap: HexGrid
+    var radius: Int
     var cellText: ((Cell) -> String)?
     var cellImage: ((Cell) -> Image)?
     var cellFillColour: ((Cell) -> GraphicsContext.Shading)?
@@ -18,6 +19,7 @@ struct DrawHex: View {
 
     init(
         hexmap: HexGrid,
+        radius: Int,
         cellText: ((Cell) -> String)? = nil,
         cellImage: ((Cell) -> Image)? = nil,
         cellFillColour: ((Cell) -> GraphicsContext.Shading)? = nil,
@@ -25,6 +27,7 @@ struct DrawHex: View {
         hexGesture: ((CGPoint) -> Void)? = nil
     ) {
         self.hexmap = hexmap
+        self.radius = radius
         self.cellText = cellText
         self.cellImage = cellImage
         self.cellFillColour = cellFillColour
@@ -46,8 +49,10 @@ struct DrawHex: View {
 
     var drawCanvas: some View {
         Canvas { context, size in
+            let center = try! Cell(CubeCoordinates(x: 0, y: 0, z: 0))
             hexmap.origin = Point(x: size.width / 2, y: size.height / 2)
-            for cell in hexmap.cells {
+
+            for cell in try! hexmap.filledRing(from: center, in: radius) {
                 let center = hexmap.pixelCoordinates(for: cell)
                 let path = cellPath(
                     cell: cell,
@@ -113,6 +118,7 @@ func previewCellColour(_ cell: Cell) -> GraphicsContext.Shading {
     )
     DrawHex(
         hexmap: hexmap,
+        radius: 3,
         cellText: previewCellText,
         cellFillColour: previewCellColour
     )

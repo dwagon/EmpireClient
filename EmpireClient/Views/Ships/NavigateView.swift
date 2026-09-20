@@ -35,6 +35,7 @@ struct NavigateView: View {
             HStack {
                 DrawHex(
                     hexmap: hexmap,
+                    radius: 5,
                     cellText: cellText,
                     cellFillColour: cellColour,
                     hexGesture: hexGesture
