@@ -150,6 +150,12 @@ struct ShipDetailView: View {
                 Text(ship.fire == 0 ? "" : "Fire: \(ship.fire)")
                 Text(ship.range == 0 ? "" : "Range: \(ship.range)")
             }
+            HStack {
+                Text("Land Units: \(shipType.landUnits)")
+                Text("Helicopters: \(shipType.helicopters)")
+                Text("Planes: \(shipType.planes)")
+                Text("L Planes: \(shipType.lightPlanes)")
+            }
             Text("Capabilities: \(shipType.capabilities)")
             Divider()
             HStack {
