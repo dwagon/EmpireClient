@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct UnloadShipView: View {
+    var game: Game
     var ship: Ship
     @Binding var item: Item
     @Binding var amount: Int
+    @Binding var selectLand: LandUnit.ID?
     var onButton: () -> Void
 
     @Environment(\.dismiss) var dismiss
@@ -20,6 +22,8 @@ struct UnloadShipView: View {
     }
 
     var body: some View {
+        let landUnits = game.landUnitsAboard(ship)
+
         VStack {
             Label(
                 "Unload Ship \(ship.number) \(ship.name)",
@@ -47,6 +51,15 @@ struct UnloadShipView: View {
                     }
                 }
             }
+            if !landUnits.isEmpty {
+                Divider()
+                Picker("Unload land unit", selection: $selectLand) {
+                    ForEach(landUnits) { unit in
+                        Text("Nothing").tag(LandUnit.ID?(nil))
+                        Text("Unit \(unit.number): \(unit.abbrev)").tag(unit.id)
+                    }.pickerStyle(.radioGroup)
+                }
+            }
             Text(
                 item == .none
                     ? ""
@@ -61,7 +74,7 @@ struct UnloadShipView: View {
                 Button("Unload") {
                     onButton()
                     dismiss()
-                }.disabled(item == .none)
+                }.disabled(item == .none && selectLand == nil)
             }
         }.padding()
     }
@@ -73,6 +86,7 @@ struct UnloadShipSheet: ViewModifier {
     var shipId: Ship.ID?
     @State private var item: Item = .none
     @State private var amount: Int = 1
+    @State private var selectLand: LandUnit.ID?
 
     func body(content: Content) -> some View {
         content
@@ -81,9 +95,11 @@ struct UnloadShipSheet: ViewModifier {
             ) {
                 if let shipId, let ship = game.ships[shipId] {
                     UnloadShipView(
+                        game: game,
                         ship: ship,
                         item: $item,
-                        amount: $amount
+                        amount: $amount,
+                        selectLand: $selectLand
                     ) {
                         if amount > 0 && item != .none {
                             Task {
@@ -96,10 +112,25 @@ struct UnloadShipSheet: ViewModifier {
                                 await game.cmd_dump(ship.coords)
                             }
                         }
+                        if let selectLand {
+                            if let unit = game.landUnits[selectLand] {
+                                Task {
+                                    await game.cmd_unload(
+                                        landUnit: unit,
+                                        shipNum: ship.number
+                                    )
+                                    await game.cmd_sdump(ship.number)
+                                    await game.cmd_ldump(unit.number)
+                                }
+                            }
+                        }
                     }
                     .onAppear {
                         item = .none
                         amount = 0
+                        selectLand = nil
+                    }.task {
+                        await game.cmd_ldump()  // So we know about land units at the same location
                     }
                 }
             }
@@ -123,18 +154,18 @@ extension View {
     }
 }
 
-#Preview {
-    @Previewable @State var item: Item = .none
-    @Previewable @State var amount: Int = 1
-    @Previewable @State var ship: Ship = DataLoader.loadSampleShip(
-        name: "ShipView"
-    )
-
-    UnloadShipView(
-        ship: ship,
-        item: $item,
-        amount: $amount,
-    ) {
-        print("Unload \(amount) x \(item) from \(ship)")
-    }
-}
+//#Preview {
+//    @Previewable @State var item: Item = .none
+//    @Previewable @State var amount: Int = 1
+//    @Previewable @State var ship: Ship = DataLoader.loadSampleShip(
+//        name: "ShipView"
+//    )
+//
+//    UnloadShipView(
+//        ship: ship,
+//        item: $item,
+//        amount: $amount,
+//    ) {
+//        print("Unload \(amount) x \(item) from \(ship)")
+//    }
+//}

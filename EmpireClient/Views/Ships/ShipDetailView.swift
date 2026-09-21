@@ -110,6 +110,9 @@ struct ShipDetailView: View {
             game: game,
             shipId: selectedShip
         )
+        .task {
+            await game.cmd_ldump()  // Get land units at the same location / cargo
+        }
     }
 
     var shipButtonBar: some View {
@@ -173,11 +176,16 @@ struct ShipDetailView: View {
                 }
             }
             VStack {
-                Text(
-                    ship.landUnits == 0
+                HStack {
+                    Text(
+                        ship.landUnits == 0
                         ? ""
                         : "Land Units: \(ship.landUnits) / \(shipType.landUnits)"
-                )
+                    )
+                    ForEach(game.landUnitsAboard(ship)) { unit in
+                        Text("Unit \(unit.number): \(unit.abbrev)")
+                    }
+                }
                 Text(
                     ship.heli == 0
                         ? ""

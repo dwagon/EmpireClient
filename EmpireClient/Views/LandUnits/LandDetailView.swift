@@ -65,6 +65,11 @@ struct LandDetailView: View {
                         ideal: idealColWidth,
                         max: maxColWidth
                     )
+                    TableColumn("Notes") { val in
+                        if val.ship >= 0 {
+                            Text("Aboard S\(val.ship)")
+                        }
+                    }
                 }
                 .onChange(of: selectedUnit) {
                     centerCoord = game.landUnits[selectedUnit!]!.coords
