@@ -37,7 +37,7 @@ struct LandType: Identifiable, Codable {
     }
 }
 
-struct LandUnit: Identifiable, Codable {
+struct LandUnit: Identifiable, Codable, Hashable {
     var number: String = ""
     var abbrev: String = ""
     var coords: MapCoord = MapCoord(x: 0, y: 0)
@@ -51,7 +51,7 @@ struct LandUnit: Identifiable, Codable {
     var xl: Int = 0
     var nland: Int = 0
     var land: String = ""
-    var ship: String = ""
+    var ship: Int = -1
     var cargo: [Item: Int] = [:]
     var attack: Float = 0
     var defense: Float = 0

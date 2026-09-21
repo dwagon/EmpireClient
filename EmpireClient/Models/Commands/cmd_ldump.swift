@@ -54,7 +54,7 @@ extension Game {
             lunit.xl = Int(bits[14])!
             lunit.nland = Int(bits[15])!
             lunit.land = String(bits[16])
-            lunit.ship = String(bits[17])
+            lunit.ship = Int(bits[17])!
             lunit.cargo[.shells] = Int(bits[18])
             lunit.cargo[.guns] = Int(bits[19])
             lunit.cargo[.petrol] = Int(bits[20])

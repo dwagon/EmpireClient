@@ -12,6 +12,7 @@ struct LoadShipView: View {
     var shipNum: String
     @Binding var item: Item
     @Binding var amount: Int
+    @Binding var selectLand: LandUnit.ID?
     var itemList: [Item]
     var onButton: () -> Void
 
@@ -20,6 +21,7 @@ struct LoadShipView: View {
     var body: some View {
         let shipLocation = game.ships[shipNum]?.coords
         let available = game.gameMap[shipLocation!]!.cargo[item]
+        let landUnits = game.landUnitsAt(shipLocation)
 
         VStack {
             Label("Load Ship \(shipNum)", systemImage: "square.and.arrow.down")
@@ -42,10 +44,27 @@ struct LoadShipView: View {
                     }
                 }
             }
+            if !landUnits.isEmpty {
+                Divider()
+//                List(landUnits, selection: $selectLand) { unit in
+//                    Text("Load Unit \(unit.number): \(unit.abbrev)").padding()
+//                }
+                Picker("Load Land Unit", selection: $selectLand) {
+                    ForEach(landUnits) { unit in
+                        Text("Nothing").tag(Optional<LandUnit.ID>(nil))
+                        Text("Unit \(unit.number): \(unit.abbrev)").tag(unit.id)
+                    }
+                }.pickerStyle(.radioGroup)
+            }
+
             Text(
                 item == .none
                     ? ""
                     : "Load \(amount) \(item.displayName.capitalized) (\(available, default: "None") avail) onto Ship \(shipNum)"
+            )
+            Text(
+                selectLand == nil
+                    ? "" : "Load Land Unit \(selectLand, default: "unknown")"
             )
             HStack {
                 Button("Cancel", role: .cancel) {
@@ -57,7 +76,7 @@ struct LoadShipView: View {
                 Button("Load") {
                     dismiss()
                     onButton()
-                }.disabled(item == .none)
+                }.disabled(item == .none && selectLand == nil)
             }
         }
     }
@@ -69,6 +88,7 @@ struct LoadShipSheet: ViewModifier {
     var shipId: Ship.ID?
     @State private var item: Item = .none
     @State private var amount: Int = 1
+    @State private var selectLand: LandUnit.ID?
     private var itemList: [Item]
 
     init(isPresented: Binding<Bool>, game: Game, shipId: Ship.ID?) {
@@ -102,7 +122,8 @@ struct LoadShipSheet: ViewModifier {
                         shipNum: ship.number,
                         item: $item,
                         amount: $amount,
-                        itemList: itemList
+                        selectLand: $selectLand,
+                        itemList: itemList,
                     ) {
                         if amount > 0 {
                             Task {
@@ -113,17 +134,31 @@ struct LoadShipSheet: ViewModifier {
                                 )
                                 await game.cmd_sdump(ship.number)
                                 await game.cmd_dump(ship.coords)
-
+                            }
+                        }
+                        if let selectLand {
+                            if let unit = game.landUnits[selectLand] {
+                                Task {
+                                    await game.cmd_load(
+                                        landUnit: unit,
+                                        shipNum: ship.number
+                                    )
+                                    await game.cmd_ldump(unit.number)
+                                    await game.cmd_sdump(ship.number)
+                                }
                             }
                         }
                     }
                     .onAppear {
                         amount = 0
                         item = .none
+                        selectLand = nil
+                    }
+                    .task {
+                        await game.cmd_ldump()  // So we know about land units at the same location
                     }
                 }
             }
-
     }
 }
 
@@ -143,18 +178,18 @@ extension View {
     }
 }
 
-#Preview {
-    @Previewable @State var game: Game = Game()
-    @Previewable @State var item: Item = .none
-    @Previewable @State var amount: Int = 1
-
-    LoadShipView(
-        game: game,
-        shipNum: "2",
-        item: $item,
-        amount: $amount,
-        itemList: [.civ, .mil]
-    ) {
-        let _ = print("loaded")
-    }
-}
+//#Preview {
+//    @Previewable @State var game: Game = Game()
+//    @Previewable @State var item: Item = .none
+//    @Previewable @State var amount: Int = 1
+//
+//    LoadShipView(
+//        game: game,
+//        shipNum: "2",
+//        item: $item,
+//        amount: $amount,
+//        itemList: [.civ, .mil]
+//    ) {
+//        let _ = print("loaded")
+//    }
+//}
