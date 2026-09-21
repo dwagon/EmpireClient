@@ -51,6 +51,16 @@ class Game: Decodable {
         }
     }
 
+    func landUnitsAt(_ coord: MapCoord?) -> [LandUnit] {
+        if let coord {
+            let units =  Array(landUnits.values).filter {
+                $0.coords == coord
+            }
+            return units
+        }
+        return []
+    }
+
     /// Return if a ship can be built with the current tech
     func isShipBuildable(_ shipType: String) -> Bool {
         if let shipType = shipTypes[shipType] {

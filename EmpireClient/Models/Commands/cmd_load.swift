@@ -15,4 +15,8 @@ extension Game {
             return
         }
     }
+
+    func cmd_load(landUnit: LandUnit, shipNum: String) async {
+        let _ = await runCmd("load land \(shipNum) \(landUnit.number)")
+    }
 }
