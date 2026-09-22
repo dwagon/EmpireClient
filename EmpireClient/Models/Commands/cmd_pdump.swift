@@ -8,15 +8,13 @@
 import Foundation
 
 extension Game {
-    func cmd_pdump(planeNum: String = "*") async {
-        let result = await runCmd("pdump \(planeNum)", suppressLog: true)
-        guard result != [] else {
-            log("pdump returned empty")
-            return
-        }
-        guard !result.contains("command failed") else {
-            return
-        }
+    func cmd_pdump(str: String = "*") async {
+        let result = await runCmd("pdump \(str)", suppressLog: true)
+        parse_cmd_pdump(result)
+    }
+
+    func cmd_pdump(plane: Plane) async {
+        let result = await runCmd("pdump \(plane.number)")
         parse_cmd_pdump(result)
     }
 
@@ -27,17 +25,17 @@ extension Game {
     //    1 plane
     func parse_cmd_pdump(_ input: [String]) {
         var plane: Plane
-        var exists: Set<String> = []
+        var exists: Set<PlaneNum> = []
 
         for line in input[3..<input.count - 1] {
             let bits = line.split(separator: " ")
-            let planeNum = String(bits[0])
+            let planeNum = PlaneNum(bits[0])!
             if planes[planeNum] == nil {
                 plane = Plane(abbrev: String(bits[1]))
             } else {
                 plane = planes[planeNum]!
             }
-            plane.number = String(bits[0])
+            plane.number = planeNum
             plane.abbrev = String(bits[1])
             plane.coords = MapCoord(x: Int(bits[2])!, y: Int(bits[3])!)
             plane.wing = String(bits[4])
@@ -52,7 +50,7 @@ extension Game {
             plane.load = Int(bits[13])!
             plane.fuel = Int(bits[14])!
             plane.harden = Int(bits[15])!
-            plane.ship = String(bits[16])
+            plane.ship = ShipNum(bits[16])!
             plane.land = String(bits[17])
             plane.launched = String(bits[18])
             plane.orbit = String(bits[19])

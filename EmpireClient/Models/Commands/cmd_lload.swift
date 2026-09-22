@@ -12,7 +12,7 @@
 import Foundation
 
 extension Game {
-    func cmd_lload(commodity: Item, unit: String, amount: Int) async {
-        let _ = await runCmd("lload \(commodity.rawValue) \(unit) \(amount)")
+    func cmd_lload(commodity: Item, unit: LandUnit, amount: Int) async {
+        let _ = await runCmd("lload \(commodity.rawValue) \(unit.number) \(amount)")
     }
 }

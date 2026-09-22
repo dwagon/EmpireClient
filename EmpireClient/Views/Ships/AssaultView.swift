@@ -9,7 +9,7 @@ import HexGrid
 import SwiftUI
 
 struct AssaultShipView: View {
-    var shipNum: String
+    var shipNum: ShipNum
     var shipLocation: MapCoord
     var gameMap: Map
     @Binding var destination: MapCoord
@@ -116,10 +116,10 @@ struct AssaultShipSheet: ViewModifier {
                         Task {
                             response = await game.cmd_assault(
                                 sector: destination,
-                                shipNum: ship.number,
+                                ship: ship,
                             )
                             await game.cmd_dump()
-                            await game.cmd_sdump(ship.number)
+                            await game.cmd_sdump(ship)
                         }
                     }
                 }
@@ -148,7 +148,7 @@ extension View {
     @Previewable @State var response: [String] = []
 
     AssaultShipView(
-        shipNum: "2",
+        shipNum: 2,
         shipLocation: MapCoord(x: 2, y: 0),
         gameMap: Map(),
         destination: $coord,

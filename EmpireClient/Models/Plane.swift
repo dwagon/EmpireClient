@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias PlaneNum = Int
+
 struct PlaneType: Identifiable, Codable {
     var abbrev: String = ""
     var name: String = ""
@@ -31,7 +33,7 @@ struct PlaneType: Identifiable, Codable {
 }
 
 struct Plane: Identifiable, Codable {
-    var number: String = ""
+    var number: PlaneNum = -1
     var abbrev: String = ""
     var coords: MapCoord = MapCoord(x: 0, y: 0)
     var wing: String = ""
@@ -46,14 +48,14 @@ struct Plane: Identifiable, Codable {
     var load: Int = 0
     var harden: Int = 0
     var fuel: Int = 0
-    var ship: String = ""
+    var ship: ShipNum = -1
     var land: String = ""
     var launched: String = ""
     var orbit: String = ""
     var nuke: String = ""
     var groundburst: String = ""
 
-    var id: String {
-        return String(self.number)
+    var id: PlaneNum {
+        return self.number
     }
 }

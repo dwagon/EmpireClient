@@ -10,10 +10,10 @@ import Foundation
 
 extension Game {
     func cmd_march(
-        unit: String,
+        unit: LandUnit,
         destination: MapCoord
     ) async {
-        let result = await runCmd("march \(unit) \(destination.toString())")
+        let result = await runCmd("march \(unit.number) \(destination.toString())")
         guard result != [] else {
             log("march returned empty")
             return

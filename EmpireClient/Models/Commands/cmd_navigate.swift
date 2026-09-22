@@ -9,10 +9,10 @@ import Foundation
 
 extension Game {
 
-    func cmd_navigate(shipNum: String, destination: MapCoord) async {
+    func cmd_navigate(ship: Ship, destination: MapCoord) async {
         let nav_regex = /\<-?\d+.\d:-?\d+.\d: -?\d+,-?\d+\>/
 
-        let result = await runCmd("navigate \(shipNum) \(destination.toString())")
+        let result = await runCmd("navigate \(ship.number) \(destination.toString())")
         guard result != [] else {
             print("navigate returned empty")
             return

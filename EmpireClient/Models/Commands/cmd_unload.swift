@@ -8,11 +8,11 @@
 import Foundation
 
 extension Game {
-    func cmd_unload(commodity: Item, shipNum: String, amount: Int) async {
-        let _ = await runCmd("unload \(commodity) \(shipNum) \(amount)")
+    func cmd_unload(commodity: Item, ship: Ship, amount: Int) async {
+        let _ = await runCmd("unload \(commodity) \(ship.number) \(amount)")
     }
 
-    func cmd_unload(landUnit: LandUnit, shipNum: String) async {
-        let _ = await runCmd("unload land \(shipNum) \(landUnit.number)")
+    func cmd_unload(landUnit: LandUnit, ship: Ship) async {
+        let _ = await runCmd("unload land \(ship.number) \(landUnit.number)")
     }
 }

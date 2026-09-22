@@ -9,7 +9,7 @@ import HexGrid
 import SwiftUI
 
 struct MarchView: View {
-    var unitNum: String
+    var unit: LandUnit
     var game: Game
     @State var destination: MapCoord? = nil
 
@@ -41,8 +41,8 @@ struct MarchView: View {
                 ).scaledToFit()
                 Text(
                     destination == nil
-                        ? "March unit \(unitNum) to a location"
-                        : "March \(unitNum) to \(destination!.toString())"
+                    ? "March unit \(unit.number) to a location"
+                    : "March \(unit.number) to \(destination!.toString())"
                 )
             }.padding()
             HStack {
@@ -58,14 +58,14 @@ struct MarchView: View {
             destination = cubeToDoubleWidth(
                 from: cell.coordinates
             )
-            destination! += game.landUnits[unitNum]!.coords
-            Task {
-                await game.cmd_march(
-                    unit: unitNum,
-                    destination: destination!
-                )
-                await game.cmd_ldump(unitNum)
-            }
+                destination! += unit.coords
+                Task {
+                    await game.cmd_march(
+                        unit: unit,
+                        destination: destination!
+                    )
+                    await game.cmd_ldump(unit)
+                }
         } else {
             print("no cell at \(location.hexPoint)")
         }
@@ -74,7 +74,7 @@ struct MarchView: View {
     func cellText(_ cell: Cell) -> String {
         let mapCoord = screenToMapCoord(
             cell.coordinates,
-            centerCoord: game.landUnits[unitNum]!.coords
+            centerCoord: unit.coords
         )
         if let sector = game.gameMap[mapCoord] {
             return sector.symbol
@@ -88,7 +88,7 @@ struct MarchView: View {
             cell: cell,
             gameMap: game.gameMap,
             hexmap: hexmap,
-            center: game.landUnits[unitNum]!.coords
+            center: unit.coords
         )
     }
 }
@@ -105,7 +105,7 @@ struct MarchUnitSheet: ViewModifier {
             ) {
                 if let unitId, let unit = game.landUnits[unitId] {
                     MarchView(
-                        unitNum: unit.number,
+                        unit: unit,
                         game: game
                     )
                 }

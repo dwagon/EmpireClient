@@ -10,11 +10,12 @@ import Foundation
 extension Game {
     func cmd_sdump(_ arg: String = "*") async {
         let result = await runCmd("sdump \(arg)", suppressLog: true)
-        guard result != [] else {
-            log("sdump returned empty")
-            return
-        }
         parse_cmd_sdump(result, trimMissing: arg == "*")
+    }
+
+    func cmd_sdump(_ ship: Ship) async {
+        let result = await runCmd("sdump \(ship.number)", suppressLog: true)
+        parse_cmd_sdump(result)
     }
 
     // DUMP SHIPS 1789346151
@@ -27,17 +28,17 @@ extension Game {
     func parse_cmd_sdump(_ input: [String], trimMissing: Bool = true) {
         var ship: Ship
         let quotesRegex = /"(.*)"/
-        var exists: Set<String> = []
+        var exists: Set<ShipNum> = []
 
         for line in input[3..<input.count - 1] {
             let bits = line.split(separator: " ")
-            let shipNum = String(bits[0])
+            let shipNum = ShipNum(bits[0])!
             if ships[shipNum] == nil {
                 ship = Ship(abbrev: String(bits[1]))
             } else {
                 ship = ships[shipNum]!
             }
-            ship.number = String(bits[0])
+            ship.number = shipNum
             ship.abbrev = String(bits[1])
             ship.coords = MapCoord(x: Int(bits[2])!, y: Int(bits[3])!)
             ship.fleet = String(bits[4])

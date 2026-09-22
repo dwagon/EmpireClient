@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoadLandView: View {
     var game: Game
-    var unitNum: String
+    var unitNum: LandNum
     @Binding var item: Item
     @Binding var amount: Int
     var itemList: [Item]
@@ -104,8 +104,8 @@ struct LoadLandUnitSheet: ViewModifier {
                     ) {
                         if let unit = game.landUnits[unitId] {
                             Task {
-                                await game.cmd_lload(commodity: item, unit: unit.number, amount: amount)
-                                await game.cmd_ldump(unit.number)
+                                await game.cmd_lload(commodity: item, unit: unit, amount: amount)
+                                await game.cmd_ldump(unit)
                                 await game.cmd_dump(unit.coords)
                             }
                         }
@@ -143,7 +143,7 @@ extension View {
 
     LoadLandView(
         game: game,
-        unitNum: "2",
+        unitNum: 2,
         item: $item,
         amount: $amount,
         itemList: [.civ, .mil, .food]

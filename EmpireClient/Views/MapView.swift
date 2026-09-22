@@ -39,9 +39,9 @@ var colourChoices: [GraphicsContext.Shading] = [
 struct MapView: View {
     let game: Game
     @Binding var centerCoord: MapCoord
-    let ships: [String: Ship]
-    let landUnits: [String: LandUnit]
-    let planes: [String: Plane]
+    let ships: [ShipNum: Ship]
+    let landUnits: [LandNum: LandUnit]
+    let planes: [PlaneNum: Plane]
     @State var distroMap: [MapCoord: GraphicsContext.Shading] = [:]
 
     @State var displayResourceMapStyle: ResourceMapStyle = .normal

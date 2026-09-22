@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NameShipView: View {
     var game: Game
-    var shipNum: String
+    var ship: Ship
     @Binding var name: String
     @FocusState private var focused: Bool
     var onButton: () -> Void
@@ -19,7 +19,7 @@ struct NameShipView: View {
     var body: some View {
         VStack {
             Label(
-                "Name Ship \(shipNum)",
+                "Name Ship \(ship.number)",
                 systemImage: "person.text.rectangle.fill"
             )
             .font(
@@ -68,12 +68,12 @@ struct NameShipSheet: ViewModifier {
                 if let shipId, let ship = game.ships[shipId] {
                     NameShipView(
                         game: game,
-                        shipNum: game.ships[shipId]!.number,
+                        ship: ship,
                         name: $name
                     ) {
                         Task {
-                            await game.cmd_name(ship: shipId, name: name)
-                            await game.cmd_sdump(shipId)
+                            await game.cmd_name(ship: ship, name: name)
+                            await game.cmd_sdump(ship)
                         }
                     }
                     .onAppear {
