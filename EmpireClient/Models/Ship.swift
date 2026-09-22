@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias ShipNum = Int
+
 struct ShipType: Identifiable, Codable {
     var abbrev: String = ""
     var name: String = ""
@@ -33,7 +35,7 @@ struct ShipType: Identifiable, Codable {
 }
 
 struct Ship: Identifiable, Codable {
-    var number: String = ""
+    var number: ShipNum = -1
     var abbrev: String = ""
     var coords: MapCoord = MapCoord(x: 0, y: 0)
     var fleet: String = ""
@@ -52,7 +54,7 @@ struct Ship: Identifiable, Codable {
     var fire: Int = 0
     var name: String = ""
 
-    var id: String {
-        return String(self.number)
+    var id: ShipNum {
+        return self.number
     }
 }

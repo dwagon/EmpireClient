@@ -17,6 +17,15 @@ extension Game {
         parse_cmd_ldump(result, trimMissing: arg == "*")
     }
 
+    func cmd_ldump(_ unit: LandUnit) async {
+        let result = await runCmd("ldump \(unit.number)", suppressLog: true)
+        guard result != [] else {
+            log("ldump returned empty")
+            return
+        }
+        parse_cmd_ldump(result)
+    }
+
     //    Mon Sep 14 17:29:40 2026
     //    DUMP LAND UNITS 1789370980
     //    id type x y army eff mil fort mob food
@@ -28,17 +37,17 @@ extension Game {
     //    1 unit
     func parse_cmd_ldump(_ input: [String], trimMissing: Bool = true) {
         var lunit: LandUnit
-        var exists: Set<String> = []
+        var exists: Set<LandNum> = []
 
         for line in input[3..<input.count - 1] {
             let bits = line.split(separator: " ")
-            let lunitNum = String(bits[0])
+            let lunitNum = LandNum(bits[0])!
             if landUnits[lunitNum] == nil {
                 lunit = LandUnit(abbrev: String(bits[1]))
             } else {
                 lunit = landUnits[lunitNum]!
             }
-            lunit.number = String(bits[0])
+            lunit.number = lunitNum
             lunit.abbrev = String(bits[1])
             lunit.coords = MapCoord(x: Int(bits[2])!, y: Int(bits[3])!)
             lunit.army = String(bits[4])
@@ -53,7 +62,7 @@ extension Game {
             lunit.react = Int(bits[13])!
             lunit.xl = Int(bits[14])!
             lunit.nland = Int(bits[15])!
-            lunit.land = String(bits[16])
+            lunit.land = LandNum(bits[16])!
             lunit.ship = Int(bits[17])!
             lunit.cargo[.shells] = Int(bits[18])
             lunit.cargo[.guns] = Int(bits[19])

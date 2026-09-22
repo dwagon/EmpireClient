@@ -10,9 +10,9 @@ import Foundation
 extension Game {
     // [##:##] Command : name <SHIPS> <NAME>
     func cmd_name(
-        ship: String,
+        ship: Ship,
         name: String
     ) async {
-        let _ = await runCmd("name \(ship) \"\(name)\"")
+        let _ = await runCmd("name \(ship.number) \"\(name)\"")
     }
 }

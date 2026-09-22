@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoadShipView: View {
     var game: Game
-    var shipNum: String
+    var shipNum: ShipNum
     @Binding var item: Item
     @Binding var amount: Int
     @Binding var selectLand: LandUnit.ID?
@@ -129,10 +129,10 @@ struct LoadShipSheet: ViewModifier {
                             Task {
                                 await game.cmd_load(
                                     commodity: item,
-                                    shipNum: ship.number,
+                                    ship: ship,
                                     amount: amount
                                 )
-                                await game.cmd_sdump(ship.number)
+                                await game.cmd_sdump(ship)
                                 await game.cmd_dump(ship.coords)
                             }
                         }
@@ -141,10 +141,10 @@ struct LoadShipSheet: ViewModifier {
                                 Task {
                                     await game.cmd_load(
                                         landUnit: unit,
-                                        shipNum: ship.number
+                                        ship: ship
                                     )
-                                    await game.cmd_ldump(unit.number)
-                                    await game.cmd_sdump(ship.number)
+                                    await game.cmd_ldump(unit)
+                                    await game.cmd_sdump(ship)
                                 }
                             }
                         }

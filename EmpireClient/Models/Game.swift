@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 // MARK: -
 @Observable
 class Game: Decodable {
@@ -18,13 +19,13 @@ class Game: Decodable {
     var logs: [Log] = []
 
     var shipTypes: [String: ShipType] = [:]
-    var ships: [String: Ship] = [:]
+    var ships: [ShipNum: Ship] = [:]
 
     var landTypes: [String: LandType] = [:]
-    var landUnits: [String: LandUnit] = [:]
+    var landUnits: [LandNum: LandUnit] = [:]
 
     var planeTypes: [String: PlaneType] = [:]
-    var planes: [String: Plane] = [:]
+    var planes: [PlaneNum: Plane] = [:]
 
     var treasury: Int = 0
     var techLevel: Float = 0
@@ -138,7 +139,7 @@ class Game: Decodable {
         nationReport = try values.decode([String].self, forKey: .nationReport)
         budgetReport = try values.decode([String].self, forKey: .budgetReport)
         logs = []
-        ships = try values.decode([String: Ship].self, forKey: .ships)
+        ships = try values.decode([ShipNum: Ship].self, forKey: .ships)
         shipTypes = try values.decode(
             [String: ShipType].self,
             forKey: .shipTypes

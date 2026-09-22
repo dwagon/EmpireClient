@@ -105,10 +105,10 @@ struct UnloadShipSheet: ViewModifier {
                             Task {
                                 await game.cmd_unload(
                                     commodity: item,
-                                    shipNum: ship.number,
+                                    ship: ship,
                                     amount: amount
                                 )
-                                await game.cmd_sdump(ship.number)
+                                await game.cmd_sdump(ship)
                                 await game.cmd_dump(ship.coords)
                             }
                         }
@@ -117,10 +117,10 @@ struct UnloadShipSheet: ViewModifier {
                                 Task {
                                     await game.cmd_unload(
                                         landUnit: unit,
-                                        shipNum: ship.number
+                                        ship: ship
                                     )
-                                    await game.cmd_sdump(ship.number)
-                                    await game.cmd_ldump(unit.number)
+                                    await game.cmd_sdump(ship)
+                                    await game.cmd_ldump(unit)
                                 }
                             }
                         }

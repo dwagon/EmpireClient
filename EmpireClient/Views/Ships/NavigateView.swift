@@ -9,7 +9,7 @@ import HexGrid
 import SwiftUI
 
 struct NavigateView: View {
-    var shipNum: String
+    var ship: Ship
     var game: Game
     @State var destination: MapCoord?
 
@@ -41,8 +41,8 @@ struct NavigateView: View {
                 ).scaledToFit()
                 Text(
                     destination == nil
-                        ? "Navigate to a location from ship \(shipNum)"
-                        : "Navigate to \(destination!.toString()) from ship \(shipNum)"
+                    ? "Navigate to a location from ship \(ship.number)"
+                    : "Navigate to \(destination!.toString()) from ship \(ship.number)"
                 )
             }.padding()
             HStack {
@@ -57,11 +57,11 @@ struct NavigateView: View {
         Task {
             if let destination {
                 await game.cmd_navigate(
-                    shipNum: shipNum,
+                    ship: ship,
                     destination: destination
                 )
-                await game.cmd_sdump(shipNum)
-                await game.cmd_map(cmdArg: shipNum)
+                await game.cmd_sdump(ship)
+                await game.cmd_map(cmdArg: String(ship.number))
             }
         }
     }
@@ -71,7 +71,7 @@ struct NavigateView: View {
             destination = cubeToDoubleWidth(
                 from: cell.coordinates
             )
-            destination! += game.ships[shipNum]!.coords
+            destination! += ship.coords
             navigateToLocation(destination)
         } else {
             print("no cell at \(location.hexPoint)")
@@ -81,7 +81,7 @@ struct NavigateView: View {
     func cellText(_ cell: Cell) -> String {
         let mapCoord = screenToMapCoord(
             cell.coordinates,
-            centerCoord: game.ships[shipNum]!.coords
+            centerCoord: ship.coords
         )
         if let sector = game.gameMap[mapCoord] {
             return sector.symbol
@@ -95,7 +95,7 @@ struct NavigateView: View {
             cell: cell,
             gameMap: game.gameMap,
             hexmap: hexmap,
-            center: game.ships[shipNum]!.coords
+            center: ship.coords
         )
     }
 }
@@ -112,7 +112,7 @@ struct NavigateShipSheet: ViewModifier {
             ) {
                 if let shipId, let ship = game.ships[shipId] {
                     NavigateView(
-                        shipNum: ship.number,
+                        ship: ship,
                         game: game,
                     )
                 }

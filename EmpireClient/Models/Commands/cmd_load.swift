@@ -8,15 +8,15 @@
 import Foundation
 
 extension Game {
-    func cmd_load(commodity: Item, shipNum: String, amount: Int) async {
-        let result = await runCmd("load \(commodity) \(shipNum) \(amount)")
+    func cmd_load(commodity: Item, ship: Ship, amount: Int) async {
+        let result = await runCmd("load \(commodity) \(ship.number) \(amount)")
         guard result != [] else {
             print("load returned empty")
             return
         }
     }
 
-    func cmd_load(landUnit: LandUnit, shipNum: String) async {
-        let _ = await runCmd("load land \(shipNum) \(landUnit.number)")
+    func cmd_load(landUnit: LandUnit, ship: Ship) async {
+        let _ = await runCmd("load land \(ship.number) \(landUnit.number)")
     }
 }

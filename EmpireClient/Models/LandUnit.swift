@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias LandNum = Int
+
 struct LandType: Identifiable, Codable {
     var abbrev: String = ""
     var name: String = ""
@@ -38,7 +40,7 @@ struct LandType: Identifiable, Codable {
 }
 
 struct LandUnit: Identifiable, Codable, Hashable {
-    var number: String = ""
+    var number: LandNum = -1
     var abbrev: String = ""
     var coords: MapCoord = MapCoord(x: 0, y: 0)
     var army: String = ""
@@ -50,8 +52,8 @@ struct LandUnit: Identifiable, Codable, Hashable {
     var react: Int = 0
     var xl: Int = 0
     var nland: Int = 0
-    var land: String = ""
-    var ship: Int = -1
+    var land: LandNum = -1
+    var ship: ShipNum = -1
     var cargo: [Item: Int] = [:]
     var attack: Float = 0
     var defense: Float = 0
@@ -66,7 +68,7 @@ struct LandUnit: Identifiable, Codable, Hashable {
     var ammoUse: Int = 0
     var aaf: Int = 0
 
-    var id: String {
-        return String(self.number)
+    var id: LandNum {
+        return self.number
     }
 }
