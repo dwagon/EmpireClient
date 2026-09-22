@@ -88,7 +88,7 @@ struct BuildView: View {
                     Text("No ship").tag("")
                     ForEach(
                         Array(game.shipTypes.keys).filter({
-                            game.isShipBuildable($0)
+                            game.shipTypes[$0]!.isBuildable(techlevel: game.techLevel)
                         }).sorted(by: {
                             game.shipTypes[$0]!.abbrev
                                 < game.shipTypes[$1]!.abbrev

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LandTypeReport: View {
     let landTypes: [LandType]
+    let currTech: Float
 
     @Environment(\.dismiss) private var dismiss
     @State private var selectedUnit: LandType.ID?
@@ -16,21 +17,62 @@ struct LandTypeReport: View {
     var body: some View {
         VStack {
             Table(landTypes, selection: $selectedUnit) {
-                TableColumn("Abbrev", value: \.abbrev)
-                    .width(min: 30, ideal: 50, max: 60)
-                TableColumn("Name", value: \.name)
-                    .width(min: 60, ideal: 100, max: 120)
-                TableColumn("Speed") { details in Text("\(details.speed)") }
-                    .width(min: 40, ideal: 50, max: 60)
-                TableColumn("Tech") { details in Text("\(details.tech)") }
-                    .width(min: 40, ideal: 50, max: 60)
-                TableColumn("Capabilities", value: \.capabilities)
+                TableColumn("Abbrev") { details in
+                    Text("\(details.abbrev)").modifier(
+                        BuildableHighlight(
+                            canBuild: details.isBuildable(
+                                techlevel: currTech
+                            )
+                        )
+                    )
+                }
+                .width(min: 30, ideal: 50, max: 60)
+                TableColumn("Name") { details in
+                    Text("\(details.name)").modifier(
+                        BuildableHighlight(
+                            canBuild: details.isBuildable(
+                                techlevel: currTech
+                            )
+                        )
+                    )
+                }
+                .width(min: 60, ideal: 100, max: 120)
+                TableColumn("Speed") { details in
+                    Text("\(details.speed)").modifier(
+                        BuildableHighlight(
+                            canBuild: details.isBuildable(
+                                techlevel: currTech
+                            )
+                        )
+                    )
+                }
+                .width(min: 40, ideal: 50, max: 60)
+                TableColumn("Tech") { details in
+                    Text("\(details.tech)").modifier(
+                        BuildableHighlight(
+                            canBuild: details.isBuildable(
+                                techlevel: currTech
+                            )
+                        )
+                    )
+                }
+                .width(min: 40, ideal: 50, max: 60)
+                TableColumn("Capabilities") { details in
+                    Text("\(details.capabilities)").modifier(
+                        BuildableHighlight(
+                            canBuild: details.isBuildable(
+                                techlevel: currTech
+                            )
+                        )
+                    )
+                }
             }
             .tableStyle(.bordered)
             .border(.blue)
             if let selectedUnit {
                 Spacer()
-                if let land = landTypes.first(where: { $0.id == selectedUnit} ) {
+                if let land = landTypes.first(where: { $0.id == selectedUnit })
+                {
                     LandTypeView(unitType: land)
                         .border(.blue).padding()
                 }
@@ -102,11 +144,15 @@ struct LandTypeReport: View {
                     }
                     GridRow {
                         Text("Attack")
-                        Text("\(unitType.att, format: .number.precision(.fractionLength(1)))")
+                        Text(
+                            "\(unitType.att, format: .number.precision(.fractionLength(1)))"
+                        )
                     }
                     GridRow {
                         Text("Defence")
-                        Text("\(unitType.def, format: .number.precision(.fractionLength(1)))")
+                        Text(
+                            "\(unitType.def, format: .number.precision(.fractionLength(1)))"
+                        )
                     }
                     GridRow {
                         Text("Range")
@@ -135,7 +181,8 @@ struct LandTypeReport: View {
 }
 
 #Preview {
-    let units = [LandType(
+    let units = [
+        LandType(
             abbrev: "su",
             name: "Some Unit",
             lcmCost: 10,
@@ -153,13 +200,14 @@ struct LandTypeReport: View {
             reactionRadius: 3,
             range: 10,
             accuracy: 11,
-            fire:12,
-            ammo:13,
+            fire: 12,
+            ammo: 13,
             aaf: 0,
             xpl: 1,
             lnd: 1,
-            capabilities: "990m 990s 200g 990p 500i 500d 100b 990f 990o 990l 990h 150r supply train heavy",
+            capabilities:
+                "990m 990s 200g 990p 500i 500d 100b 990f 990o 990l 990h 150r supply train heavy",
         )
     ]
-    LandTypeReport(landTypes: units)
+    LandTypeReport(landTypes: units, currTech: 20)
 }

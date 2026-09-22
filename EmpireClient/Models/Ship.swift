@@ -9,7 +9,7 @@ import Foundation
 
 typealias ShipNum = Int
 
-struct ShipType: Identifiable, Codable {
+struct ShipType: Identifiable, Codable, Buildable {
     var abbrev: String = ""
     var name: String = ""
     var lcmCost: Int = 0
@@ -57,4 +57,5 @@ struct Ship: Identifiable, Codable {
     var id: ShipNum {
         return self.number
     }
+
 }

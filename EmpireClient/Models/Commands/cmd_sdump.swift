@@ -8,14 +8,14 @@
 import Foundation
 
 extension Game {
-    func cmd_sdump(_ arg: String = "*") async {
-        let result = await runCmd("sdump \(arg)", suppressLog: true)
-        parse_cmd_sdump(result, trimMissing: arg == "*")
+    func cmd_sdump() async {
+        let result = await runCmd("sdump *", suppressLog: true)
+        parse_cmd_sdump(result, trimMissing: true)
     }
 
     func cmd_sdump(_ ship: Ship) async {
         let result = await runCmd("sdump \(ship.number)", suppressLog: true)
-        parse_cmd_sdump(result)
+        parse_cmd_sdump(result, trimMissing: false)
     }
 
     // DUMP SHIPS 1789346151

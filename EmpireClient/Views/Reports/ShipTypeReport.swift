@@ -7,19 +7,9 @@
 
 import SwiftUI
 
-struct BuildHighlight: ViewModifier {
-    var canBuild: Bool
-
-    func body(content: Content) -> some View {
-        content.foregroundStyle(
-            canBuild ? .primary : .secondary
-        )
-    }
-}
-
 struct ShipTypeReport: View {
     @State var shipTypes: [ShipType]
-    let buildable: (String) -> Bool
+    let currTech: Float
     @Environment(\.dismiss) private var dismiss
     @State private var selectedShip: ShipType.ID?
     @State private var sortOrder = [KeyPathComparator(\ShipType.abbrev)]
@@ -30,41 +20,41 @@ struct ShipTypeReport: View {
                 TableColumn("Abbrev") { details in
                     Text("\(details.abbrev)")
                         .modifier(
-                            BuildHighlight(canBuild: buildable(details.abbrev))
+                            BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
                         )
                 }.width(min: 30, ideal: 50, max: 60)
 
                 TableColumn("Name") { details in
                     Text("\(details.name)")
                         .modifier(
-                            BuildHighlight(canBuild: buildable(details.abbrev))
+                            BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
                         )
                 }
 
                 TableColumn("Speed") { details in
                     Text("\(details.speed)").modifier(
-                        BuildHighlight(canBuild: buildable(details.abbrev))
+                        BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
                     )
                 }
                 .width(min: 40, ideal: 50, max: 60)
 
                 TableColumn("Tech") { details in
                     Text("\(details.tech)").modifier(
-                        BuildHighlight(canBuild: buildable(details.abbrev))
+                        BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
                     )
                 }
                 .width(min: 40, ideal: 50, max: 60)
 
                 TableColumn("LCM") { details in
                     Text("\(details.lcmCost)").modifier(
-                        BuildHighlight(canBuild: buildable(details.abbrev))
+                        BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
                     )
                 }
                 .width(min: 40, ideal: 50, max: 60)
 
                 TableColumn("HCM") { details in
                     Text("\(details.hcmCost)").modifier(
-                        BuildHighlight(canBuild: buildable(details.abbrev))
+                        BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
                     )
                 }
                 .width(min: 40, ideal: 50, max: 60)
@@ -73,7 +63,7 @@ struct ShipTypeReport: View {
                     details in
                     Text("\(details.capabilities)")
                         .modifier(
-                            BuildHighlight(canBuild: buildable(details.abbrev))
+                            BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
                         )
                 }
             }
@@ -86,7 +76,7 @@ struct ShipTypeReport: View {
             if let selectedShip {
                 Spacer()
                 if let ship = shipTypes.first (where: { $0.id == selectedShip }) {
-                    ShipTypeView(shipType: ship, buildable: buildable(ship.abbrev))
+                    ShipTypeView(shipType: ship, buildable: ship.isBuildable(techlevel: currTech))
                         .border(.blue)
                 }
             }
@@ -193,12 +183,7 @@ struct ShipTypeReport: View {
     }
 }
 
-func preview_buildable(_: String) -> Bool {
-    return true
-}
-
 #Preview {
-
     let ships = [
         "ss": ShipType(
             abbrev: "ss",
@@ -209,5 +194,5 @@ func preview_buildable(_: String) -> Bool {
             capabilities: "300c 10m 900f 15u fish canal"
         )
     ]
-    ShipTypeReport(shipTypes: Array(ships.values), buildable: preview_buildable)
+    ShipTypeReport(shipTypes: Array(ships.values), currTech: 34.4)
 }

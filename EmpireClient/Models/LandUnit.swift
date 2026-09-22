@@ -9,7 +9,7 @@ import Foundation
 
 typealias LandNum = Int
 
-struct LandType: Identifiable, Codable {
+struct LandType: Identifiable, Codable, Buildable {
     var abbrev: String = ""
     var name: String = ""
     var lcmCost: Int = 0
@@ -71,4 +71,5 @@ struct LandUnit: Identifiable, Codable, Hashable {
     var id: LandNum {
         return self.number
     }
+
 }

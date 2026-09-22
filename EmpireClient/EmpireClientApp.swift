@@ -51,15 +51,15 @@ struct EmpireClientApp: App {
         }
 
         Window("Ship Types Report", id: "ship_types_report") {
-            ShipTypeReport(shipTypes: Array(game.shipTypes.values).sorted(by: { $0.tech < $1.tech}), buildable: game.isShipBuildable)
+            ShipTypeReport(shipTypes: Array(game.shipTypes.values).sorted(by: { $0.tech < $1.tech}), currTech: game.techLevel)
         }
 
         Window("Land Unit Types Report", id: "land_types_report") {
-            LandTypeReport(landTypes: Array(game.landTypes.values).sorted(by: { $0.tech < $1.tech}))
+            LandTypeReport(landTypes: Array(game.landTypes.values).sorted(by: { $0.tech < $1.tech}), currTech: game.techLevel)
         }
 
         Window("Plane Types Report", id: "plane_types_report") {
-            PlaneTypeReport(planeTypes: Array(game.planeTypes.values).sorted(by: { $0.tech < $1.tech}))
+            PlaneTypeReport(planeTypes: Array(game.planeTypes.values).sorted(by: { $0.tech < $1.tech}), currTech: game.techLevel)
         }
 
         Window("Power Report", id: "power_report") {
