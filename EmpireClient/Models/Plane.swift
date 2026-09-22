@@ -9,7 +9,7 @@ import Foundation
 
 typealias PlaneNum = Int
 
-struct PlaneType: Identifiable, Codable {
+struct PlaneType: Identifiable, Codable, Buildable {
     var abbrev: String = ""
     var name: String = ""
     var lcmCost: Int = 0

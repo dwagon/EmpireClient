@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PlaneTypeReport: View {
     let planeTypes: [PlaneType]
+    let currTech: Float
 
     @Environment(\.dismiss) private var dismiss
     @State private var selectedUnit: PlaneType.ID?
@@ -16,15 +17,47 @@ struct PlaneTypeReport: View {
     var body: some View {
         VStack {
             Table(planeTypes, selection: $selectedUnit) {
-                TableColumn("Abbrev", value: \.abbrev)
-                    .width(min: 30, ideal: 50, max: 60)
-                TableColumn("Name", value: \.name)
-                    .width(min: 60, ideal: 100, max: 120)
-                TableColumn("Tech") { details in
-                    Text("\(details.tech)")
+                TableColumn("Abbrev") { details in
+                    Text("\(details.abbrev)").modifier(
+                        BuildableHighlight(
+                            canBuild: details.isBuildable(
+                                techlevel: currTech
+                            )
+                        )
+                    )
+                }.width(min: 30, ideal: 50, max: 60)
+
+                TableColumn("Name") { details in
+                    Text("\(details.name)").modifier(
+                        BuildableHighlight(
+                            canBuild: details.isBuildable(
+                                techlevel: currTech
+                            )
+                        )
+                    )
                 }
                 .width(min: 60, ideal: 100, max: 120)
-                TableColumn("Capabilities", value: \.capabilities)
+
+                TableColumn("Tech") { details in
+                    Text("\(details.tech)").modifier(
+                        BuildableHighlight(
+                            canBuild: details.isBuildable(
+                                techlevel: currTech
+                            )
+                        )
+                    )
+                }
+                .width(min: 60, ideal: 100, max: 120)
+
+                TableColumn("Capabilities") { details in
+                    Text("\(details.capabilities)").modifier(
+                        BuildableHighlight(
+                            canBuild: details.isBuildable(
+                                techlevel: currTech
+                            )
+                        )
+                    )
+                }
             }
             .tableStyle(.bordered)
             .border(.blue)
@@ -141,5 +174,5 @@ struct PlaneTypeReport: View {
             capabilities: "tactical cargo VTOL spy",
         )
     ]
-    PlaneTypeReport(planeTypes: units)
+    PlaneTypeReport(planeTypes: units, currTech: 7)
 }
