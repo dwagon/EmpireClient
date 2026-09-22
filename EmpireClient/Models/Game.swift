@@ -53,12 +53,17 @@ class Game: Decodable {
 
     func landUnitsAt(_ coord: MapCoord?) -> [LandUnit] {
         if let coord {
-            let units =  Array(landUnits.values).filter {
+            return  Array(landUnits.values).filter {
                 $0.coords == coord
             }
-            return units
         }
         return []
+    }
+
+    func landUnitsAboard(_ ship: Ship) -> [LandUnit] {
+        return Array(landUnits.values).filter {
+            $0.ship == Int(ship.number)
+        }
     }
 
     /// Return if a ship can be built with the current tech
