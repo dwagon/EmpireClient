@@ -80,7 +80,12 @@ extension Game {
 
     private func set_map_sector(_ coord: MapCoord, to: String) {
         if let sector = gameMap[coord] {
-            sector.desig = Desig(to)
+            if to == "?" {
+                return
+            }
+            if sector.desig != Desig(to) {
+                sector.desig = Desig(to)
+            }
         } else {
             gameMap[coord] = Sector(coords: coord)
             gameMap[coord]!.desig = Desig(to)
