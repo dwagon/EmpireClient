@@ -19,65 +19,77 @@ struct ShipTypeReport: View {
             Table(shipTypes, selection: $selectedShip, sortOrder: $sortOrder) {
                 TableColumn("Abbrev") { details in
                     Text("\(details.abbrev)")
-                        .modifier(
-                            BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
+                        .buildableHighlight(
+                            details.isBuildable(techlevel: currTech)
                         )
                 }.width(min: 30, ideal: 50, max: 60)
 
                 TableColumn("Name") { details in
                     Text("\(details.name)")
-                        .modifier(
-                            BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
+                        .buildableHighlight(
+                            details.isBuildable(techlevel: currTech)
                         )
+
                 }
 
                 TableColumn("Speed") { details in
-                    Text("\(details.speed)").modifier(
-                        BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
+                    Text("\(details.speed)").buildableHighlight(
+                        details.isBuildable(techlevel: currTech)
                     )
+
                 }
                 .width(min: 40, ideal: 50, max: 60)
 
                 TableColumn("Tech") { details in
-                    Text("\(details.tech)").modifier(
-                        BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
+                    Text("\(details.tech)").buildableHighlight(
+                        details.isBuildable(techlevel: currTech)
                     )
+
                 }
                 .width(min: 40, ideal: 50, max: 60)
 
                 TableColumn("LCM") { details in
-                    Text("\(details.lcmCost)").modifier(
-                        BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
+                    Text("\(details.lcmCost)").buildableHighlight(
+                        details.isBuildable(techlevel: currTech)
                     )
+
                 }
                 .width(min: 40, ideal: 50, max: 60)
 
                 TableColumn("HCM") { details in
-                    Text("\(details.hcmCost)").modifier(
-                        BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
+                    Text("\(details.hcmCost)").buildableHighlight(
+                        details.isBuildable(techlevel: currTech)
                     )
+
                 }
                 .width(min: 40, ideal: 50, max: 60)
 
                 TableColumn("Capabilities") {
                     details in
                     Text("\(details.capabilities)")
-                        .modifier(
-                            BuildableHighlight(canBuild: details.isBuildable(techlevel: currTech))
+                        .buildableHighlight(
+                            details.isBuildable(techlevel: currTech)
                         )
+
                 }
             }
             .onChange(of: sortOrder) { oldSortOrder, sortOrder in
-                let _ = print("oldSortOrder=\(oldSortOrder) sortOrder=\(sortOrder)")
+                let _ = print(
+                    "oldSortOrder=\(oldSortOrder) sortOrder=\(sortOrder)"
+                )
                 shipTypes.sort(using: sortOrder)
             }
             .tableStyle(.bordered)
             .border(.blue)
             if let selectedShip {
                 Spacer()
-                if let ship = shipTypes.first (where: { $0.id == selectedShip }) {
-                    ShipTypeView(shipType: ship, buildable: ship.isBuildable(techlevel: currTech))
-                        .border(.blue)
+                if let ship = shipTypes.first(where: { $0.id == selectedShip })
+                {
+                    ShipTypeView(
+                        shipType: ship,
+                        buildable: ship.isBuildable(techlevel: currTech)
+                    )
+                    .border(.blue)
                 }
             }
             HStack {
@@ -118,7 +130,9 @@ struct ShipTypeReport: View {
                     }
                     GridRow {
                         Text("Tech")
-                        Text("\(shipType.tech)").foregroundStyle(buildable ? .primary : Color.red)
+                        Text("\(shipType.tech)").foregroundStyle(
+                            buildable ? .primary : Color.red
+                        )
                     }
                 }
                 Grid(alignment: .leading) {
