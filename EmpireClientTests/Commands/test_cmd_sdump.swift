@@ -9,6 +9,7 @@ import XCTest
 
 @testable import EmpireClient
 
+@MainActor
 final class test_cmd_sdump: XCTestCase {
     let testInput: [String] = [
         "'Mon Sep 14 11:30:15 2026'",
@@ -25,38 +26,58 @@ final class test_cmd_sdump: XCTestCase {
         let g: Game = Game()
         g.parse_cmd_sdump(testInput)
         XCTAssertEqual(g.ships.count, 4)
-        XCTAssertEqual(g.ships["0"]?.coords, MapCoord(x:19, y:15))
-        XCTAssertEqual(g.ships["1"]?.fleet, "p")
-        XCTAssertEqual(g.ships["1"]?.number, "1")
-        XCTAssertEqual(g.ships["1"]?.name, "ship thing")
-        XCTAssertEqual(g.ships["3"]?.abbrev, "oe")
-        XCTAssertEqual(g.ships["0"]?.eff, 100)
-        XCTAssertEqual(g.ships["2"]?.mob, -28)
-        XCTAssertEqual(g.ships["2"]?.cargo[.civ]!, 300)
-        XCTAssertEqual(g.ships["3"]?.cargo[.civ]!, 11)
-        XCTAssertEqual(g.ships["3"]?.cargo[.mil]!, 12)
-        XCTAssertEqual(g.ships["3"]?.cargo[.uw]!, 13)
-        XCTAssertEqual(g.ships["3"]?.cargo[.food]!, 14)
-        XCTAssertEqual(g.ships["3"]?.planes, 15)
-        XCTAssertEqual(g.ships["3"]?.heli, 16)
-        XCTAssertEqual(g.ships["3"]?.xlPlanes, 17)
-        XCTAssertEqual(g.ships["3"]?.landUnits, 18)
-        XCTAssertEqual(g.ships["3"]?.mob, 19)
-        XCTAssertEqual(g.ships["3"]?.tech, 21)
-        XCTAssertEqual(g.ships["3"]?.cargo[.shells], 22)
-        XCTAssertEqual(g.ships["3"]?.cargo[.guns], 23)
-        XCTAssertEqual(g.ships["3"]?.cargo[.petrol], 24)
-        XCTAssertEqual(g.ships["3"]?.cargo[.ironOre], 25)
-        XCTAssertEqual(g.ships["3"]?.cargo[.goldDust], 26)
-        XCTAssertEqual(g.ships["3"]?.cargo[.goldBars], 27)
-        XCTAssertEqual(g.ships["3"]?.cargo[.oil], 28)
-        XCTAssertEqual(g.ships["3"]?.cargo[.lcm], 29)
-        XCTAssertEqual(g.ships["3"]?.cargo[.hcm], 30)
-        XCTAssertEqual(g.ships["3"]?.cargo[.radioactives], 31)
-        XCTAssertEqual(g.ships["3"]?.defense, 32)
-        XCTAssertEqual(g.ships["3"]?.speed, 33)
-        XCTAssertEqual(g.ships["3"]?.visibility, 34)
-        XCTAssertEqual(g.ships["3"]?.range, 35)
-        XCTAssertEqual(g.ships["3"]?.fire, 36)
+        if let ship = g.ships[0] {
+            XCTAssertEqual(ship.coords, MapCoord(x: 19, y: 15))
+            XCTAssertEqual(ship.eff, 100)
+
+        } else {
+            XCTFail("No ship 0 found")
+        }
+        if let ship = g.ships[1] {
+            XCTAssertEqual(ship.fleet, "p")
+            XCTAssertEqual(ship.number, 1)
+            XCTAssertEqual(ship.name, "ship thing")
+        } else {
+            XCTFail("No ship 1 found")
+        }
+
+        if let ship = g.ships[2] {
+            XCTAssertEqual(ship.mob, -28)
+            XCTAssertEqual(ship.cargo[.civ]!, 300)
+        } else {
+            XCTFail("No ship 2 found")
+        }
+
+        if let ship = g.ships[3] {
+            XCTAssertEqual(ship.abbrev, "oe")
+            XCTAssertEqual(ship.cargo[.civ]!, 11)
+            XCTAssertEqual(ship.cargo[.mil]!, 12)
+            XCTAssertEqual(ship.cargo[.uw]!, 13)
+            XCTAssertEqual(ship.cargo[.food]!, 14)
+            XCTAssertEqual(ship.planes, 15)
+            XCTAssertEqual(ship.heli, 16)
+            XCTAssertEqual(ship.xlPlanes, 17)
+            XCTAssertEqual(ship.landUnits, 18)
+            XCTAssertEqual(ship.mob, 19)
+            XCTAssertEqual(ship.tech, 21)
+            XCTAssertEqual(ship.cargo[.shells], 22)
+            XCTAssertEqual(ship.cargo[.guns], 23)
+            XCTAssertEqual(ship.cargo[.petrol], 24)
+            XCTAssertEqual(ship.cargo[.ironOre], 25)
+            XCTAssertEqual(ship.cargo[.goldDust], 26)
+            XCTAssertEqual(ship.cargo[.goldBars], 27)
+            XCTAssertEqual(ship.cargo[.oil], 28)
+            XCTAssertEqual(ship.cargo[.lcm], 29)
+            XCTAssertEqual(ship.cargo[.hcm], 30)
+            XCTAssertEqual(ship.cargo[.radioactives], 31)
+            XCTAssertEqual(ship.defense, 32)
+            XCTAssertEqual(ship.speed, 33)
+            XCTAssertEqual(ship.visibility, 34)
+            XCTAssertEqual(ship.range, 35)
+            XCTAssertEqual(ship.fire, 36)
+        } else {
+            XCTFail("No ship 3 found")
+        }
+
     }
 }

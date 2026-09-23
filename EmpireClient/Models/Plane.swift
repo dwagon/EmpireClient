@@ -49,7 +49,7 @@ struct Plane: Identifiable, Codable {
     var harden: Int = 0
     var fuel: Int = 0
     var ship: ShipNum = -1
-    var land: String = ""
+    var land: LandNum = -1
     var launched: String = ""
     var orbit: String = ""
     var nuke: String = ""

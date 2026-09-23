@@ -39,6 +39,9 @@ struct EmpireClientApp: App {
                 Button("Plane Types", systemImage: "airplane.up.right") {
                     openWindow(id: "plane_types_report")
                 }.disabled(game.planeTypes.isEmpty)
+                Button("Nuke Types", systemImage: "exclamationmark.icloud.fill") {
+                    openWindow(id: "nuke_types_report")
+                }.disabled(game.planeTypes.isEmpty)
             }
         }
 
@@ -60,6 +63,10 @@ struct EmpireClientApp: App {
 
         Window("Plane Types Report", id: "plane_types_report") {
             PlaneTypeReport(planeTypes: Array(game.planeTypes.values).sorted(by: { $0.tech < $1.tech}), currTech: game.techLevel)
+        }
+
+        Window("Nuke Types Report", id: "nuke_types_report") {
+            NukeTypeReport(nukeTypes: Array(game.nukeTypes.values).sorted(by: { $0.tech < $1.tech}), currTech: game.techLevel)
         }
 
         Window("Power Report", id: "power_report") {

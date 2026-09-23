@@ -41,7 +41,7 @@ extension Game {
 
         for line in input[3..<input.count] {
             let bits = line.split(separator: " ")
-            if bits[1].starts(with: "units") {
+            if bits[1].starts(with: "unit") {
                 break
             }
             let lunitNum = LandNum(bits[0])!

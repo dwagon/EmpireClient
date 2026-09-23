@@ -27,6 +27,8 @@ class Game: Decodable {
     var planeTypes: [String: PlaneType] = [:]
     var planes: [PlaneNum: Plane] = [:]
 
+    var nukeTypes: [String: NukeType] = [:]
+
     var treasury: Int = 0
     var techLevel: Float = 0
 
@@ -104,6 +106,7 @@ class Game: Decodable {
         shipTypes = await cmd_show_ship()
         landTypes = await cmd_show_land()
         planeTypes = await cmd_show_plane()
+        nukeTypes = await cmd_show_nuke()
     }
 
     func get_data() async {

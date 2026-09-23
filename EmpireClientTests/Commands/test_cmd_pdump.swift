@@ -8,6 +8,7 @@
 import XCTest
 @testable import EmpireClient
 
+@MainActor
 final class test_cmd_pdump: XCTestCase {
     let testInput: [String] = [
         "Mon Sep 14 11:49:53 2026",
@@ -21,26 +22,31 @@ final class test_cmd_pdump: XCTestCase {
         let g: Game = Game()
         g.parse_cmd_pdump(testInput)
         XCTAssertEqual(g.planes.count, 1)
-        XCTAssertEqual(g.planes["0"]?.number, "0")
-        XCTAssertEqual(g.planes["0"]?.abbrev, "zep")
-        XCTAssertEqual(g.planes["0"]?.coords, MapCoord(x: 2, y: 4))
-        XCTAssertEqual(g.planes["0"]?.wing, "~")
-        XCTAssertEqual(g.planes["0"]?.eff, 100)
-        XCTAssertEqual(g.planes["0"]?.mob, 60)
-        XCTAssertEqual(g.planes["0"]?.tech, 110)
-        XCTAssertEqual(g.planes["0"]?.attack, 0)
-        XCTAssertEqual(g.planes["0"]?.defence, -1)
-        XCTAssertEqual(g.planes["0"]?.accuracy, 52)
-        XCTAssertEqual(g.planes["0"]?.react, 21)
-        XCTAssertEqual(g.planes["0"]?.range, 20)
-        XCTAssertEqual(g.planes["0"]?.load, 2)
-        XCTAssertEqual(g.planes["0"]?.fuel, 3)
-        XCTAssertEqual(g.planes["0"]?.harden, 4)
-        XCTAssertEqual(g.planes["0"]?.ship, "-1")
-        XCTAssertEqual(g.planes["0"]?.land, "-1")
-        XCTAssertEqual(g.planes["0"]?.launched, "N")
-        XCTAssertEqual(g.planes["0"]?.orbit, "N")
-        XCTAssertEqual(g.planes["0"]?.nuke, "N/A")
-        XCTAssertEqual(g.planes["0"]?.groundburst, "G")
+        if let plane = g.planes[0] {
+            XCTAssertEqual(plane.number, 0)
+            XCTAssertEqual(plane.abbrev, "zep")
+            XCTAssertEqual(plane.coords, MapCoord(x: 2, y: 4))
+            XCTAssertEqual(plane.wing, "~")
+            XCTAssertEqual(plane.eff, 100)
+            XCTAssertEqual(plane.mob, 60)
+            XCTAssertEqual(plane.tech, 110)
+            XCTAssertEqual(plane.attack, 0)
+            XCTAssertEqual(plane.defence, -1)
+            XCTAssertEqual(plane.accuracy, 52)
+            XCTAssertEqual(plane.react, 21)
+            XCTAssertEqual(plane.range, 20)
+            XCTAssertEqual(plane.load, 2)
+            XCTAssertEqual(plane.fuel, 3)
+            XCTAssertEqual(plane.harden, 4)
+            XCTAssertEqual(plane.ship, -1)
+            XCTAssertEqual(plane.land, -1)
+            XCTAssertEqual(plane.launched, "N")
+            XCTAssertEqual(plane.orbit, "N")
+            XCTAssertEqual(plane.nuke, "N/A")
+            XCTAssertEqual(plane.groundburst, "G")
+        }
+        else {
+            XCTFail("No plane parsed")
+        }
     }
 }
