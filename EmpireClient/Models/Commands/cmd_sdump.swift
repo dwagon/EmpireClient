@@ -30,8 +30,11 @@ extension Game {
         let quotesRegex = /"(.*)"/
         var exists: Set<ShipNum> = []
 
-        for line in input[3..<input.count - 1] {
+        for line in input[3..<input.count] {
             let bits = line.split(separator: " ")
+            if bits[1].starts(with:"ship") {  // Last line
+                break
+            }
             let shipNum = ShipNum(bits[0])!
             if ships[shipNum] == nil {
                 ship = Ship(abbrev: String(bits[1]))
