@@ -47,8 +47,11 @@ extension Game {
     func parse_cmd_dump(_ input: [String]) {
         var sector: Sector
 
-        for line in input[3..<input.count - 1] {
+        for line in input[3..<input.count] {
             let bits = line.split(separator: " ")
+            if bits[1].starts(with: "sector") {   // Last line
+                break
+            }
             let coord = MapCoord(x: Int(bits[0])!, y: Int(bits[1])!)
             if self[coord] == nil {
                 self[coord] = Sector(coords: coord)

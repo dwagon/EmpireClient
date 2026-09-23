@@ -39,8 +39,11 @@ extension Game {
         var lunit: LandUnit
         var exists: Set<LandNum> = []
 
-        for line in input[3..<input.count - 1] {
+        for line in input[3..<input.count] {
             let bits = line.split(separator: " ")
+            if bits[1].starts(with: "units") {
+                break
+            }
             let lunitNum = LandNum(bits[0])!
             if landUnits[lunitNum] == nil {
                 lunit = LandUnit(abbrev: String(bits[1]))
