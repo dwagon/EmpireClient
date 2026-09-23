@@ -17,6 +17,7 @@ struct ShipDetailView: View {
     @State private var showNavigatePopup: Bool = false
     @State private var showAssaultPopup: Bool = false
     @State private var showNamePopup: Bool = false
+    @State private var showFleetAddPopup: Bool = false
 
     var body: some View {
         let minColWidth: CGFloat = 60
@@ -110,6 +111,11 @@ struct ShipDetailView: View {
             game: game,
             shipId: selectedShip
         )
+        .fleetAdd(
+            isPresented: $showFleetAddPopup,
+            game: game,
+            shipId: selectedShip
+        )
         .task {
             await game.cmd_ldump()  // Get land units at the same location / cargo
         }
@@ -125,6 +131,7 @@ struct ShipDetailView: View {
                 navigateButton
                 assaultButton
                 nameButton
+                fleetAddButton
             }
         }
     }
@@ -243,6 +250,12 @@ struct ShipDetailView: View {
     var nameButton: some View {
         Button("Name") {
             showNamePopup = true
+        }
+    }
+
+    var fleetAddButton: some View {
+        Button("Add to Fleet") {
+            showFleetAddPopup = true
         }
     }
 }
