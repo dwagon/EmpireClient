@@ -81,6 +81,9 @@ struct SectorDetailView: View {
                     exploreButton
                     thresholdButton
                     optimizeButton
+                    if sector.desig.desig == .radar {
+                        radarButton
+                    }
                 }
             }
         }
@@ -93,6 +96,16 @@ struct SectorDetailView: View {
                     await game.get_data()
                 }
             }
+    }
+
+    var radarButton: some View {
+        Button("Radar") {
+            Task {
+                if let _ = game[centerCoord] {
+                    await game.cmd_radar(centerCoord, suppressLog: false)
+                }
+            }
+        }
     }
 
     var buildButton: some View {

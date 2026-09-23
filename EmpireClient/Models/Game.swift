@@ -109,6 +109,15 @@ class Game: Decodable {
         nukeTypes = await cmd_show_nuke()
     }
 
+    /// Run the radar for all radar sectors to fill the bmap
+    func get_radar() async {
+        let radars = gameMap.instances(.radar)
+        for radar in radars {
+            await cmd_radar(radar.coords, suppressLog: true)
+        }
+        await cmd_map()
+    }
+
     func get_data() async {
         await cmd_dump()
         await cmd_map()
