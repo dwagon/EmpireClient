@@ -54,7 +54,7 @@ extension Game {
             plane.fuel = Int(bits[14])!
             plane.harden = Int(bits[15])!
             plane.ship = ShipNum(bits[16])!
-            plane.land = String(bits[17])
+            plane.land = LandNum(bits[17])!
             plane.launched = String(bits[18])
             plane.orbit = String(bits[19])
             plane.nuke = String(bits[20])
