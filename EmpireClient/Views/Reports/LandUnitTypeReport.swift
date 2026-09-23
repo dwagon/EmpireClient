@@ -18,52 +18,36 @@ struct LandTypeReport: View {
         VStack {
             Table(landTypes, selection: $selectedUnit) {
                 TableColumn("Abbrev") { details in
-                    Text("\(details.abbrev)").modifier(
-                        BuildableHighlight(
-                            canBuild: details.isBuildable(
-                                techlevel: currTech
-                            )
-                        )
+                    Text("\(details.abbrev)").buildableHighlight(
+                        details.isBuildable(techlevel: currTech)
                     )
+
                 }
                 .width(min: 30, ideal: 50, max: 60)
                 TableColumn("Name") { details in
-                    Text("\(details.name)").modifier(
-                        BuildableHighlight(
-                            canBuild: details.isBuildable(
-                                techlevel: currTech
-                            )
-                        )
+                    Text("\(details.name)").buildableHighlight(
+                        details.isBuildable(techlevel: currTech)
                     )
+
                 }
                 .width(min: 60, ideal: 100, max: 120)
                 TableColumn("Speed") { details in
-                    Text("\(details.speed)").modifier(
-                        BuildableHighlight(
-                            canBuild: details.isBuildable(
-                                techlevel: currTech
-                            )
-                        )
+                    Text("\(details.speed)").buildableHighlight(
+                        details.isBuildable(techlevel: currTech)
                     )
+
                 }
                 .width(min: 40, ideal: 50, max: 60)
                 TableColumn("Tech") { details in
-                    Text("\(details.tech)").modifier(
-                        BuildableHighlight(
-                            canBuild: details.isBuildable(
-                                techlevel: currTech
-                            )
-                        )
+                    Text("\(details.tech)").buildableHighlight(
+                        details.isBuildable(techlevel: currTech)
                     )
+
                 }
                 .width(min: 40, ideal: 50, max: 60)
                 TableColumn("Capabilities") { details in
-                    Text("\(details.capabilities)").modifier(
-                        BuildableHighlight(
-                            canBuild: details.isBuildable(
-                                techlevel: currTech
-                            )
-                        )
+                    Text("\(details.capabilities)").buildableHighlight(
+                        details.isBuildable(techlevel: currTech)
                     )
                 }
             }

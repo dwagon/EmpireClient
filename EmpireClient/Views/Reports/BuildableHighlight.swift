@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+extension View {
+    func buildableHighlight(_ canBuild: Bool) -> some View {
+        modifier(BuildableHighlight(canBuild: canBuild))
+    }
+}
+
 struct BuildableHighlight: ViewModifier {
     var canBuild: Bool
 
