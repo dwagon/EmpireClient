@@ -121,6 +121,9 @@ class Game: Decodable {
     func get_data() async {
         await cmd_dump()
         await cmd_map()
+        await cmd_sdump()
+        await cmd_ldump()
+        await cmd_pdump()
     }
 
     enum CodingKeys: String, CodingKey {

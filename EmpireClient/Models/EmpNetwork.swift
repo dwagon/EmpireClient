@@ -10,6 +10,7 @@ import Network
 
 struct Payload: nonisolated Codable {
     var command: String
+    var status: String
     var response: [String]
 }
 
@@ -57,7 +58,7 @@ class TCPClient {
                 return payload
             } catch {
                 print(error)
-                return Payload(command: cmd, response: [])
+                return Payload(command: cmd, status: "", response: [])
             }
         }
         let result = await task.result

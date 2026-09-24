@@ -63,6 +63,7 @@ struct MapView: View {
                 radius: radius,
                 cellText: cellText,
                 cellFillColour: cellColour,
+                cellOpacity: cellOpacity,
                 hexGesture: hexGesture
             )
 
@@ -130,7 +131,17 @@ struct MapView: View {
         }
     }
 
+    func cellOpacity(_ cell: Cell) -> Double {
+        if cell == hexmap.cellAt(try! CubeCoordinates(x: 0, y: 0, z: 0))! {
+            return 0.25
+        }
+        return 1.0
+    }
+
     func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
+        if cell == hexmap.cellAt(try! CubeCoordinates(x: 0, y: 0, z: 0))! {
+            return .color(Color.orange)
+        }
         if let unitColour = cellColourUnit(cell) {
             return unitColour
         }

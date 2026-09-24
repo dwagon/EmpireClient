@@ -15,6 +15,7 @@ struct DrawHex: View {
     var cellImage: ((Cell) -> Image)?
     var cellFillColour: ((Cell) -> GraphicsContext.Shading)?
     var cellEdgeColour: ((Cell) -> GraphicsContext.Shading)?
+    var cellOpacity: ((Cell) -> Double)?
     var hexGesture: ((CGPoint) -> Void)?
 
     init(
@@ -24,6 +25,7 @@ struct DrawHex: View {
         cellImage: ((Cell) -> Image)? = nil,
         cellFillColour: ((Cell) -> GraphicsContext.Shading)? = nil,
         cellEdgeColour: ((Cell) -> GraphicsContext.Shading)? = nil,
+        cellOpacity: ((Cell) -> Double)? = nil,
         hexGesture: ((CGPoint) -> Void)? = nil
     ) {
         self.hexmap = hexmap
@@ -32,6 +34,7 @@ struct DrawHex: View {
         self.cellImage = cellImage
         self.cellFillColour = cellFillColour
         self.cellEdgeColour = cellEdgeColour
+        self.cellOpacity = cellOpacity
         self.hexGesture = hexGesture
     }
 
@@ -58,6 +61,9 @@ struct DrawHex: View {
                     cell: cell,
                     corners: hexmap.polygonCorners(for: cell)
                 )
+                if let cellOpacity {
+                    context.opacity = cellOpacity(cell)
+                }
                 context.stroke(
                     path,
                     with: cellStrokeColour(cell: cell),
