@@ -58,11 +58,6 @@ func directionIcon(_ direction: String?) -> String? {
 
 // Generic cell colour for maps
 func mapCellColour(cell: Cell, gameMap: Map, hexmap: HexGrid, center: MapCoord) -> GraphicsContext.Shading {
-    do {
-        if cell == hexmap.cellAt(try CubeCoordinates(x: 0, y: 0, z: 0))! {
-            return .color(Color.orange)
-        }
-    } catch { print("cellColour: No center of hexmap") }
     let mapCoord = screenToMapCoord(
         cell.coordinates,
         centerCoord: center
