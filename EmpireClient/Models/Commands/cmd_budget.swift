@@ -19,11 +19,7 @@ import Foundation
 
 extension Game {
     func cmd_budget() async {
-        let result = await runCmd("budget")
-        guard result != [] else {
-            print("budget returned empty")
-            return
-        }
+        let result = await runCmd("budget", suppressLog: true)
         budgetReport = result
     }
 }
