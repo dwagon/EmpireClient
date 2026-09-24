@@ -13,10 +13,12 @@ struct BudgetReport: View {
 
     var body: some View {
         VStack {
-            Text(game.budgetReport.joined(separator: "\n"))
-                .font(
-                    .system(.body, design: .monospaced)
-                ).border(.blue)
+            ScrollView {
+                Text(game.budgetReport.joined(separator: "\n"))
+                    .font(
+                        .system(.body, design: .monospaced)
+                    ).border(.blue)
+            }
             HStack {
                 Button("OK") {
                     dismiss()
@@ -26,7 +28,6 @@ struct BudgetReport: View {
         .task {
             await game.cmd_budget()
         }
-
     }
 }
 
