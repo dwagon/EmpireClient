@@ -28,9 +28,10 @@ enum ExtraMapStyle {
     case none
     case distribution
     case efficiency
+    case realm
 }
 
-var colourChoices: [GraphicsContext.Shading] = [
+let colourChoices: [GraphicsContext.Shading] = [
     .color(.brown), .color(.pink), .color(.gray), .color(.orange),
     .color(.green),
     .color(.yellow), .color(.teal),
@@ -43,6 +44,7 @@ struct MapView: View {
     let landUnits: [LandNum: LandUnit]
     let planes: [PlaneNum: Plane]
     @State var distroMap: [MapCoord: GraphicsContext.Shading] = [:]
+    @State var realmMap: [RealmNum: GraphicsContext.Shading] = [:]
 
     @State var displayResourceMapStyle: ResourceMapStyle = .normal
     @State var displayUnitMapStyle: UnitMapStyle = .none
@@ -73,6 +75,10 @@ struct MapView: View {
                 Text("Plane").tag(UnitMapStyle.plane)
                 Text("Land Unit").tag(UnitMapStyle.land)
             }.pickerStyle(.segmented)
+                .onChange(of: displayUnitMapStyle) {
+                    displayResourceMapStyle = .normal
+                    displayExtraMapStyle = .none
+                }
             Picker("", selection: $displayResourceMapStyle) {
                 Text("Normal").tag(ResourceMapStyle.normal)
                 Text("Fertitilty").tag(ResourceMapStyle.fertility)
@@ -81,17 +87,30 @@ struct MapView: View {
                 Text("Oil").tag(ResourceMapStyle.oil)
                 Text("Uranium").tag(ResourceMapStyle.uranium)
             }.pickerStyle(.segmented)
+                .onChange(of: displayResourceMapStyle) {
+                    displayUnitMapStyle = .none
+                    displayExtraMapStyle = .none
+                }
             Picker("", selection: $displayExtraMapStyle) {
                 Text("Normal").tag(ExtraMapStyle.none)
                 Text("Distribution").tag(ExtraMapStyle.distribution)
                 Text("Efficiency").tag(ExtraMapStyle.efficiency)
+                Text("Realm").tag(ExtraMapStyle.realm)
             }.pickerStyle(.segmented)
+                .onChange(of: displayExtraMapStyle) {
+                    displayUnitMapStyle = .none
+                    displayResourceMapStyle = .normal
+                }
         }.onChange(of: game.gameMap.updated) {
             setDistroMap()
+        }
+        .onChange(of: game.realms) {
+            setRealmMap()
         }
     }
 
     func setDistroMap() {
+        var distroColourChoices = colourChoices
         for sector in game.gameMap.allSectors().filter({ $0.owned }) {
             if let distX = sector[.distX], let distY = sector[.distY] {
                 if let distro = MapCoord(x: distX, y: distY) {
@@ -99,10 +118,17 @@ struct MapView: View {
                         continue
                     }
                     if !distroMap.contains(where: { $0.key == distro }) {
-                        distroMap[distro] = colourChoices.popLast()
+                        distroMap[distro] = distroColourChoices.popLast()
                     }
                 }
             }
+        }
+    }
+
+    func setRealmMap() {
+        var realmColourChoices = colourChoices
+        for realm in game.realms.keys {
+            realmMap[realm] = realmColourChoices.popLast()
         }
     }
 
@@ -153,8 +179,9 @@ struct MapView: View {
             case .distribution:
                 return cellColourByDistribution(cell)
             case .efficiency:
-                return cellColourbyEfficiency(cell)
-
+                return cellColourByEfficiency(cell)
+            case .realm:
+                return cellColourByRealm(cell)
             }
         case .fertility:
             return cellColourBySector(cell, mapkey: .fert)
@@ -169,7 +196,21 @@ struct MapView: View {
         }
     }
 
-    func cellColourbyEfficiency(_ cell: Cell) -> GraphicsContext.Shading {
+    func cellColourByRealm(_ cell: Cell) -> GraphicsContext.Shading {
+        let mapCoord = screenToMapCoord(
+            cell.coordinates,
+            centerCoord: centerCoord
+        )
+        let realms = game.inWhichRealm(coord: mapCoord)
+        if !realms.isEmpty {
+            if realmMap.contains(where: { $0.key == realms[0]} ) {
+                return realmMap[realms[0]]!
+            }
+        }
+        return cellColourNormal(cell)
+    }
+
+    func cellColourByEfficiency(_ cell: Cell) -> GraphicsContext.Shading {
         let mapCoord = screenToMapCoord(
             cell.coordinates,
             centerCoord: centerCoord
