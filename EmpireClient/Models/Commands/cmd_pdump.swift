@@ -27,10 +27,13 @@ extension Game {
         var plane: Plane
         var exists: Set<PlaneNum> = []
 
-        for line in input[3..<input.count] {
+        for line in input {
             let bits = line.split(separator: " ")
             if bits[1].starts(with:"plane") {
                 break
+            }
+            if bits[0] == "DUMP" || bits[0] == "id" || bits.count != 22 {   // Headers
+                continue
             }
             let planeNum = PlaneNum(bits[0])!
             if planes[planeNum] == nil {
