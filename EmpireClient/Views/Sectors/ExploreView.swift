@@ -41,15 +41,10 @@ struct ExploreView: View {
                 Spacer()
             }
             HStack {
-                Button("Cancel", role: .cancel) {
-                    dismiss()
-                }
-                .padding()
-                Button("Explore") {
+                CancelButton()
+                OkButton("Explore", disabled:destination == nil) {
                     onButton()
-                    dismiss()
-                }.disabled(destination == nil)
-                    .buttonStyle(.automatic)
+                }
             }
         }
     }

@@ -41,15 +41,11 @@ struct NavigateView: View {
                 ).scaledToFit()
                 Text(
                     destination == nil
-                    ? "Navigate to a location from ship \(ship.number)"
-                    : "Navigate to \(destination!.toString()) from ship \(ship.number)"
+                        ? "Navigate to a location from ship \(ship.number)"
+                        : "Navigate to \(destination!.toString()) from ship \(ship.number)"
                 )
             }.padding()
-            HStack {
-                Button("Finish") {
-                    dismiss()
-                }
-            }.buttonStyle(.automatic)
+            OkButton("Finish")
         }.padding()
     }
 

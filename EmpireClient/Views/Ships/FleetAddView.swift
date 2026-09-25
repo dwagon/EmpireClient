@@ -44,15 +44,9 @@ struct FleetAddView: View {
                 }
             }
             HStack {
-                Button("Cancel", role: .cancel) {
-                    fleet = ""
-                    dismiss()
-                }
-                .buttonStyle(.automatic)
-                .padding()
-                Button("Add") {
+                CancelButton()
+                OkButton("Add") {
                     onButton()
-                    dismiss()
                 }
             }
         }.padding()

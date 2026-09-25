@@ -63,11 +63,7 @@ struct NukeTypeReport: View {
                         .border(.blue).padding()
                 }
             }
-            HStack {
-                Button("OK") {
-                    dismiss()
-                }
-            }
+            OkButton()
         }
     }
 

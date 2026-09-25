@@ -25,13 +25,11 @@ struct SettingsView: View {
         }
         Spacer()
         HStack {
-            Button("Cancel", role: .cancel) {
+            CancelButton {
                 userProfile = loadSettings()
-                dismiss()
             }
-            Button("OK", role: .confirm) {
+            OkButton("OK") {
                 saveSettings(profile: userProfile)
-                dismiss()
             }
         }
     }

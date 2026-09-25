@@ -33,14 +33,9 @@ struct BuildView: View {
                 }
             }.padding()
             HStack {
-                Button("Cancel", role: .cancel) {
-                    dismiss()
-                }
-                .buttonStyle(.automatic)
-                .padding()
-                Button("Build") {
+                CancelButton()
+                OkButton("Build") {
                     onButton()
-                    dismiss()
                 }
             }
         }
@@ -88,7 +83,9 @@ struct BuildView: View {
                     Text("No ship").tag("")
                     ForEach(
                         Array(game.shipTypes.keys).filter({
-                            game.shipTypes[$0]!.isBuildable(techlevel: game.techLevel)
+                            game.shipTypes[$0]!.isBuildable(
+                                techlevel: game.techLevel
+                            )
                         }).sorted(by: {
                             game.shipTypes[$0]!.abbrev
                                 < game.shipTypes[$1]!.abbrev

@@ -55,18 +55,17 @@ struct ThresholdView: View {
                     "Set threshold of \(item.displayName) at all \(desig.name)s to \(Int(level))"
                 )
             }
-            Text(currentLevel == 0 ? "" : "Current Threshold of \(item.displayName) is \(currentLevel)")
+            Text(
+                currentLevel == 0
+                    ? ""
+                    : "Current Threshold of \(item.displayName) is \(currentLevel)"
+            )
             HStack {
-                Button("Cancel", role: .cancel) {
-                    dismiss()
-                }
-                .padding()
-                Button("Set Threshold") {
+                CancelButton()
+                OkButton("Set Threshold", disabled: item == .none) {
                     onButton()
-                    dismiss()
                 }
-                .disabled(item == .none)
-            }.buttonStyle(.automatic)
+            }
         }
     }
 
@@ -86,8 +85,8 @@ struct ThresholdView: View {
                 }
             ).pickerStyle(.segmented)
             ItemPicker(label: "Set", item: $item)
-            .pickerStyle(.automatic)
-            .padding()
+                .pickerStyle(.automatic)
+                .padding()
             Slider(value: $level, in: 0...1000, step: 10) {
             } minimumValueLabel: {
                 Text("0")
@@ -99,7 +98,13 @@ struct ThresholdView: View {
     }
 }
 
-func doThreshold(game: Game, threshType: ThresholdType, coord: MapCoord, item: Item, level: Int) {
+func doThreshold(
+    game: Game,
+    threshType: ThresholdType,
+    coord: MapCoord,
+    item: Item,
+    level: Int
+) {
     Task {
         switch threshType {
         case .individual:
@@ -145,7 +150,13 @@ struct ThresholdSheet: ViewModifier {
                     threshType: $threshType
                 ) {
                     if item != .none {
-                        doThreshold(game: game, threshType: threshType, coord: centerCoord, item: item, level: Int(level))
+                        doThreshold(
+                            game: game,
+                            threshType: threshType,
+                            coord: centerCoord,
+                            item: item,
+                            level: Int(level)
+                        )
                     }
                 }
             }

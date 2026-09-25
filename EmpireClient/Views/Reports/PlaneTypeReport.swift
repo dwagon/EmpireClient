@@ -56,11 +56,7 @@ struct PlaneTypeReport: View {
                         .border(.blue).padding()
                 }
             }
-            HStack {
-                Button("OK") {
-                    dismiss()
-                }
-            }
+            OkButton()
         }
     }
 

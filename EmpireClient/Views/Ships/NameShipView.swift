@@ -39,16 +39,11 @@ struct NameShipView: View {
                 }
             }
             HStack {
-                Button("Cancel", role: .cancel) {
-                    name = ""
-                    dismiss()
-                }
-                .buttonStyle(.automatic)
-                .padding()
-                Button("Name") {
+                CancelButton()
+                OkButton("Name", disabled: name.isEmpty) {
                     onButton()
-                    dismiss()
                 }
+
             }
         }.padding()
     }

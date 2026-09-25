@@ -27,13 +27,8 @@ struct PowerReport: View {
                 .system(.body, design: .monospaced)
             ).border(.blue)
             .task { await game.cmd_power() }
-            HStack {
-                Button("OK") {
-                    dismiss()
-                }
-            }
+            OkButton()
         }
-
     }
 }
 

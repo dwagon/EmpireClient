@@ -41,15 +41,13 @@ struct MarchView: View {
                 ).scaledToFit()
                 Text(
                     destination == nil
-                    ? "March unit \(unit.number) to a location"
-                    : "March \(unit.number) to \(destination!.toString())"
+                        ? "March unit \(unit.number) to a location"
+                        : "March \(unit.number) to \(destination!.toString())"
                 )
             }.padding()
             HStack {
-                Button("Finish") {
-                    dismiss()
-                }
-            }.buttonStyle(.automatic)
+                OkButton("Finish")
+            }
         }.padding()
     }
 
@@ -58,14 +56,14 @@ struct MarchView: View {
             destination = cubeToDoubleWidth(
                 from: cell.coordinates
             )
-                destination! += unit.coords
-                Task {
-                    await game.cmd_march(
-                        unit: unit,
-                        destination: destination!
-                    )
-                    await game.cmd_ldump(unit)
-                }
+            destination! += unit.coords
+            Task {
+                await game.cmd_march(
+                    unit: unit,
+                    destination: destination!
+                )
+                await game.cmd_ldump(unit)
+            }
         } else {
             print("no cell at \(location.hexPoint)")
         }

@@ -92,11 +92,7 @@ struct ShipTypeReport: View {
                     .border(.blue)
                 }
             }
-            HStack {
-                Button("OK") {
-                    dismiss()
-                }
-            }
+            OkButton()
         }
     }
 

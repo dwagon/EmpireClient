@@ -42,15 +42,11 @@ struct OptimizeView: View {
                 Text("Optimize all \(desig.name)s")
             }
             HStack {
-                Button("Cancel", role: .cancel) {
-                    dismiss()
-                }
-                .padding()
-                Button("Optimize") {
+                CancelButton()
+                OkButton("Optimize") {
                     onButton()
-                    dismiss()
                 }
-            }.buttonStyle(.automatic)
+            }
         }
     }
 
