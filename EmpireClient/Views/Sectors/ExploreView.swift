@@ -42,7 +42,7 @@ struct ExploreView: View {
             }
             HStack {
                 CancelButton()
-                OkButton("Explore", disabled:destination == nil) {
+                OkButton("Explore", disabled:destination == nil || number == 0) {
                     onButton()
                 }
             }
@@ -150,7 +150,7 @@ struct ExploreSheet: ViewModifier {
                     }
                 }
                 .onAppear {
-                    number = 0
+                    number = 1
                     item = .civ
                 }
             }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+typealias RealmNum = Int
 
 // MARK: -
 @Observable
@@ -17,6 +18,7 @@ class Game: Decodable {
     var budgetReport: [String] = []
     var powerReport: [String] = []
     var logs: [Log] = []
+    var realms: [RealmNum:Realm] = [:]
 
     var shipTypes: [String: ShipType] = [:]
     var ships: [ShipNum: Ship] = [:]
@@ -34,6 +36,12 @@ class Game: Decodable {
 
     init() {
         gameMap = Map(xSize: MapConfig.mapWidth, ySize: MapConfig.mapHeight)
+    }
+
+    func inWhichRealm(coord: MapCoord) -> [RealmNum] {
+        return Array(realms.keys).filter {
+            realms[$0]!.inRealm(coord: coord)
+        }
     }
 
     var shipTable: [Ship] {
@@ -103,6 +111,7 @@ class Game: Decodable {
     func get_initial_data() async {
         await cmd_nation()
         await cmd_prod()
+        await cmd_realm()
         shipTypes = await cmd_show_ship()
         landTypes = await cmd_show_land()
         planeTypes = await cmd_show_plane()

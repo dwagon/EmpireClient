@@ -59,7 +59,7 @@ struct ContentView: View {
                     PlaneDetailView(game: game, centerCoord: $centerCoord)
                 }.disabled(game.planes.isEmpty)
             }
-            .onChange(of: tabSelection) { oldTab, newTab in
+            .onChange(of: tabSelection) { _, newTab in
                 switch newTab {
                 case .land:
                     Task {
