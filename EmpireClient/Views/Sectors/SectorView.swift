@@ -11,6 +11,7 @@ import SwiftUI
 struct SectorView: View {
     var coord: MapCoord
     var sector: Sector
+    var realms: [RealmNum] = []
 
     @State var resourceCollapse: Bool = false
     @State var naturalResourceCollapse: Bool = false
@@ -21,7 +22,7 @@ struct SectorView: View {
         var ans =
             "Desig: \(sector.desig.name) (Eff: \(sector[.eff], default: "??")%)"
         if sector.sdes.desig != .unknown {
-            ans += " SDesig: \(sector.sdes.name)"
+            ans += " Redesignated to: \(sector.sdes.name)"
         }
         return ans
     }
@@ -119,7 +120,7 @@ struct SectorView: View {
 
     var populationSection: some View {
         Grid {
-            GridRow() {
+            GridRow {
                 Text("Population").bold()
                 Text("Civilians").bold()
                 Text("Military").bold()
@@ -253,17 +254,26 @@ struct SectorView: View {
             //
             Section("Sector Details") {
                 Text(desigStr)
-                if let distX = sector[.distX], let distY = sector[.distY] {
-                    if MapCoord(x: distX, y: distY) != coord {
-                        Text(
-                            "Distribute to \(sector[.distX], default: "?"), \(sector[.distY], default: "?")"
-                        )
-                    } else {
-                        Text("No distribution set")
+                HStack {
+                    if let distX = sector[.distX], let distY = sector[.distY] {
+                        if MapCoord(x: distX, y: distY) != coord {
+                            Text(
+                                "Distribute to \(sector[.distX], default: "?"), \(sector[.distY], default: "?")"
+                            ).padding(.horizontal)
+                        } else {
+                            Text("No distribution set").padding(.horizontal)
+                        }
                     }
+                    Text("Mobility: \(sector[.mob], default: "?")").padding(
+                        .horizontal
+                    )
+                    Text("Available Work: \(sector[.avail], default: "?")")
+                        .padding(.horizontal)
+                    Text(
+                        realms.isEmpty
+                            ? "" : "Realm: \(realms[0], default: "?")"
+                    ).padding(.horizontal)
                 }
-                Text("Mobility: \(sector[.mob], default: "?")")
-                Text("Available Work: \(sector[.avail], default: "?")")
             }
 
             //
@@ -327,12 +337,10 @@ struct DeliveryDirection: View {
         if let dir {
             if let icon = directionIcon(dir) {
                 Image(systemName: icon)
-            }
-            else {
+            } else {
                 Image(systemName: "questionmark")
             }
-        }
-        else {
+        } else {
             Image(systemName: "questionmark")
         }
     }

@@ -145,6 +145,17 @@ struct MapView: View {
             cell.coordinates,
             centerCoord: centerCoord
         )
+        if displayExtraMapStyle == .realm {
+            let realmNums = game.inWhichRealm(coord: mapCoord)
+            if !realmNums.isEmpty {
+                let realmNum = realmNums[0]
+                if let realm = game.realms[realmNum] {
+                    if mapCoord == MapCoord(x: realm.minX, y: realm.minY) || mapCoord == MapCoord(x: realm.maxX, y: realm.maxY) {
+                        return "\(realmNum)"
+                    }
+                }
+            }
+        }
         if let sector = game.gameMap[mapCoord] {
             if lowPriDesigs.contains(sector.desig.desig) {
                 if let shipText = shipText(mapCoord) {

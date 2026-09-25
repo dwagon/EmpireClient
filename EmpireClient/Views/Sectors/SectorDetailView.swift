@@ -21,6 +21,7 @@ struct SectorDetailView: View {
 
 
     var body: some View {
+        let realms = game.inWhichRealm(coord: centerCoord)
         HStack {
             VStack {
                 if let sector = game[centerCoord] {
@@ -28,7 +29,7 @@ struct SectorDetailView: View {
                         "\(centerCoord.x), \(centerCoord.y): \(sector.desig.name)"
                     )
                     .font(.title)
-                    SectorView(coord: centerCoord, sector: sector)
+                    SectorView(coord: centerCoord, sector: sector, realms: realms)
                         .focusable(true)
                         .focused($focused)
                 } else {
