@@ -35,7 +35,9 @@ struct DistributeView: View {
                         selection: $source
                     ) {
                         Text("Everywhere").tag(DistributeSource.global)
-                        Text("Just \(coord.toString())").tag(DistributeSource.sector(coord))
+                        Text("Just \(coord.toString())").tag(
+                            DistributeSource.sector(coord)
+                        )
                     } label: {
                         Text("")
                     }
@@ -49,7 +51,7 @@ struct DistributeView: View {
                     Picker(
                         selection: $destination
                     ) {
-                        Text("Stop Distribution").tag(Optional<MapCoord>(nil))
+                        Text("Stop Distribution").tag(MapCoord?(nil))
                         ForEach(warehouses) { whouse in
                             Text("\(whouse.coords.toString())").tag(
                                 whouse.coords
@@ -63,21 +65,20 @@ struct DistributeView: View {
             }
         }.padding()
         HStack {
-            Button("Cancel", role: .cancel) {
-                dismiss()
-            }.padding()
-
-            Button("Distribute") {
+            CancelButton()
+            OkButton("Distribute") {
                 onButton()
-                dismiss()
             }
-            .buttonStyle(.automatic)
-            .padding()
         }
     }
 }
 
-func doDistribute(game: Game, coord: MapCoord, source: DistributeSource, destination: MapCoord?) {
+func doDistribute(
+    game: Game,
+    coord: MapCoord,
+    source: DistributeSource,
+    destination: MapCoord?
+) {
     if let destination {
         switch source {
         case .global:
@@ -87,12 +88,14 @@ func doDistribute(game: Game, coord: MapCoord, source: DistributeSource, destina
             }
         case .sector(let sector):
             Task {
-                await game.cmd_distribute(source: sector, destination: destination)
+                await game.cmd_distribute(
+                    source: sector,
+                    destination: destination
+                )
                 await game.cmd_dump(sector)
             }
         }
-    }
-    else {
+    } else {
         switch source {
         case .global:
             Task {
@@ -129,7 +132,12 @@ struct DistributeSheet: ViewModifier {
                     source: $source,
                     destination: $destination
                 ) {
-                    doDistribute(game: game, coord: centerCoord, source: source, destination: destination)
+                    doDistribute(
+                        game: game,
+                        coord: centerCoord,
+                        source: source,
+                        destination: destination
+                    )
                     source = .global
                     destination = nil
                 }

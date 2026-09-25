@@ -46,12 +46,12 @@ struct LoadShipView: View {
             }
             if !landUnits.isEmpty {
                 Divider()
-//                List(landUnits, selection: $selectLand) { unit in
-//                    Text("Load Unit \(unit.number): \(unit.abbrev)").padding()
-//                }
+                //                List(landUnits, selection: $selectLand) { unit in
+                //                    Text("Load Unit \(unit.number): \(unit.abbrev)").padding()
+                //                }
                 Picker("Load Land Unit", selection: $selectLand) {
                     ForEach(landUnits) { unit in
-                        Text("Nothing").tag(Optional<LandUnit.ID>(nil))
+                        Text("Nothing").tag(LandUnit.ID?(nil))
                         Text("Unit \(unit.number): \(unit.abbrev)").tag(unit.id)
                     }
                 }.pickerStyle(.radioGroup)
@@ -67,16 +67,11 @@ struct LoadShipView: View {
                     ? "" : "Load Land Unit \(selectLand, default: "unknown")"
             )
             HStack {
-                Button("Cancel", role: .cancel) {
-                    amount = 0
-                    dismiss()
-                }
-                .buttonStyle(.automatic)
-                .padding()
-                Button("Load") {
-                    dismiss()
+                CancelButton()
+                OkButton("Load", disabled: item == .none && selectLand == nil) {
                     onButton()
-                }.disabled(item == .none && selectLand == nil)
+                }
+
             }
         }
     }

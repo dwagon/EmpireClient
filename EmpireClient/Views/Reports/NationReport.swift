@@ -17,13 +17,8 @@ struct NationReport: View {
                 .font(
                     .system(.body, design: .monospaced)
                 ).border(.blue)
-            HStack {
-                Button("OK") {
-                    dismiss()
-                }
-            }
+            OkButton()
         }
-
     }
 }
 

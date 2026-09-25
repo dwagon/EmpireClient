@@ -26,16 +26,10 @@ struct DesignateView: View {
                 Spacer()
             }
             HStack {
-                Button("Cancel", role: .cancel) {
-                    dismiss()
-                }
-                .padding()
-                Button("Designate") {
+                CancelButton()
+                OkButton("Designate", disabled: designation.isEmpty) {
                     onButton()
-                    dismiss()
                 }
-                .buttonStyle(.automatic)
-
             }
         }
     }

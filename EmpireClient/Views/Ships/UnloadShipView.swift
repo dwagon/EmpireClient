@@ -66,15 +66,11 @@ struct UnloadShipView: View {
                     : "Unload \(amount) of \(ship.cargo[item]!) \(item.displayName.capitalized)"
             )
             HStack {
-                Button("Cancel", role: .cancel) {
-                    dismiss()
-                }
-                .buttonStyle(.automatic)
-                .padding()
-                Button("Unload") {
+                CancelButton()
+                OkButton("Unload", disabled: item == .none && selectLand == nil)
+                {
                     onButton()
-                    dismiss()
-                }.disabled(item == .none && selectLand == nil)
+                }
             }
         }.padding()
     }

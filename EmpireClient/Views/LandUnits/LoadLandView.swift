@@ -30,7 +30,11 @@ struct LoadLandView: View {
                 .title
             )
             HStack {
-                ItemPicker(label: "Load what item?", itemList: itemList, item: $item).padding()
+                ItemPicker(
+                    label: "Load what item?",
+                    itemList: itemList,
+                    item: $item
+                ).padding()
                 VStack(alignment: .leading) {
                     Text("Amount:")
                     TextField(
@@ -48,16 +52,11 @@ struct LoadLandView: View {
                     : "Load \(amount) \(item.displayName.capitalized) (\(available, default: "None") avail) onto Unit \(unitNum)"
             )
             HStack {
-                Button("Cancel", role: .cancel) {
-                    dismiss()
-                }
-                .padding()
-                Button("Load") {
-                    dismiss()
+                CancelButton()
+                OkButton("Load", disabled: item == .none) {
                     onButton()
-                }.disabled(item == .none)
+                }
             }
-            .buttonStyle(.automatic)
         }.padding()
     }
 }
@@ -104,7 +103,11 @@ struct LoadLandUnitSheet: ViewModifier {
                     ) {
                         if let unit = game.landUnits[unitId] {
                             Task {
-                                await game.cmd_lload(commodity: item, unit: unit, amount: amount)
+                                await game.cmd_lload(
+                                    commodity: item,
+                                    unit: unit,
+                                    amount: amount
+                                )
                                 await game.cmd_ldump(unit)
                                 await game.cmd_dump(unit.coords)
                             }
@@ -134,7 +137,6 @@ extension View {
         )
     }
 }
-
 
 #Preview {
     @Previewable @State var game: Game = Game()
