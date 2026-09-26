@@ -28,6 +28,7 @@ struct BuildView: View {
                 case .ship: buildShipDetails
                 case .plane: buildPlaneDetails
                 case .land: buildLandUnitDetails
+                case .nuke: buildNukeDetails
                 default:
                     Text("Unknown \(buildType.name)")
                 }
@@ -178,6 +179,82 @@ struct BuildView: View {
         }
     }
 
+    var buildNukeDetails: some View {
+        return VStack {
+            Grid(alignment: .leading) {
+                GridRow {
+                    Text("")
+                    Text("LCM")
+                    Text("HCM")
+                    Text("Oil")
+                    Text("Rads")
+                    Text("Avail")
+                    Text("Cost")
+                }
+                GridRow {
+                    Text("Available")
+                    Text("\(game[coord]!.cargo[.lcm], default: "?")")
+                    Text("\(game[coord]!.cargo[.hcm], default: "?")")
+                    Text("\(game[coord]!.cargo[.oil], default: "?")")
+                    Text("\(game[coord]!.cargo[.radioactives], default: "?")")
+                    Text("\(game[coord]![.avail], default: "?")")
+                    Text("$\(game.treasury)")
+                }
+                GridRow {
+                    Text("Requirement")
+                    let lcmCost =
+                        game.nukeTypes[deviceType] != nil
+                        ? game.nukeTypes[deviceType]!.lcmCost * number : 0
+                    let hcmCost =
+                        game.nukeTypes[deviceType] != nil
+                        ? game.nukeTypes[deviceType]!.hcmCost * number : 0
+                    let oilCost =
+                        game.nukeTypes[deviceType] != nil
+                        ? game.nukeTypes[deviceType]!.oilCost * number : 0
+                    let radCost =
+                        game.nukeTypes[deviceType] != nil
+                        ? game.nukeTypes[deviceType]!.radCost * number : 0
+                    let avail =
+                        game.nukeTypes[deviceType] != nil
+                        ? game.nukeTypes[deviceType]!.avail * number : 0
+                    let cost =
+                        game.nukeTypes[deviceType] != nil
+                        ? game.nukeTypes[deviceType]!.cost * number : 0
+                    Text("\(lcmCost)")
+                    Text("\(hcmCost)")
+                    Text("\(oilCost)")
+                    Text("\(radCost)")
+                    Text("\(avail)")
+                    Text("$\(cost)")
+                }
+            }
+            HStack {
+                Picker("Nuke Type to Build", selection: $deviceType) {
+                    Text("No nuke").tag("")
+
+                    ForEach(
+                        Array(game.nukeTypes.keys).sorted(by: {
+                            game.nukeTypes[$0]!.abbrev
+                                < game.nukeTypes[$1]!.abbrev
+                        }),
+                        id: \.self
+                    ) { nukeType in
+                        let details = game.nukeTypes[nukeType]!
+                        Text("\(details.name) (\(details.abbrev))").tag(
+                            nukeType
+                        )
+                    }
+                }.pickerStyle(.menu)
+                Spacer()
+                Picker("Number to Build", selection: $number) {
+                    ForEach(0...maxUnits, id: \.self) { number in
+                        Text("\(number)").tag(number)
+                    }
+                }
+            }
+        }
+    }
+
     var buildLandUnitDetails: some View {
         return VStack {
             Grid(alignment: .leading) {
@@ -272,6 +349,8 @@ func buildThing(
                 await game.cmd_ldump()
             case .plane:
                 await game.cmd_pdump()
+            case .nuke:
+                await game.cmd_ndump()
             default:
                 break
             }
@@ -290,6 +369,8 @@ func getBuildType(_ desigType: DesigType) -> BuildType {
         buildType = .plane
     case .headquarters:
         buildType = .land
+    case .nuclearPlant:
+        buildType = .nuke
     default:
         buildType = .nothing
     }

@@ -30,6 +30,7 @@ class Game: Decodable {
     var planes: [PlaneNum: Plane] = [:]
 
     var nukeTypes: [String: NukeType] = [:]
+    var nukes: [NukeNum: Nuke] = [:]
 
     var treasury: Int = 0
     var techLevel: Float = 0
@@ -58,6 +59,12 @@ class Game: Decodable {
 
     var landTable: [LandUnit] {
         return Array(landUnits.values).sorted {
+            $0.number < $1.number
+        }
+    }
+
+    var nukeTable: [Nuke] {
+        return Array(nukes.values).sorted {
             $0.number < $1.number
         }
     }
@@ -133,6 +140,7 @@ class Game: Decodable {
         await cmd_sdump()
         await cmd_ldump()
         await cmd_pdump()
+        await cmd_ndump()
     }
 
     enum CodingKeys: String, CodingKey {

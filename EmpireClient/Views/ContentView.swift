@@ -13,6 +13,7 @@ enum TabChosen {
     case ship
     case plane
     case land
+    case nuke
 }
 
 struct ContentView: View {
@@ -32,9 +33,9 @@ struct ContentView: View {
                     displayMapView
                         .simultaneousGesture(
                             TapGesture()
-                            .onEnded {
-                                tabSelection = .sector
-                            }
+                                .onEnded {
+                                    tabSelection = .sector
+                                }
                         )
                 }
             }.navigationSplitViewColumnWidth(800)
@@ -58,6 +59,9 @@ struct ContentView: View {
                 Tab("Planes", systemImage: "airplane.up.right", value: .plane) {
                     PlaneDetailView(game: game, centerCoord: $centerCoord)
                 }.disabled(game.planes.isEmpty)
+                Tab("Nukes", systemImage: "sun.max.trianglebadge.exclamationmark", value: .nuke) {
+                    NukeDetailView(game: game, centerCoord: $centerCoord)
+                }.disabled(game.nukes.isEmpty)
             }
             .onChange(of: tabSelection) { _, newTab in
                 switch newTab {
@@ -72,6 +76,11 @@ struct ContentView: View {
                 case .plane:
                     Task {
                         await game.cmd_pdump()
+                    }
+
+                case .nuke:
+                    Task {
+                        await game.cmd_ndump()
                     }
                 case .sector:
                     break
@@ -92,7 +101,8 @@ struct ContentView: View {
             centerCoord: $centerCoord,
             ships: game.ships,
             landUnits: game.landUnits,
-            planes: game.planes
+            planes: game.planes,
+            nukes: game.nukes
         )
         .navigationSplitViewColumnWidth(min: 300, ideal: 400)
     }

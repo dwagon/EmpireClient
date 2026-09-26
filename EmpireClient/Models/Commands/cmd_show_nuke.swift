@@ -37,9 +37,10 @@ func parse_nuke_str(buildStr: [String], statsStr: [String])
 
     for line in buildStr[2..<buildStr.count] {
         let bits = line.split(separator: " ")
-        let unitName = "\(bits[0]) \(bits[1])"
-        var nuke = NukeType(name: unitName)
-        nuke.abbrev = unitName
+        let abbrev = String(bits[0])
+        var nuke = NukeType(abbrev: abbrev)
+        nuke.name = "\(bits[0]) \(bits[1])"
+        nuke.abbrev = String(bits[0])
         nuke.lcmCost = Int(bits[2])!
         nuke.hcmCost = Int(bits[3])!
         nuke.oilCost = Int(bits[4])!
@@ -49,7 +50,7 @@ func parse_nuke_str(buildStr: [String], statsStr: [String])
         nuke.research = Int(bits[8])!
         // $ is on a column of its own - consistency, not
         nuke.cost = Int(bits[10])!
-        nukeTypes[unitName] = nuke
+        nukeTypes[abbrev] = nuke
     }
 
     //    Printing for tech level '301'
@@ -59,8 +60,8 @@ func parse_nuke_str(buildStr: [String], statsStr: [String])
     //    50kt  fission    3 100   6  300   0 $  25000
     for line in statsStr[2..<statsStr.count] {
         let bits = line.split(separator: " ")
-        let unitName = "\(bits[0]) \(bits[1])"
-        var nuke = nukeTypes[unitName]!
+        let abbrev = String(bits[0])
+        var nuke = nukeTypes[abbrev]!
         nuke.blast = Int(bits[2])!
         nuke.damage = Int(bits[3])!
         nuke.lbs = Int(bits[4])!
@@ -69,7 +70,7 @@ func parse_nuke_str(buildStr: [String], statsStr: [String])
         } else {
             nuke.capabilities = ""
         }
-        nukeTypes[unitName] = nuke
+        nukeTypes[abbrev] = nuke
     }
 
     return nukeTypes

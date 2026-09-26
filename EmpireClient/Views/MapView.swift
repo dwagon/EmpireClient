@@ -22,6 +22,7 @@ enum UnitMapStyle {
     case ship
     case plane
     case land
+    case nuke
 }
 
 enum ExtraMapStyle {
@@ -43,6 +44,7 @@ struct MapView: View {
     let ships: [ShipNum: Ship]
     let landUnits: [LandNum: LandUnit]
     let planes: [PlaneNum: Plane]
+    let nukes: [NukeNum: Nuke]
     @State var distroMap: [MapCoord: GraphicsContext.Shading] = [:]
     @State var realmMap: [RealmNum: GraphicsContext.Shading] = [:]
 
@@ -74,6 +76,7 @@ struct MapView: View {
                 Text("Ship").tag(UnitMapStyle.ship)
                 Text("Plane").tag(UnitMapStyle.plane)
                 Text("Land Unit").tag(UnitMapStyle.land)
+                Text("Nuke").tag(UnitMapStyle.nuke)
             }.pickerStyle(.segmented)
                 .onChange(of: displayUnitMapStyle) {
                     displayResourceMapStyle = .normal
@@ -304,6 +307,13 @@ struct MapView: View {
             {
                 return foundColour
             }
+        case .nuke:
+            for (_, unit) in nukes
+            where unit.coords
+                == screenToMapCoord(cell.coordinates, centerCoord: centerCoord)
+            {
+                return foundColour
+            }
         }
         return nil
     }
@@ -367,6 +377,7 @@ struct MapView: View {
         centerCoord: $centerCoord,
         ships: [:],
         landUnits: [:],
-        planes: [:]
+        planes: [:],
+        nukes: [:]
     )
 }
