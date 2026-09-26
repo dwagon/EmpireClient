@@ -17,6 +17,13 @@ struct NukeTypeReport: View {
     var body: some View {
         VStack {
             Table(nukeTypes, selection: $selectedUnit) {
+                TableColumn("Abbrev") { details in
+                    Text("\(details.abbrev)").buildableHighlight(
+                        details.isBuildable(techlevel: currTech)
+                    )
+                }
+                .width(min: 60, ideal: 100, max: 120)
+
                 TableColumn("Name") { details in
                     Text("\(details.name)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)

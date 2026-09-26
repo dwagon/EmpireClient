@@ -29,3 +29,13 @@ struct NukeType: Identifiable, Codable, Buildable {
         return self.abbrev
     }
 }
+
+struct Nuke: Identifiable {
+    var number: NukeNum = -1
+    var abbrev: String = ""
+    var coords: MapCoord = MapCoord(x: 0, y: 0)
+
+    var id: NukeNum {
+        return self.number
+    }
+}
