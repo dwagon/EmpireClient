@@ -39,8 +39,11 @@ extension Game {
         var lunit: LandUnit
         var exists: Set<LandNum> = []
 
-        for line in input[3..<input.count] {
+        for line in input {
             let bits = line.split(separator: " ")
+            if bits[0] == "id" || bits[0] == "DUMP" || bits.count == 5 {   // Header
+                continue
+            }
             if bits[1].starts(with: "unit") {
                 break
             }
