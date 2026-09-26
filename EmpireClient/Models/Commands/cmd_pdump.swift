@@ -66,7 +66,7 @@ extension Game {
             exists.insert(planeNum)
         }
 
-        // Remove ships that weren't in the dump
+        // Remove planes that weren't in the dump
         for planeNum in planes.keys {
             if !exists.contains(planeNum) {
                 planes.removeValue(forKey: planeNum)
