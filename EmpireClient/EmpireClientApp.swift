@@ -42,6 +42,9 @@ struct EmpireClientApp: App {
                 Button("Nuke Types", systemImage: "exclamationmark.icloud.fill") {
                     openWindow(id: "nuke_types_report")
                 }.disabled(game.planeTypes.isEmpty)
+                Button("Telegrams", systemImage: "envelope.front.rtl") {
+                    openWindow(id: "telegram_report")
+                }.disabled(game.telegrams.isEmpty)
             }
         }
 
@@ -71,6 +74,10 @@ struct EmpireClientApp: App {
 
         Window("Power Report", id: "power_report") {
             PowerReport(game: game)
+        }
+
+        Window("Telegram Report", id: "telegram_report") {
+            TelegramReport(telegrams: game.telegrams)
         }
     }
 }
