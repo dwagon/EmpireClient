@@ -16,20 +16,13 @@ struct LandDetailView: View {
     @State private var showLLandPopup: Bool = false
 
     var body: some View {
-        let minColWidth: CGFloat = 60
-        let idealColWidth: CGFloat = 80
-        let maxColWidth: CGFloat = 100
         HStack {
             VStack {
                 Table(game.landTable, selection: $selectedUnit) {
                     TableColumn("Unit #") { val in
                         Text("\(val.number)")
                     }
-                    .width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    .standardWidth()
                     TableColumn("Type") { val in
                         Text(
                             "\(game.landTypes[val.abbrev]!.name) (\(val.abbrev))"
@@ -37,34 +30,19 @@ struct LandDetailView: View {
                     }
                     TableColumn("Coord") { val in
                         Text("\(val.coords.toString(), default: "unknown")")
-                    }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    }.standardWidth()
 
-                    TableColumn("Mil") { val in Text("\(val.cargo[.mil], default: "?")") }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    TableColumn("Mil") { val in
+                        Text("\(val.cargo[.mil], default: "?")")
+                    }.standardWidth()
 
-                    TableColumn("Army") { val in Text("\(val.army)") }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    TableColumn("Army") { val in Text("\(val.army)") }
+                        .standardWidth()
 
-                    TableColumn("Mob") { val in Text("\(val.mob)") }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
-                    TableColumn("Eff") { val in Text("\(val.eff)%") }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    TableColumn("Mob") { val in Text("\(val.mob)") }
+                        .standardWidth()
+                    TableColumn("Eff") { val in Text("\(val.eff)%") }
+                        .standardWidth()
                     TableColumn("Notes") { val in
                         if val.ship >= 0 {
                             Text("Aboard S\(val.ship)")
@@ -75,11 +53,10 @@ struct LandDetailView: View {
                     centerCoord = game.landUnits[selectedUnit!]!.coords
                 }
                 if let selectedUnit {
-                    if let _ = game.landUnits[selectedUnit] {
+                    if game.landUnits[selectedUnit] != nil {
                         Divider()
                         landDetails
-                    }
-                    else {
+                    } else {
                         Text("Unit doesn't exist")
                     }
                 }
@@ -87,8 +64,16 @@ struct LandDetailView: View {
             landButtonBar
         }
         .navigationSplitViewColumnWidth(min: 400, ideal: 800)
-        .marchUnit(isPresented: $showMarchPopup, game: game, unitId: selectedUnit)
-        .loadLandUnit(isPresented: $showLLandPopup, game: game, unitId: selectedUnit)
+        .marchUnit(
+            isPresented: $showMarchPopup,
+            game: game,
+            unitId: selectedUnit
+        )
+        .loadLandUnit(
+            isPresented: $showLLandPopup,
+            game: game,
+            unitId: selectedUnit
+        )
     }
 
     var landButtonBar: some View {
@@ -132,14 +117,18 @@ struct LandDetailView: View {
                 Text("Spy: \(unit.spy)")
             }
             HStack {
-                Text("Defense: \(unit.defense, format: .number.precision(.fractionLength(1)))")
+                Text(
+                    "Defense: \(unit.defense, format: .number.precision(.fractionLength(1)))"
+                )
                 Text("Vulnerability: \(unit.vulnerability)")
                 Text("Fortification: \(unit.fortification)")
                 Text("Retreat: \(unit.retreat)%")
                 Text("Reaction Radius: \(unit.react)")
             }
             HStack {
-                Text("Attack: \(unit.attack, format: .number.precision(.fractionLength(1)))")
+                Text(
+                    "Attack: \(unit.attack, format: .number.precision(.fractionLength(1)))"
+                )
                 Text("Ammo Use: \(unit.ammoUse)")
                 Text("Firing Range: \(unit.frg)")
                 Text("Accuracy: \(unit.accuracy)")
