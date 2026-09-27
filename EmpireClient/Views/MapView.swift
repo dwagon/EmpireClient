@@ -32,10 +32,24 @@ enum ExtraMapStyle {
     case realm
 }
 
+// Distinct colours - See https://mokole.com/palette.html
 let colourChoices: [GraphicsContext.Shading] = [
-    .color(.brown), .color(.pink), .color(.gray), .color(.orange),
-    .color(.green), .color(.yellow), .color(.teal), .color(.cyan),
-    .color(.indigo), .color(.mint),
+    .color(Color(.dimGrey)),
+    .color(Color(.seaGreen)),
+    .color(Color(.darkRed)),
+    .color(Color(.olive)),
+    .color(Color(.orangeRed)),
+    .color(Color(.orange)),
+    .color(Color(.lawnGreen)),
+    .color(Color(.mediumOrchid)),
+    .color(Color(.mediumSpringGreen)),
+    .color(Color(.aqua)),
+    .color(Color(.salmon)),
+    .color(Color(.laserLemon)),
+    .color(Color(.plum)),
+    .color(Color(.deepPink)),
+    .color(Color(.lightSkyBlue)),
+    .color(Color(.bisque)),
 ]
 
 struct MapView: View {
