@@ -34,8 +34,8 @@ enum ExtraMapStyle {
 
 let colourChoices: [GraphicsContext.Shading] = [
     .color(.brown), .color(.pink), .color(.gray), .color(.orange),
-    .color(.green),
-    .color(.yellow), .color(.teal),
+    .color(.green), .color(.yellow), .color(.teal), .color(.cyan),
+    .color(.indigo), .color(.mint),
 ]
 
 struct MapView: View {
@@ -153,7 +153,9 @@ struct MapView: View {
             if !realmNums.isEmpty {
                 let realmNum = realmNums[0]
                 if let realm = game.realms[realmNum] {
-                    if mapCoord == MapCoord(x: realm.minX, y: realm.minY) || mapCoord == MapCoord(x: realm.maxX, y: realm.maxY) {
+                    if mapCoord == MapCoord(x: realm.minX, y: realm.minY)
+                        || mapCoord == MapCoord(x: realm.maxX, y: realm.maxY)
+                    {
                         return "\(realmNum)"
                     }
                 }
@@ -217,7 +219,7 @@ struct MapView: View {
         )
         let realms = game.inWhichRealm(coord: mapCoord)
         if !realms.isEmpty {
-            if realmMap.contains(where: { $0.key == realms[0]} ) {
+            if realmMap.contains(where: { $0.key == realms[0] }) {
                 return realmMap[realms[0]]!
             }
         }

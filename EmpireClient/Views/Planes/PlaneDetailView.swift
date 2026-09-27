@@ -13,20 +13,13 @@ struct PlaneDetailView: View {
     @State private var selectedPlane: Plane.ID?
 
     var body: some View {
-        let minColWidth: CGFloat = 60
-        let idealColWidth: CGFloat = 80
-        let maxColWidth: CGFloat = 100
         HStack {
             VStack {
                 Table(game.planeTable, selection: $selectedPlane) {
                     TableColumn("Plane #") { val in
                         Text("\(val.number)")
                     }
-                    .width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    .standardWidth()
                     TableColumn("Type") { val in
                         Text(
                             "\(game.planeTypes[val.abbrev]!.name) (\(val.abbrev))"
@@ -34,28 +27,12 @@ struct PlaneDetailView: View {
                     }
                     TableColumn("Coord") { val in
                         Text("\(val.coords.toString(), default: "unknown")")
-                    }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    }.standardWidth()
 
-                    TableColumn("Wing") { val in Text("\(val.wing)") }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    TableColumn("Wing") { val in Text("\(val.wing)") }.standardWidth()
 
-                    TableColumn("Mob") { val in Text("\(val.mob)") }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
-                    TableColumn("Eff") { val in Text("\(val.eff)%") }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    TableColumn("Mob") { val in Text("\(val.mob)") }.standardWidth()
+                    TableColumn("Eff") { val in Text("\(val.eff)%") }.standardWidth()
                 }
                 .onChange(of: selectedPlane) {
                     centerCoord = game.planes[selectedPlane!]!.coords

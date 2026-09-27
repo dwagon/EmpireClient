@@ -13,20 +13,13 @@ struct NukeDetailView: View {
     @State private var selectedNuke: Nuke.ID?
 
     var body: some View {
-        let minColWidth: CGFloat = 60
-        let idealColWidth: CGFloat = 80
-        let maxColWidth: CGFloat = 100
         HStack {
             VStack {
                 Table(game.nukeTable, selection: $selectedNuke) {
                     TableColumn("Nuke #") { val in
                         Text("\(val.number)")
                     }
-                    .width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    .standardWidth()
                     TableColumn("Type") { val in
                         Text(
                             "\(game.nukeTypes[val.abbrev]!.name) (\(val.abbrev))"
@@ -34,11 +27,7 @@ struct NukeDetailView: View {
                     }
                     TableColumn("Coord") { val in
                         Text("\(val.coords.toString(), default: "unknown")")
-                    }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    }.standardWidth()
 
                 }
                 .onChange(of: selectedNuke) {

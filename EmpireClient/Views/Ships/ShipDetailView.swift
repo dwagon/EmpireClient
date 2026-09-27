@@ -20,18 +20,11 @@ struct ShipDetailView: View {
     @State private var showFleetAddPopup: Bool = false
 
     var body: some View {
-        let minColWidth: CGFloat = 60
-        let idealColWidth: CGFloat = 80
-        let maxColWidth: CGFloat = 100
         HStack {
             VStack {
                 Table(game.shipTable, selection: $selectedShip) {
                     TableColumn("Ship #") { val in Text("\(val.number)") }
-                        .width(
-                            min: minColWidth,
-                            ideal: idealColWidth,
-                            max: maxColWidth
-                        )
+                        .standardWidth()
 
                     TableColumn("Name") { val in
                         Text("\(val.name)")
@@ -45,31 +38,17 @@ struct ShipDetailView: View {
 
                     TableColumn("Coord") { val in
                         Text("\(val.coords.toString(), default: "unknown")")
-                    }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    }.standardWidth()
 
                     TableColumn("Fleet") { val in
                         Text("\(val.fleet)")
-                    }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    }.standardWidth()
 
-                    TableColumn("Mob") { val in Text("\(val.mob)") }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    TableColumn("Mob") { val in Text("\(val.mob)") }
+                        .standardWidth()
 
-                    TableColumn("Eff") { val in Text("\(val.eff)%") }.width(
-                        min: minColWidth,
-                        ideal: idealColWidth,
-                        max: maxColWidth
-                    )
+                    TableColumn("Eff") { val in Text("\(val.eff)%") }
+                        .standardWidth()
                 }
                 .onChange(of: selectedShip) {
                     centerCoord = game.ships[selectedShip!]!.coords
@@ -186,8 +165,8 @@ struct ShipDetailView: View {
                 HStack {
                     Text(
                         ship.landUnits == 0
-                        ? ""
-                        : "Land Units: \(ship.landUnits) / \(shipType.landUnits)"
+                            ? ""
+                            : "Land Units: \(ship.landUnits) / \(shipType.landUnits)"
                     )
                     ForEach(game.landUnitsAboard(ship)) { unit in
                         Text("Unit \(unit.number): \(unit.abbrev)")
