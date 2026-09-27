@@ -151,7 +151,7 @@ struct ExploreSheet: ViewModifier {
                 }
                 .onAppear {
                     number = 1
-                    item = .civ
+                    item = game[centerCoord]!.cargo[.mil] != 0 ? .mil : .civ
                 }
             }
     }
