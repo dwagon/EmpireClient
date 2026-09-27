@@ -39,7 +39,7 @@ struct LandType: Identifiable, Codable, Buildable {
     }
 }
 
-struct LandUnit: Identifiable, Codable, Hashable {
+struct LandUnit: Identifiable, Codable, Hashable, CargoCarrying {
     var number: LandNum = -1
     var abbrev: String = ""
     var coords: MapCoord = MapCoord(x: 0, y: 0)

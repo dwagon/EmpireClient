@@ -34,7 +34,7 @@ struct ShipType: Identifiable, Codable, Buildable {
     }
 }
 
-struct Ship: Identifiable, Codable {
+struct Ship: Identifiable, Codable, CargoCarrying {
     var number: ShipNum = -1
     var abbrev: String = ""
     var coords: MapCoord = MapCoord(x: 0, y: 0)
@@ -57,5 +57,7 @@ struct Ship: Identifiable, Codable {
     var id: ShipNum {
         return self.number
     }
+
+
 
 }
