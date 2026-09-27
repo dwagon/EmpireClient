@@ -44,8 +44,11 @@ struct LandDetailView: View {
                     TableColumn("Eff") { val in Text("\(val.eff)%") }
                         .standardWidth()
                     TableColumn("Notes") { val in
-                        if val.ship >= 0 {
-                            Text("Aboard S\(val.ship)")
+                        HStack {
+                            if val.ship >= 0 {
+                                Text("Aboard S\(val.ship)")
+                            }
+                            Text("\(val.cargoString())")
                         }
                     }
                 }

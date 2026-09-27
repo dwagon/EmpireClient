@@ -33,6 +33,9 @@ struct PlaneDetailView: View {
 
                     TableColumn("Mob") { val in Text("\(val.mob)") }.standardWidth()
                     TableColumn("Eff") { val in Text("\(val.eff)%") }.standardWidth()
+                    TableColumn("Notes") { val in
+                        Text("")
+                    }
                 }
                 .onChange(of: selectedPlane) {
                     centerCoord = game.planes[selectedPlane!]!.coords

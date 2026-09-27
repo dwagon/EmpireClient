@@ -49,6 +49,10 @@ struct ShipDetailView: View {
 
                     TableColumn("Eff") { val in Text("\(val.eff)%") }
                         .standardWidth()
+
+                    TableColumn("Notes") { val in
+                        Text("\(val.cargoString())")
+                    }
                 }
                 .onChange(of: selectedShip) {
                     centerCoord = game.ships[selectedShip!]!.coords

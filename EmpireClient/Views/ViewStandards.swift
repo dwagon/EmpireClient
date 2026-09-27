@@ -8,9 +8,9 @@
 import SwiftUI
 
 private class Standard {
-    static let minColWidth: CGFloat = 40
-    static let idealColWidth: CGFloat = 50
-    static let maxColWidth: CGFloat = 80
+    static let minColWidth: CGFloat = 20
+    static let idealColWidth: CGFloat = 30
+    static let maxColWidth: CGFloat = 50
 }
 
 extension TableColumn {
