@@ -11,9 +11,24 @@ extension Game {
     func cmd_read(delete: String = "no") async {
         let result = await runCmd("read \(delete)", suppressLog: true)
         if !result.isEmpty {
-            if let tel = Telegram(result) {
-                telegrams.append(tel)
+            parse_cmd_read(result)
+        }
+    }
+
+    func parse_cmd_read(_ input: [String]) {
+        let regex = /^> (.*) dated (.*)/
+        var batch: [String] = []
+        for line in input {
+            if line.firstMatch(of: regex) != nil && !batch.isEmpty && batch != [""] {
+                if let tel = Telegram(batch) {
+                    telegrams.append(tel)
+                }
+                batch = []
             }
+            batch.append(line)
+        }
+        if let tel = Telegram(batch) {
+            telegrams.append(tel)
         }
     }
 }
