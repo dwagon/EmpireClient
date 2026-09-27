@@ -19,6 +19,7 @@ class Game: Decodable {
     var powerReport: [String] = []
     var logs: [Log] = []
     var realms: [RealmNum:Realm] = [:]
+    var telegrams: [Telegram] = []
 
     var shipTypes: [String: ShipType] = [:]
     var ships: [ShipNum: Ship] = [:]
@@ -141,6 +142,7 @@ class Game: Decodable {
         await cmd_ldump()
         await cmd_pdump()
         await cmd_ndump()
+        await cmd_read()
     }
 
     enum CodingKeys: String, CodingKey {
