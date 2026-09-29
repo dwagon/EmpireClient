@@ -9,25 +9,59 @@ import SwiftUI
 
 struct LoadShipView: View {
     var game: Game
-    var shipNum: ShipNum
-    @Binding var item: Item
-    @Binding var amount: Int
-    @Binding var selectLand: LandUnit.ID?
-    var itemList: [Item]
-    var onButton: () -> Void
+    var selectedShip: Ship.ID?
+    @Binding var viewMode: ShipViewMode
 
-    @Environment(\.dismiss) var dismiss
+    @State var item: Item = .none  // Item to load
+    @State var amount: Int = 0  // Amount of {item} to load
+    @State var selectLand: LandUnit.ID?  // Land unit selected to load
+
+    private var itemList: [Item] {
+        guard let location = shipLocation,
+            let sector = game.gameMap[location]
+        else {
+            return [.none]
+        }
+        return [.none] + sector.cargo.filter { $0.value > 0 }.map(\.key)
+    }
+
+    private var itemAvailable: Int? {
+        guard item != .none,
+            let location = shipLocation,
+            let sector = game.gameMap[location]
+        else {
+            return nil
+        }
+        return sector.cargo[item]
+    }
+
+    private var landUnits: [LandUnit] {
+        guard let location = shipLocation
+        else {
+            return []
+        }
+        return game.landUnitsAt(location)
+    }
+
+    private var shipLocation: MapCoord? {
+        guard let selectedShip,
+              let location = game.ships[selectedShip]?.coords
+        else {
+            return nil
+        }
+
+        return location
+    }
 
     var body: some View {
-        let shipLocation = game.ships[shipNum]?.coords
-        let available = game.gameMap[shipLocation!]!.cargo[item]
-        let landUnits = game.landUnitsAt(shipLocation)
-
         VStack {
-            Label("Load Ship \(shipNum)", systemImage: "square.and.arrow.down")
-                .font(
-                    .title
-                )
+            Label(
+                "Load Ship \(selectedShip, default: "")",
+                systemImage: "square.and.arrow.down"
+            )
+            .font(
+                .title
+            )
             HStack {
                 ItemPicker(label: "Load", itemList: itemList, item: $item)
                     .padding()
@@ -46,12 +80,9 @@ struct LoadShipView: View {
             }
             if !landUnits.isEmpty {
                 Divider()
-                //                List(landUnits, selection: $selectLand) { unit in
-                //                    Text("Load Unit \(unit.number): \(unit.abbrev)").padding()
-                //                }
                 Picker("Load Land Unit", selection: $selectLand) {
+                    Text("Nothing").tag(LandUnit.ID?.none)
                     ForEach(landUnits) { unit in
-                        Text("Nothing").tag(LandUnit.ID?(nil))
                         Text("Unit \(unit.number): \(unit.abbrev)").tag(unit.id)
                     }
                 }.pickerStyle(.radioGroup)
@@ -60,131 +91,61 @@ struct LoadShipView: View {
             Text(
                 item == .none
                     ? ""
-                    : "Load \(amount) \(item.displayName.capitalized) (\(available, default: "None") avail) onto Ship \(shipNum)"
+                    : "Load \(amount) \(item.displayName.capitalized) (\(itemAvailable, default: "None") avail) onto Ship \(selectedShip, default: "")"
             )
             Text(
                 selectLand == nil
                     ? "" : "Load Land Unit \(selectLand, default: "unknown")"
             )
             HStack {
-                CancelButton()
-                OkButton("Load", disabled: item == .none && selectLand == nil) {
-                    onButton()
+                CancelButton("Cancel") {
+                    viewMode = .overview
                 }
-
-            }
-        }
-    }
-}
-
-struct LoadShipSheet: ViewModifier {
-    @Binding var isPresented: Bool
-    var game: Game
-    var shipId: Ship.ID?
-    @State private var item: Item = .none
-    @State private var amount: Int = 1
-    @State private var selectLand: LandUnit.ID?
-    private var itemList: [Item]
-
-    init(isPresented: Binding<Bool>, game: Game, shipId: Ship.ID?) {
-        self._isPresented = isPresented
-        self.game = game
-        self.shipId = shipId
-        self.itemList = []
-
-        if let shipId {
-            if let shipLocation = game.ships[shipId]?.coords {
-                if let sector = game.gameMap[shipLocation] {
-                    let available = sector.cargo.filter({
-                        $0.value > 0
-                    })
-                    var items = Array(available.keys)
-                    items.insert(.none, at: 0)
-                    self.itemList = items
+                OkButton("Load", disabled: ((item == .none && amount <= 0) && selectLand == nil)) {
+                    Task {
+                        await loadShip(
+                            selectedShip: selectedShip,
+                            amount: amount,
+                            selectLand: selectLand,
+                            item: item
+                        )
+                    }
+                    viewMode = .overview
                 }
             }
         }
     }
 
-    func body(content: Content) -> some View {
-        content
-            .sheet(
-                isPresented: $isPresented
-            ) {
-                if let shipId, let ship = game.ships[shipId] {
-                    LoadShipView(
-                        game: game,
-                        shipNum: ship.number,
-                        item: $item,
-                        amount: $amount,
-                        selectLand: $selectLand,
-                        itemList: itemList,
-                    ) {
-                        if amount > 0 {
-                            Task {
-                                await game.cmd_load(
-                                    commodity: item,
-                                    ship: ship,
-                                    amount: amount
-                                )
-                                await game.cmd_sdump(ship)
-                                await game.cmd_dump(ship.coords)
-                            }
-                        }
-                        if let selectLand {
-                            if let unit = game.landUnits[selectLand] {
-                                Task {
-                                    await game.cmd_load(
-                                        landUnit: unit,
-                                        ship: ship
-                                    )
-                                    await game.cmd_ldump(unit)
-                                    await game.cmd_sdump(ship)
-                                }
-                            }
-                        }
-                    }
-                    .onAppear {
-                        amount = 0
-                        item = .none
-                        selectLand = nil
-                    }
-                    .task {
-                        await game.cmd_ldump()  // So we know about land units at the same location
-                    }
-                }
-            }
-    }
-}
-
-extension View {
     func loadShip(
-        isPresented: Binding<Bool>,
-        game: Game,
-        shipId: Ship.ID?
-    ) -> some View {
-        modifier(
-            LoadShipSheet(
-                isPresented: isPresented,
-                game: game,
-                shipId: shipId
-            )
-        )
+        selectedShip: Ship.ID?,
+        amount: Int,
+        selectLand: LandUnit.ID?,
+        item: Item
+    ) async {
+        if let selectedShip, let ship = game.ships[selectedShip] {
+            if amount > 0 {
+                Task {
+                    await game.cmd_load(
+                        commodity: item,
+                        ship: ship,
+                        amount: amount
+                    )
+                    await game.cmd_sdump(ship)
+                    await game.cmd_dump(ship.coords)
+                }
+            }
+            if let selectLand {
+                if let unit = game.landUnits[selectLand] {
+                    Task {
+                        await game.cmd_load(
+                            landUnit: unit,
+                            ship: ship
+                        )
+                        await game.cmd_ldump(unit)
+                        await game.cmd_sdump(ship)
+                    }
+                }
+            }
+        }
     }
 }
-
-//#Preview {
-//    @Previewable @State var game: Game = Game()
-//    @Previewable @State var item: Item = .none
-//    @Previewable @State var amount: Int = 1
-//
-//    LoadShipView(
-//        game: game,
-//        shipNum: "2",
-//        item: $item,
-//        amount: $amount,
-//        itemList: [.civ, .mil]
-//    ) {
-//        let _ = print("loaded")
-//    }
-//}

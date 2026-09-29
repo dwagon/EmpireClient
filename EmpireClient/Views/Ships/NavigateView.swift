@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NavigateView: View {
     var game: Game
-    @Binding var selectedShip: Ship.ID?
+    var selectedShip: Ship.ID?
     @Binding var destination: MapCoord
     @Binding var viewMode: ShipViewMode
     @State var origLocation: MapCoord = MapCoord(x: 0, y: 0)
@@ -24,7 +24,7 @@ struct NavigateView: View {
                 .title
             )
             if selectedShip != nil {
-                ShipDetailView(game: game, selectedShip: $selectedShip)
+                ShipDetailView(game: game, selectedShip: selectedShip)
                 Text(
                     "Navigate to Destination: \(destination.toString()) from \(origLocation.toString())"
                 )

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ShipDetailView: View {
     var game: Game
-    @Binding var selectedShip: Ship.ID?
+    var selectedShip: Ship.ID?
 
     var body: some View {
         let shipNum = selectedShip!

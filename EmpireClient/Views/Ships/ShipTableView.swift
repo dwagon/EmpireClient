@@ -54,7 +54,7 @@ struct ShipTableView: View {
                 if selectedShip != nil {
                     if let shipNum = selectedShip, game.ships[shipNum] != nil {
                         Divider()
-                        ShipDetailView(game: game, selectedShip: $selectedShip)
+                        ShipDetailView(game: game, selectedShip: selectedShip)
                     } else {
                         Text("Ship doesn't exist")
                     }

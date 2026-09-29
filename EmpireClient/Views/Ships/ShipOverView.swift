@@ -10,6 +10,7 @@ import SwiftUI
 enum ShipViewMode {
     case overview
     case navigate
+    case load
 }
 
 struct ShipOverView: View {
@@ -31,32 +32,32 @@ struct ShipOverView: View {
             case .overview:
                 ShipTableView(game: game, centerCoord: $centerCoord, selectedShip: $selectedShip)
             case .navigate:
-                NavigateView(game: game, selectedShip: $selectedShip, destination: $centerCoord, viewMode: $viewMode)
+                NavigateView(game: game, selectedShip: selectedShip, destination: $centerCoord, viewMode: $viewMode)
+            case .load:
+                LoadShipView(game: game, selectedShip: selectedShip, viewMode: $viewMode)
             }
             Spacer()
             ShipButtonBar(game: game, selectedShip: $selectedShip, viewMode: $viewMode)
         }
-        .loadShip(isPresented: $showLoadPopup, game: game, shipId: selectedShip)
-        .unloadShip(
-            isPresented: $showUnloadPopup,
-            game: game,
-            shipId: selectedShip
-        )
-        .assaultShip(
-            isPresented: $showAssaultPopup,
-            game: game,
-            shipId: selectedShip
-        )
-        .nameShip(
-            isPresented: $showNamePopup,
-            game: game,
-            shipId: selectedShip
-        )
-        .fleetAdd(
-            isPresented: $showFleetAddPopup,
-            game: game,
-            shipId: selectedShip
-        )
+//        .unloadShip(
+//            isPresented: $showUnloadPopup,
+//            game: game,
+//            shipId: selectedShip
+//        )
+//        .assaultShip(
+//            isPresented: $showAssaultPopup,
+//            game: game,
+//            shipId: selectedShip
+//        )
+//        .nameShip(
+//            isPresented: $showNamePopup,
+//            game: game,
+//            shipId: selectedShip
+//        )
+//        .fleetAdd(
+//            isPresented: $showFleetAddPopup,
+//            game: game,
+//            shipId: selectedShip
+//        )
     }
-
 }

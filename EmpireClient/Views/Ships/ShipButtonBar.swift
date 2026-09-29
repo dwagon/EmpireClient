@@ -18,11 +18,11 @@ struct ShipButtonBar: View {
 
                 if selectedShip != nil {
                     loadButton
-                    unloadButton
+//                    unloadButton
                     navigateButton
-                    assaultButton
-                    nameButton
-                    fleetAddButton
+//                    assaultButton
+//                    nameButton
+//                    fleetAddButton
                 }
             }
         }
@@ -39,19 +39,19 @@ struct ShipButtonBar: View {
 
     var loadButton: some View {
         Button("Load") {
-            showLoadPopup = true
+            viewMode = .load
         }
     }
 
     var unloadButton: some View {
         Button("Unload") {
-            showUnloadPopup = true
+//            showUnloadPopup = true
         }
     }
 
     var assaultButton: some View {
         Button("Assault") {
-            showAssaultPopup = true
+//            showAssaultPopup = true
         }
     }
 
@@ -63,13 +63,13 @@ struct ShipButtonBar: View {
 
     var nameButton: some View {
         Button("Name") {
-            showNamePopup = true
+//            showNamePopup = true
         }
     }
 
     var fleetAddButton: some View {
         Button("Add to Fleet") {
-            showFleetAddPopup = true
+//            showFleetAddPopup = true
         }
     }
 }
