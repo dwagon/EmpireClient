@@ -9,22 +9,40 @@ import SwiftUI
 
 struct NameShipView: View {
     var game: Game
-    var ship: Ship
-    @Binding var name: String
-    @FocusState private var focused: Bool
-    var onButton: () -> Void
+    var selectedShip: Ship.ID?
+    @Binding var viewMode: ShipViewMode
+    @State var name: String = ""
 
-    @Environment(\.dismiss) var dismiss
+    init(
+        game: Game,
+        selectedShip: Ship.ID?,
+        viewMode: Binding<ShipViewMode>
+    ) {
+        self.game = game
+        self.selectedShip = selectedShip
+        self._viewMode = viewMode
+
+        let existingName: String
+        if let selectedShip,
+           let ship = game.ships[selectedShip] {
+            existingName = ship.name
+        } else {
+            existingName = ""
+        }
+
+        self._name = State(initialValue: existingName)
+    }
 
     var body: some View {
         VStack {
             Label(
-                "Name Ship \(ship.number)",
+                ship.map {"Name Ship \($0.number)"} ?? "Error",
                 systemImage: "person.text.rectangle.fill"
             )
             .font(
                 .title
             )
+            ShipDetailView(game: game, selectedShip: selectedShip)
             HStack {
                 VStack(alignment: .leading) {
                     HStack {
@@ -39,61 +57,30 @@ struct NameShipView: View {
                 }
             }
             HStack {
-                CancelButton() {
-                    dismiss()
+                CancelButton {
+                    viewMode = .overview
                 }
                 OkButton("Name", disabled: name.isEmpty) {
-                    onButton()
-                    dismiss()
+                    Task {
+                        await nameShip()
+                        viewMode = .overview
+                    }
                 }
-
             }
         }.padding()
     }
-}
 
-struct NameShipSheet: ViewModifier {
-    @Binding var isPresented: Bool
-    @State var name: String = ""
-    var game: Game
-    var shipId: Ship.ID?
-
-    func body(content: Content) -> some View {
-        content
-            .sheet(
-                isPresented: $isPresented
-            ) {
-                if let shipId, let ship = game.ships[shipId] {
-                    NameShipView(
-                        game: game,
-                        ship: ship,
-                        name: $name
-                    ) {
-                        Task {
-                            await game.cmd_name(ship: ship, name: name)
-                            await game.cmd_sdump(ship)
-                        }
-                    }
-                    .onAppear {
-                        name = ship.name
-                    }
-                }
-            }
+    var ship: Ship? {
+        guard let selectedShip, let ship = game.ships[selectedShip] else {
+            return nil
+        }
+        return ship
     }
-}
 
-extension View {
-    func nameShip(
-        isPresented: Binding<Bool>,
-        game: Game,
-        shipId: Ship.ID?
-    ) -> some View {
-        modifier(
-            NameShipSheet(
-                isPresented: isPresented,
-                game: game,
-                shipId: shipId
-            )
-        )
+    func nameShip() async {
+        guard let ship else { return }
+        await game.cmd_name(ship: ship, name: name)
+        await game.cmd_sdump(ship)
     }
+
 }

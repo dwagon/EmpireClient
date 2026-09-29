@@ -21,7 +21,7 @@ struct ShipButtonBar: View {
                     unloadButton
                     navigateButton
 //                    assaultButton
-//                    nameButton
+                    nameButton
 //                    fleetAddButton
                 }
             }
@@ -63,7 +63,7 @@ struct ShipButtonBar: View {
 
     var nameButton: some View {
         Button("Name") {
-//            showNamePopup = true
+            viewMode = .name
         }
     }
 
