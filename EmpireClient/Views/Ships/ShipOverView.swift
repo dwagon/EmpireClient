@@ -11,6 +11,7 @@ enum ShipViewMode {
     case overview
     case navigate
     case load
+    case unload
 }
 
 struct ShipOverView: View {
@@ -35,15 +36,13 @@ struct ShipOverView: View {
                 NavigateView(game: game, selectedShip: selectedShip, destination: $centerCoord, viewMode: $viewMode)
             case .load:
                 LoadShipView(game: game, selectedShip: selectedShip, viewMode: $viewMode)
+            case .unload:
+                UnloadShipView(game: game, selectedShip: selectedShip, viewMode: $viewMode)
             }
             Spacer()
             ShipButtonBar(game: game, selectedShip: $selectedShip, viewMode: $viewMode)
         }
-//        .unloadShip(
-//            isPresented: $showUnloadPopup,
-//            game: game,
-//            shipId: selectedShip
-//        )
+
 //        .assaultShip(
 //            isPresented: $showAssaultPopup,
 //            game: game,

@@ -62,6 +62,7 @@ struct LoadShipView: View {
             .font(
                 .title
             )
+            ShipDetailView(game: game, selectedShip: selectedShip)
             HStack {
                 ItemPicker(label: "Load", itemList: itemList, item: $item)
                     .padding()

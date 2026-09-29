@@ -18,7 +18,7 @@ struct ShipButtonBar: View {
 
                 if selectedShip != nil {
                     loadButton
-//                    unloadButton
+                    unloadButton
                     navigateButton
 //                    assaultButton
 //                    nameButton
@@ -45,7 +45,7 @@ struct ShipButtonBar: View {
 
     var unloadButton: some View {
         Button("Unload") {
-//            showUnloadPopup = true
+            viewMode = .unload
         }
     }
 
