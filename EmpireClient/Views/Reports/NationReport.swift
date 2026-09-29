@@ -17,7 +17,9 @@ struct NationReport: View {
                 .font(
                     .system(.body, design: .monospaced)
                 ).border(.blue)
-            OkButton()
+            OkButton() {
+                dismiss()
+            }
         }
     }
 }

@@ -62,7 +62,9 @@ struct LandTypeReport: View {
                 }
             }
             HStack {
-                OkButton()
+                OkButton() {
+                    dismiss()
+                }
             }
         }
     }

@@ -70,7 +70,9 @@ struct NukeTypeReport: View {
                         .border(.blue).padding()
                 }
             }
-            OkButton()
+            OkButton() {
+                dismiss()
+            }
         }
     }
 

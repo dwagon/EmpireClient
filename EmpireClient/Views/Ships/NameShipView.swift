@@ -39,9 +39,12 @@ struct NameShipView: View {
                 }
             }
             HStack {
-                CancelButton()
+                CancelButton() {
+                    dismiss()
+                }
                 OkButton("Name", disabled: name.isEmpty) {
                     onButton()
+                    dismiss()
                 }
 
             }

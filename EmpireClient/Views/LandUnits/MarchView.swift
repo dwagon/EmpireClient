@@ -46,7 +46,9 @@ struct MarchView: View {
                 )
             }.padding()
             HStack {
-                OkButton("Finish")
+                OkButton("Finish") {
+                    dismiss()
+                }
             }
         }.padding()
     }

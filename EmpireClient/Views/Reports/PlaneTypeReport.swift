@@ -56,7 +56,9 @@ struct PlaneTypeReport: View {
                         .border(.blue).padding()
                 }
             }
-            OkButton()
+            OkButton() {
+                dismiss()
+            }
         }
     }
 

@@ -29,7 +29,9 @@ struct TelegramReport: View {
                 }
             }
         }
-        OkButton()
+        OkButton() {
+            dismiss()
+        }
     }
 }
 

@@ -65,9 +65,12 @@ struct DistributeView: View {
             }
         }.padding()
         HStack {
-            CancelButton()
+            CancelButton() {
+                dismiss()
+            }
             OkButton("Distribute") {
                 onButton()
+                dismiss()
             }
         }
     }
