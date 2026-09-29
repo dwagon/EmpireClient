@@ -22,7 +22,7 @@ struct ShipButtonBar: View {
                     navigateButton
 //                    assaultButton
                     nameButton
-//                    fleetAddButton
+                    fleetAddButton
                 }
             }
         }
@@ -69,7 +69,7 @@ struct ShipButtonBar: View {
 
     var fleetAddButton: some View {
         Button("Add to Fleet") {
-//            showFleetAddPopup = true
+            viewMode = .fleetAdd
         }
     }
 }

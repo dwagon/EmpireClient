@@ -12,6 +12,7 @@ struct NameShipView: View {
     var selectedShip: Ship.ID?
     @Binding var viewMode: ShipViewMode
     @State var name: String = ""
+    @FocusState private var focused: Bool
 
     init(
         game: Game,
@@ -49,7 +50,7 @@ struct NameShipView: View {
                         TextField(
                             "Name",
                             text: $name
-                        )
+                        ).focused($focused)
                         .disableAutocorrection(true)
                         .textFieldStyle(.roundedBorder)
                         .frame(idealWidth: 100, maxWidth: 150)
@@ -68,6 +69,9 @@ struct NameShipView: View {
                 }
             }
         }.padding()
+            .onAppear {
+                focused = true
+            }
     }
 
     var ship: Ship? {
@@ -82,5 +86,4 @@ struct NameShipView: View {
         await game.cmd_name(ship: ship, name: name)
         await game.cmd_sdump(ship)
     }
-
 }

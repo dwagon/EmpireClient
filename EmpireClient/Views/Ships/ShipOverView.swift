@@ -13,6 +13,7 @@ enum ShipViewMode {
     case load
     case unload
     case name
+    case fleetAdd
 }
 
 struct ShipOverView: View {
@@ -21,12 +22,6 @@ struct ShipOverView: View {
     @State var viewMode: ShipViewMode = .overview
     @State private var selectedShip: Ship.ID?
 
-    @State private var showLoadPopup: Bool = false
-    @State private var showUnloadPopup: Bool = false
-    @State private var showNavigatePopup: Bool = false
-    @State private var showAssaultPopup: Bool = false
-    @State private var showNamePopup: Bool = false
-    @State private var showFleetAddPopup: Bool = false
 
     var body: some View {
         HStack {
@@ -41,6 +36,8 @@ struct ShipOverView: View {
                 UnloadShipView(game: game, selectedShip: selectedShip, viewMode: $viewMode)
             case .name:
                 NameShipView(game: game, selectedShip: selectedShip, viewMode: $viewMode)
+            case .fleetAdd:
+                FleetAddView(game: game, selectedShip: selectedShip, viewMode: $viewMode)
             }
             Spacer()
             ShipButtonBar(game: game, selectedShip: $selectedShip, viewMode: $viewMode)
@@ -51,10 +48,6 @@ struct ShipOverView: View {
 //            game: game,
 //            shipId: selectedShip
 //        )
-//        .fleetAdd(
-//            isPresented: $showFleetAddPopup,
-//            game: game,
-//            shipId: selectedShip
-//        )
+
     }
 }
