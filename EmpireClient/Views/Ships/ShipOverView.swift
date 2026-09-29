@@ -1,0 +1,62 @@
+//
+//  ShipOverView.swift
+//  EmpireClient
+//
+//  Created by Dougal Scott on 29/9/2026.
+//
+
+import SwiftUI
+
+enum ShipViewMode {
+    case overview
+    case navigate
+}
+
+struct ShipOverView: View {
+    var game: Game
+    @Binding var centerCoord: MapCoord
+    @State var viewMode: ShipViewMode = .overview
+    @State private var selectedShip: Ship.ID?
+
+    @State private var showLoadPopup: Bool = false
+    @State private var showUnloadPopup: Bool = false
+    @State private var showNavigatePopup: Bool = false
+    @State private var showAssaultPopup: Bool = false
+    @State private var showNamePopup: Bool = false
+    @State private var showFleetAddPopup: Bool = false
+
+    var body: some View {
+        HStack {
+            switch viewMode {
+            case .overview:
+                ShipTableView(game: game, centerCoord: $centerCoord, selectedShip: $selectedShip)
+            case .navigate:
+                NavigateView(game: game, selectedShip: $selectedShip, destination: $centerCoord, viewMode: $viewMode)
+            }
+            Spacer()
+            ShipButtonBar(game: game, selectedShip: $selectedShip, viewMode: $viewMode)
+        }
+        .loadShip(isPresented: $showLoadPopup, game: game, shipId: selectedShip)
+        .unloadShip(
+            isPresented: $showUnloadPopup,
+            game: game,
+            shipId: selectedShip
+        )
+        .assaultShip(
+            isPresented: $showAssaultPopup,
+            game: game,
+            shipId: selectedShip
+        )
+        .nameShip(
+            isPresented: $showNamePopup,
+            game: game,
+            shipId: selectedShip
+        )
+        .fleetAdd(
+            isPresented: $showFleetAddPopup,
+            game: game,
+            shipId: selectedShip
+        )
+    }
+
+}
