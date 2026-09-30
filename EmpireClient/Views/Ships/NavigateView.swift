@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NavigateView: View {
     var game: Game
-    var selectedShip: Ship.ID?
+    var ship: Ship
     @Binding var destination: MapCoord
     @Binding var viewMode: ShipViewMode
     @State var origLocation: MapCoord = MapCoord(x: 0, y: 0)
@@ -17,27 +17,21 @@ struct NavigateView: View {
     var body: some View {
         VStack {
             Label(
-                "Navigate Ship \(selectedShip, default: "")",
+                "Navigate Ship \(ship.number) \(ship.name)",
                 systemImage: "arrow.up.and.down.and.arrow.left.and.right"
             )
             .font(
                 .title
             )
-            if selectedShip != nil {
-                ShipDetailView(game: game, selectedShip: selectedShip)
-                Text(
-                    "Navigate to Destination: \(destination.toString()) from \(origLocation.toString())"
-                )
-            }
             HStack {
                 Button("Cancel") {
                     viewMode = .overview
                     destination = origLocation
                 }
                 Button("Navigate") {
-                    navigateToLocation(destination, ship: selectedShip)
+                    navigateToLocation(destination, ship: ship)
                     viewMode = .overview
-                }.disabled(selectedShip == nil)
+                }.disabled(destination != origLocation)
             }
         }.padding()
             .onAppear {
@@ -45,18 +39,14 @@ struct NavigateView: View {
             }
     }
 
-    func navigateToLocation(_ destination: MapCoord?, ship: Ship.ID?) {
+    func navigateToLocation(_ destination: MapCoord, ship: Ship) {
         Task {
-            if let destination, let selectedShip,
-                let ship = game.ships[selectedShip]
-            {
-                await game.cmd_navigate(
-                    ship: ship,
-                    destination: destination
-                )
-                await game.cmd_sdump(ship)
-                await game.cmd_map(cmdArg: String(ship.number))
-            }
+            await game.cmd_navigate(
+                ship: ship,
+                destination: destination
+            )
+            await game.cmd_sdump(ship)
+            await game.cmd_map(cmdArg: String(ship.number))
         }
     }
 }

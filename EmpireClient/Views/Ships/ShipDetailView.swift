@@ -9,16 +9,13 @@ import SwiftUI
 
 struct ShipDetailView: View {
     var game: Game
-    var selectedShip: Ship.ID?
+    var ship: Ship
 
     var body: some View {
-        let shipNum = selectedShip!
-        let ship = game.ships[shipNum]!
         let shipType = game.shipTypes[ship.abbrev]!
-
-        return VStack(alignment: .leading) {
+        VStack(alignment: .leading) {
             HStack {
-                Text("Ship \(shipNum)")
+                Text("Ship \(ship.number)")
                 Text("\(shipType.name.capitalized)").bold()
                 Text("'\(shipType.abbrev)'")
             }
@@ -52,7 +49,7 @@ struct ShipDetailView: View {
                 ) { key, value in
                     if value != 0 {
                         Text(
-                            "\(key.displayName.capitalized): \(value, default: "?")"
+                            "\(key.displayName.capitalized): \(value)"
                         )
                     }
                 }
@@ -84,7 +81,6 @@ struct ShipDetailView: View {
                         : "Extra Light Planes: \(ship.xlPlanes) / \(shipType.lightPlanes)"
                 )
             }
-        }.padding()
-            .border(.blue)
+        }
     }
 }

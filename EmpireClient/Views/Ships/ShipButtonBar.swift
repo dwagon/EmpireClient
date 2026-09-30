@@ -17,6 +17,9 @@ struct ShipButtonBar: View {
                 refreshButton
 
                 if selectedShip != nil {
+                    if viewMode != .overview {
+                        backButton
+                    }
                     loadButton
                     unloadButton
                     navigateButton
@@ -26,6 +29,12 @@ struct ShipButtonBar: View {
                 }
             }
         }
+
+    var backButton: some View {
+        return Button("Back") {
+            viewMode = .overview
+        }
+    }
 
     var refreshButton: some View {
         return

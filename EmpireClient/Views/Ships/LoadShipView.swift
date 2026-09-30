@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoadShipView: View {
     var game: Game
-    var selectedShip: Ship.ID?
+    var ship: Ship
     @Binding var viewMode: ShipViewMode
 
     @State var item: Item = .none  // Item to load
@@ -44,25 +44,18 @@ struct LoadShipView: View {
     }
 
     private var shipLocation: MapCoord? {
-        guard let selectedShip,
-              let location = game.ships[selectedShip]?.coords
-        else {
-            return nil
-        }
-
-        return location
+        return ship.coords
     }
 
     var body: some View {
         VStack {
             Label(
-                "Load Ship \(selectedShip, default: "")",
+                "Load Ship \(ship.number) \(ship.name)",
                 systemImage: "square.and.arrow.down"
             )
             .font(
                 .title
             )
-            ShipDetailView(game: game, selectedShip: selectedShip)
             HStack {
                 ItemPicker(label: "Load", itemList: itemList, item: $item)
                     .padding()
@@ -92,7 +85,7 @@ struct LoadShipView: View {
             Text(
                 item == .none
                     ? ""
-                    : "Load \(amount) \(item.displayName.capitalized) (\(itemAvailable, default: "None") avail) onto Ship \(selectedShip, default: "")"
+                    : "Load \(amount) \(item.displayName.capitalized) (\(itemAvailable, default: "None") avail) onto Ship \(ship)"
             )
             Text(
                 selectLand == nil
@@ -102,10 +95,14 @@ struct LoadShipView: View {
                 CancelButton("Cancel") {
                     viewMode = .overview
                 }
-                OkButton("Load", disabled: ((item == .none && amount <= 0) && selectLand == nil)) {
+                OkButton(
+                    "Load",
+                    disabled: ((item == .none && amount <= 0)
+                        && selectLand == nil)
+                ) {
                     Task {
                         await loadShip(
-                            selectedShip: selectedShip,
+                            ship: ship,
                             amount: amount,
                             selectLand: selectLand,
                             item: item
@@ -118,35 +115,34 @@ struct LoadShipView: View {
     }
 
     func loadShip(
-        selectedShip: Ship.ID?,
+        ship: Ship,
         amount: Int,
         selectLand: LandUnit.ID?,
         item: Item
     ) async {
-        if let selectedShip, let ship = game.ships[selectedShip] {
-            if amount > 0 {
+        if amount > 0 {
+            Task {
+                await game.cmd_load(
+                    commodity: item,
+                    ship: ship,
+                    amount: amount
+                )
+                await game.cmd_sdump(ship)
+                await game.cmd_dump(ship.coords)
+            }
+        }
+        if let selectLand {
+            if let unit = game.landUnits[selectLand] {
                 Task {
                     await game.cmd_load(
-                        commodity: item,
-                        ship: ship,
-                        amount: amount
+                        landUnit: unit,
+                        ship: ship
                     )
+                    await game.cmd_ldump(unit)
                     await game.cmd_sdump(ship)
-                    await game.cmd_dump(ship.coords)
                 }
             }
-            if let selectLand {
-                if let unit = game.landUnits[selectLand] {
-                    Task {
-                        await game.cmd_load(
-                            landUnit: unit,
-                            ship: ship
-                        )
-                        await game.cmd_ldump(unit)
-                        await game.cmd_sdump(ship)
-                    }
-                }
-            }
+
         }
     }
 }

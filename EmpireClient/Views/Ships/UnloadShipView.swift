@@ -9,39 +9,28 @@ import SwiftUI
 
 struct UnloadShipView: View {
     var game: Game
-    var selectedShip: Ship.ID?
+    var ship: Ship
     @Binding var viewMode: ShipViewMode
     @State var item: Item = .none
     @State var amount: Int = 0
     @State var selectLand: LandUnit.ID?
 
-    var ship: Ship? {
-        guard let selectedShip, let ship = game.ships[selectedShip] else {
-            return nil
-        }
-        return ship
-    }
-
     var availableCargo: [Item] {
-        guard let ship else { return [] }
         return ship.cargo.keys.filter { ship.cargo[$0]! > 0 }
     }
 
     var landUnits: [LandUnit] {
-        guard let ship else { return [] }
         return game.landUnitsAboard(ship)
     }
 
     var body: some View {
         VStack {
             Label(
-                ship != nil
-                    ? "Unload Ship \(ship!.number) \(ship!.name)" : "Error",
+                "Unload Ship \(ship.number) \(ship.name)",
                 systemImage: "square.and.arrow.up"
             ).font(
                 .title
             )
-            ShipDetailView(game: game, selectedShip: selectedShip)
             HStack {
                 ItemPicker(
                     label: "Unload",
@@ -74,7 +63,7 @@ struct UnloadShipView: View {
             Text(
                 item == .none
                     ? ""
-                    : "Unload \(amount) of \(ship!.cargo[item]!) \(item.displayName.capitalized)"
+                    : "Unload \(amount) of \(ship.cargo[item]!) \(item.displayName.capitalized)"
             )
             HStack {
                 CancelButton {
@@ -95,25 +84,23 @@ struct UnloadShipView: View {
     }
 
     func unloadShip() async {
-        if let ship {
-            if amount > 0 && item != .none {
+        if amount > 0 && item != .none {
+            await game.cmd_unload(
+                commodity: item,
+                ship: ship,
+                amount: amount
+            )
+            await game.cmd_sdump(ship)
+            await game.cmd_dump(ship.coords)
+        }
+        if let selectLand {
+            if let unit = game.landUnits[selectLand] {
                 await game.cmd_unload(
-                    commodity: item,
-                    ship: ship,
-                    amount: amount
+                    landUnit: unit,
+                    ship: ship
                 )
                 await game.cmd_sdump(ship)
-                await game.cmd_dump(ship.coords)
-            }
-            if let selectLand {
-                if let unit = game.landUnits[selectLand] {
-                    await game.cmd_unload(
-                        landUnit: unit,
-                        ship: ship
-                    )
-                    await game.cmd_sdump(ship)
-                    await game.cmd_ldump(unit)
-                }
+                await game.cmd_ldump(unit)
             }
         }
     }

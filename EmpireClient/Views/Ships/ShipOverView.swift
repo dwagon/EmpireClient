@@ -22,32 +22,81 @@ struct ShipOverView: View {
     @State var viewMode: ShipViewMode = .overview
     @State private var selectedShip: Ship.ID?
 
-
     var body: some View {
-        HStack {
+        VStack {
+            if let selectedShip, let ship = game.ships[selectedShip] {
+                ShipDetailView(game: game, ship: ship)
+                Divider()
+                Spacer()
+            } else {
+                Text("Ship not selected")
+            }
+            HStack(alignment: .center) {
+                Spacer()
+                if viewMode == .overview {
+                    tableView
+                }
+                else {
+                    operationView
+                }
+                Spacer()
+                ShipButtonBar(
+                    game: game,
+                    selectedShip: $selectedShip,
+                    viewMode: $viewMode
+                )
+            }.border(.darkRed)
+            Spacer()
+        }
+    }
+
+    @ViewBuilder
+    var tableView: some View {
+        ShipTableView(
+            game: game,
+            centerCoord: $centerCoord,
+            selectedShip: $selectedShip
+        )
+    }
+
+    @ViewBuilder
+    var operationView: some View {
+        if let selectedShip, let ship = game.ships[selectedShip] {
             switch viewMode {
             case .overview:
-                ShipTableView(game: game, centerCoord: $centerCoord, selectedShip: $selectedShip)
+                EmptyView() // Should never occur
             case .navigate:
-                NavigateView(game: game, selectedShip: selectedShip, destination: $centerCoord, viewMode: $viewMode)
+                NavigateView(
+                    game: game,
+                    ship: ship,
+                    destination: $centerCoord,
+                    viewMode: $viewMode
+                )
             case .load:
-                LoadShipView(game: game, selectedShip: selectedShip, viewMode: $viewMode)
+                LoadShipView(
+                    game: game,
+                    ship: ship,
+                    viewMode: $viewMode
+                )
             case .unload:
-                UnloadShipView(game: game, selectedShip: selectedShip, viewMode: $viewMode)
+                UnloadShipView(
+                    game: game,
+                    ship: ship,
+                    viewMode: $viewMode
+                )
             case .name:
-                NameShipView(game: game, selectedShip: selectedShip, viewMode: $viewMode)
+                NameShipView(
+                    game: game,
+                    ship: ship,
+                    viewMode: $viewMode
+                )
             case .fleetAdd:
-                FleetAddView(game: game, selectedShip: selectedShip, viewMode: $viewMode)
+                FleetAddView(
+                    game: game,
+                    ship: ship,
+                    viewMode: $viewMode
+                )
             }
-            Spacer()
-            ShipButtonBar(game: game, selectedShip: $selectedShip, viewMode: $viewMode)
         }
-
-//        .assaultShip(
-//            isPresented: $showAssaultPopup,
-//            game: game,
-//            shipId: selectedShip
-//        )
-
     }
 }

@@ -9,41 +9,33 @@ import SwiftUI
 
 struct NameShipView: View {
     var game: Game
-    var selectedShip: Ship.ID?
+    var ship: Ship
     @Binding var viewMode: ShipViewMode
     @State var name: String = ""
     @FocusState private var focused: Bool
 
     init(
         game: Game,
-        selectedShip: Ship.ID?,
+        ship: Ship,
         viewMode: Binding<ShipViewMode>
     ) {
         self.game = game
-        self.selectedShip = selectedShip
+        self.ship = ship
         self._viewMode = viewMode
 
-        let existingName: String
-        if let selectedShip,
-           let ship = game.ships[selectedShip] {
-            existingName = ship.name
-        } else {
-            existingName = ""
-        }
-
+        let existingName: String = ship.name
         self._name = State(initialValue: existingName)
     }
 
     var body: some View {
         VStack {
             Label(
-                ship.map {"Name Ship \($0.number)"} ?? "Error",
+                "Name Ship \(ship.number) \(ship.name)",
                 systemImage: "person.text.rectangle.fill"
             )
             .font(
                 .title
             )
-            ShipDetailView(game: game, selectedShip: selectedShip)
             HStack {
                 VStack(alignment: .leading) {
                     HStack {
@@ -51,9 +43,9 @@ struct NameShipView: View {
                             "Name",
                             text: $name
                         ).focused($focused)
-                        .disableAutocorrection(true)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(idealWidth: 100, maxWidth: 150)
+                            .disableAutocorrection(true)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(idealWidth: 100, maxWidth: 150)
                     }
                 }
             }
@@ -74,15 +66,7 @@ struct NameShipView: View {
             }
     }
 
-    var ship: Ship? {
-        guard let selectedShip, let ship = game.ships[selectedShip] else {
-            return nil
-        }
-        return ship
-    }
-
     func nameShip() async {
-        guard let ship else { return }
         await game.cmd_name(ship: ship, name: name)
         await game.cmd_sdump(ship)
     }
