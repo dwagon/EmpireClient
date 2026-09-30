@@ -27,9 +27,11 @@ struct SettingsView: View {
         HStack {
             CancelButton {
                 userProfile = loadSettings()
+                dismiss()
             }
             OkButton("OK") {
                 saveSettings(profile: userProfile)
+                dismiss()
             }
         }
     }

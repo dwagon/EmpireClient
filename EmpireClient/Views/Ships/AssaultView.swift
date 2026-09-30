@@ -45,9 +45,12 @@ struct AssaultShipView: View {
                 Text(response.joined(separator: "\n"))
             }
             HStack {
-                CancelButton()
+                CancelButton() {
+                    dismiss()
+                }
                 OkButton("Assault") {
                     onButton()
+                    dismiss()
                 }
             }
         }

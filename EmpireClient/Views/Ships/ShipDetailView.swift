@@ -2,131 +2,20 @@
 //  ShipDetailView.swift
 //  EmpireClient
 //
-//  Created by Dougal Scott on 27/8/2026.
+//  Created by Dougal Scott on 29/9/2026.
 //
 
 import SwiftUI
 
 struct ShipDetailView: View {
-    @State var game: Game
-    @Binding var centerCoord: MapCoord
-    @State private var selectedShip: Ship.ID?
-
-    @State private var showLoadPopup: Bool = false
-    @State private var showUnloadPopup: Bool = false
-    @State private var showNavigatePopup: Bool = false
-    @State private var showAssaultPopup: Bool = false
-    @State private var showNamePopup: Bool = false
-    @State private var showFleetAddPopup: Bool = false
+    var game: Game
+    var ship: Ship
 
     var body: some View {
-        HStack {
-            VStack {
-                Table(game.shipTable, selection: $selectedShip) {
-                    TableColumn("Ship #") { val in Text("\(val.number)") }
-                        .standardWidth()
-
-                    TableColumn("Name") { val in
-                        Text("\(val.name)")
-                    }
-
-                    TableColumn("Type") { val in
-                        Text(
-                            "\(game.shipTypes[val.abbrev]!.name) (\(val.abbrev))"
-                        )
-                    }
-
-                    TableColumn("Coord") { val in
-                        Text("\(val.coords.toString(), default: "unknown")")
-                    }.standardWidth()
-
-                    TableColumn("Fleet") { val in
-                        Text("\(val.fleet)")
-                    }.standardWidth()
-
-                    TableColumn("Mob") { val in Text("\(val.mob)") }
-                        .standardWidth()
-
-                    TableColumn("Eff") { val in Text("\(val.eff)%") }
-                        .standardWidth()
-
-                    TableColumn("Notes") { val in
-                        Text("\(val.cargoString())")
-                    }
-                }
-                .onChange(of: selectedShip) {
-                    centerCoord = game.ships[selectedShip!]!.coords
-                }
-                .onChange(of: showNavigatePopup) {
-                    centerCoord = game.ships[selectedShip!]!.coords
-                }
-
-                if selectedShip != nil {
-                    if let shipNum = selectedShip, game.ships[shipNum] != nil {
-                        Divider()
-                        shipDetails
-                    } else {
-                        Text("Ship doesn't exist")
-                    }
-                }
-            }
-            shipButtonBar
-        }
-        .navigationSplitViewColumnWidth(min: 400, ideal: 800)
-        .loadShip(isPresented: $showLoadPopup, game: game, shipId: selectedShip)
-        .unloadShip(
-            isPresented: $showUnloadPopup,
-            game: game,
-            shipId: selectedShip
-        )
-        .assaultShip(
-            isPresented: $showAssaultPopup,
-            game: game,
-            shipId: selectedShip
-        )
-        .navigateShip(
-            isPresented: $showNavigatePopup,
-            game: game,
-            shipId: selectedShip
-        )
-        .nameShip(
-            isPresented: $showNamePopup,
-            game: game,
-            shipId: selectedShip
-        )
-        .fleetAdd(
-            isPresented: $showFleetAddPopup,
-            game: game,
-            shipId: selectedShip
-        )
-        .task {
-            await game.cmd_ldump()  // Get land units at the same location / cargo
-        }
-    }
-
-    var shipButtonBar: some View {
-        VStack {
-            refreshButton
-
-            if selectedShip != nil {
-                loadButton
-                unloadButton
-                navigateButton
-                assaultButton
-                nameButton
-                fleetAddButton
-            }
-        }
-    }
-
-    var shipDetails: some View {
-        let shipNum = selectedShip!
-        let ship = game.ships[shipNum]!
         let shipType = game.shipTypes[ship.abbrev]!
-
-        return VStack(alignment: .leading) {
+        VStack(alignment: .leading) {
             HStack {
-                Text("Ship \(shipNum)")
+                Text("Ship \(ship.number)")
                 Text("\(shipType.name.capitalized)").bold()
                 Text("'\(shipType.abbrev)'")
             }
@@ -160,7 +49,7 @@ struct ShipDetailView: View {
                 ) { key, value in
                     if value != 0 {
                         Text(
-                            "\(key.displayName.capitalized): \(value, default: "?")"
+                            "\(key.displayName.capitalized): \(value)"
                         )
                     }
                 }
@@ -192,62 +81,6 @@ struct ShipDetailView: View {
                         : "Extra Light Planes: \(ship.xlPlanes) / \(shipType.lightPlanes)"
                 )
             }
-        }.padding()
-            .border(.blue)
-    }
-
-    var refreshButton: some View {
-        return
-            Button("Refresh") {
-                Task {
-                    await game.cmd_map()
-                    await game.cmd_sdump()
-                }
-            }
-    }
-
-    var loadButton: some View {
-        Button("Load") {
-            showLoadPopup = true
         }
     }
-
-    var unloadButton: some View {
-        Button("Unload") {
-            showUnloadPopup = true
-        }
-    }
-
-    var assaultButton: some View {
-        Button("Assault") {
-            showAssaultPopup = true
-        }
-    }
-
-    var navigateButton: some View {
-        Button("Navigate") {
-            showNavigatePopup = true
-        }
-    }
-
-    var nameButton: some View {
-        Button("Name") {
-            showNamePopup = true
-        }
-    }
-
-    var fleetAddButton: some View {
-        Button("Add to Fleet") {
-            showFleetAddPopup = true
-        }
-    }
-}
-
-#Preview {
-    @Previewable @State var game = DataLoader.loadSampleGame(
-        name: "Game_ShipView"
-    )
-    @Previewable @State var centerCoord = MapCoord(x: 0, y: 0)
-    ShipDetailView(game: game, centerCoord: $centerCoord)
-
 }

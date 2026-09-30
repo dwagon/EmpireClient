@@ -19,7 +19,9 @@ struct BudgetReport: View {
                         .system(.body, design: .monospaced)
                     ).border(.blue)
             }
-            OkButton()
+            OkButton() {
+                dismiss()
+            }
         }
         .task {
             await game.cmd_budget()

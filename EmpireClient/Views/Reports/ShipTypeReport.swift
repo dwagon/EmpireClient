@@ -92,7 +92,9 @@ struct ShipTypeReport: View {
                     .border(.blue)
                 }
             }
-            OkButton()
+            OkButton() {
+                dismiss()
+            }
         }
     }
 

@@ -34,9 +34,12 @@ struct BuildView: View {
                 }
             }.padding()
             HStack {
-                CancelButton()
+                CancelButton() {
+                    dismiss()
+                }
                 OkButton("Build") {
                     onButton()
+                    dismiss()
                 }
             }
         }

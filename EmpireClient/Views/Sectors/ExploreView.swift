@@ -41,9 +41,12 @@ struct ExploreView: View {
                 Spacer()
             }
             HStack {
-                CancelButton()
+                CancelButton() {
+                    dismiss()
+                }
                 OkButton("Explore", disabled:destination == nil || number == 0) {
                     onButton()
+                    dismiss()
                 }
             }
         }

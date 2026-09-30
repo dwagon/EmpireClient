@@ -61,9 +61,12 @@ struct ThresholdView: View {
                     : "Current Threshold of \(item.displayName) is \(currentLevel)"
             )
             HStack {
-                CancelButton()
+                CancelButton() {
+                    dismiss()
+                }
                 OkButton("Set Threshold", disabled: item == .none) {
                     onButton()
+                    dismiss()
                 }
             }
         }

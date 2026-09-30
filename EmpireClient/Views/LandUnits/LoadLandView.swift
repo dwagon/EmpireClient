@@ -52,9 +52,12 @@ struct LoadLandView: View {
                     : "Load \(amount) \(item.displayName.capitalized) (\(available, default: "None") avail) onto Unit \(unitNum)"
             )
             HStack {
-                CancelButton()
+                CancelButton() {
+                    dismiss()
+                }
                 OkButton("Load", disabled: item == .none) {
                     onButton()
+                    dismiss()
                 }
             }
         }.padding()

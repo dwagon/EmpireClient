@@ -10,20 +10,20 @@ import SwiftUI
 struct UnloadShipView: View {
     var game: Game
     var ship: Ship
-    @Binding var item: Item
-    @Binding var amount: Int
-    @Binding var selectLand: LandUnit.ID?
-    var onButton: () -> Void
-
-    @Environment(\.dismiss) var dismiss
+    @Binding var viewMode: ShipViewMode
+    @State var item: Item = .none
+    @State var amount: Int = 0
+    @State var selectLand: LandUnit.ID?
 
     var availableCargo: [Item] {
         return ship.cargo.keys.filter { ship.cargo[$0]! > 0 }
     }
 
-    var body: some View {
-        let landUnits = game.landUnitsAboard(ship)
+    var landUnits: [LandUnit] {
+        return game.landUnitsAboard(ship)
+    }
 
+    var body: some View {
         VStack {
             Label(
                 "Unload Ship \(ship.number) \(ship.name)",
@@ -54,8 +54,8 @@ struct UnloadShipView: View {
             if !landUnits.isEmpty {
                 Divider()
                 Picker("Unload land unit", selection: $selectLand) {
+                    Text("Nothing").tag(LandUnit.ID?(nil))
                     ForEach(landUnits) { unit in
-                        Text("Nothing").tag(LandUnit.ID?(nil))
                         Text("Unit \(unit.number): \(unit.abbrev)").tag(unit.id)
                     }.pickerStyle(.radioGroup)
                 }
@@ -66,102 +66,42 @@ struct UnloadShipView: View {
                     : "Unload \(amount) of \(ship.cargo[item]!) \(item.displayName.capitalized)"
             )
             HStack {
-                CancelButton()
-                OkButton("Unload", disabled: item == .none && selectLand == nil)
-                {
-                    onButton()
+                CancelButton {
+                    viewMode = .overview
+                }
+                OkButton(
+                    "Unload",
+                    disabled: (item == .none || amount <= 0)
+                        && selectLand == nil
+                ) {
+                    Task {
+                        await unloadShip()
+                    }
+                    viewMode = .overview
                 }
             }
         }.padding()
     }
-}
 
-struct UnloadShipSheet: ViewModifier {
-    @Binding var isPresented: Bool
-    var game: Game
-    var shipId: Ship.ID?
-    @State private var item: Item = .none
-    @State private var amount: Int = 1
-    @State private var selectLand: LandUnit.ID?
-
-    func body(content: Content) -> some View {
-        content
-            .sheet(
-                isPresented: $isPresented
-            ) {
-                if let shipId, let ship = game.ships[shipId] {
-                    UnloadShipView(
-                        game: game,
-                        ship: ship,
-                        item: $item,
-                        amount: $amount,
-                        selectLand: $selectLand
-                    ) {
-                        if amount > 0 && item != .none {
-                            Task {
-                                await game.cmd_unload(
-                                    commodity: item,
-                                    ship: ship,
-                                    amount: amount
-                                )
-                                await game.cmd_sdump(ship)
-                                await game.cmd_dump(ship.coords)
-                            }
-                        }
-                        if let selectLand {
-                            if let unit = game.landUnits[selectLand] {
-                                Task {
-                                    await game.cmd_unload(
-                                        landUnit: unit,
-                                        ship: ship
-                                    )
-                                    await game.cmd_sdump(ship)
-                                    await game.cmd_ldump(unit)
-                                }
-                            }
-                        }
-                    }
-                    .onAppear {
-                        item = .none
-                        amount = 0
-                        selectLand = nil
-                    }.task {
-                        await game.cmd_ldump()  // So we know about land units at the same location
-                    }
-                }
-            }
-    }
-
-}
-
-extension View {
-    func unloadShip(
-        isPresented: Binding<Bool>,
-        game: Game,
-        shipId: Ship.ID?
-    ) -> some View {
-        modifier(
-            UnloadShipSheet(
-                isPresented: isPresented,
-                game: game,
-                shipId: shipId
+    func unloadShip() async {
+        if amount > 0 && item != .none {
+            await game.cmd_unload(
+                commodity: item,
+                ship: ship,
+                amount: amount
             )
-        )
+            await game.cmd_sdump(ship)
+            await game.cmd_dump(ship.coords)
+        }
+        if let selectLand {
+            if let unit = game.landUnits[selectLand] {
+                await game.cmd_unload(
+                    landUnit: unit,
+                    ship: ship
+                )
+                await game.cmd_sdump(ship)
+                await game.cmd_ldump(unit)
+            }
+        }
     }
 }
-
-//#Preview {
-//    @Previewable @State var item: Item = .none
-//    @Previewable @State var amount: Int = 1
-//    @Previewable @State var ship: Ship = DataLoader.loadSampleShip(
-//        name: "ShipView"
-//    )
-//
-//    UnloadShipView(
-//        ship: ship,
-//        item: $item,
-//        amount: $amount,
-//    ) {
-//        print("Unload \(amount) x \(item) from \(ship)")
-//    }
-//}
