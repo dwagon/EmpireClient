@@ -33,7 +33,7 @@ struct TabbedDetailView: View {
                 systemImage: "car.rear.road.lane.distance.5",
                 value: .land
             ) {
-                LandDetailView(game: game, centerCoord: $centerCoord)
+                LandOverView(game: game, centerCoord: $centerCoord)
             }.disabled(game.landUnits.isEmpty)
             Tab("Planes", systemImage: "airplane.up.right", value: .plane) {
                 PlaneDetailView(game: game, centerCoord: $centerCoord)
