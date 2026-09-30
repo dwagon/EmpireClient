@@ -79,6 +79,15 @@ class Game: Decodable {
         return []
     }
 
+    func shipsAt(_ coord: MapCoord?) -> [Ship] {
+        if let coord {
+            return  Array(ships.values).filter {
+                $0.coords == coord
+            }
+        }
+        return []
+    }
+
     func landUnitsAboard(_ ship: Ship) -> [LandUnit] {
         return Array(landUnits.values).filter {
             $0.ship == Int(ship.number)
