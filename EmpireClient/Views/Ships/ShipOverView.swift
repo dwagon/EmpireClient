@@ -14,6 +14,7 @@ enum ShipViewMode {
     case unload
     case name
     case fleetAdd
+    case tend
 }
 
 struct ShipOverView: View {
@@ -35,8 +36,7 @@ struct ShipOverView: View {
                 Spacer()
                 if viewMode == .overview {
                     tableView
-                }
-                else {
+                } else {
                     operationView
                 }
                 Spacer()
@@ -45,7 +45,7 @@ struct ShipOverView: View {
                     selectedShip: $selectedShip,
                     viewMode: $viewMode
                 )
-            }.border(.darkRed)
+            }
             Spacer()
         }
     }
@@ -64,7 +64,7 @@ struct ShipOverView: View {
         if let selectedShip, let ship = game.ships[selectedShip] {
             switch viewMode {
             case .overview:
-                EmptyView() // Should never occur
+                EmptyView()  // Should never occur
             case .navigate:
                 NavigateView(
                     game: game,
@@ -96,6 +96,8 @@ struct ShipOverView: View {
                     ship: ship,
                     viewMode: $viewMode
                 )
+            case .tend:
+                TendShipView(game: game, ship: ship, viewMode: $viewMode)
             }
         }
     }

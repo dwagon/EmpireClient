@@ -26,6 +26,7 @@ struct ShipButtonBar: View {
 //                    assaultButton
                     nameButton
                     fleetAddButton
+                    tendButton
                 }
             }
         }
@@ -79,6 +80,12 @@ struct ShipButtonBar: View {
     var fleetAddButton: some View {
         Button("Add to Fleet") {
             viewMode = .fleetAdd
+        }
+    }
+
+    var tendButton: some View {
+        Button("Tend") {
+            viewMode = .tend
         }
     }
 }
