@@ -11,6 +11,7 @@ enum LandViewMode {
     case overview
     case march
     case load
+    case upgrade
 }
 
 struct LandOverView: View {
@@ -70,6 +71,8 @@ struct LandOverView: View {
                     destination: $centerCoord,
                     viewMode: $viewMode
                 )
+            case .upgrade:
+                LandUpgradeView(game: game, unit: unit, viewMode: $viewMode)
             }
         }
     }
