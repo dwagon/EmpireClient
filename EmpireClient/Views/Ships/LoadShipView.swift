@@ -85,7 +85,7 @@ struct LoadShipView: View {
             Text(
                 item == .none
                     ? ""
-                    : "Load \(amount) \(item.displayName.capitalized) (\(itemAvailable, default: "None") avail) onto Ship \(ship)"
+                : "Load \(amount) \(item.displayName.capitalized) (\(itemAvailable, default: "None") avail) onto Ship \(ship.number) \(ship.name)"
             )
             Text(
                 selectLand == nil
