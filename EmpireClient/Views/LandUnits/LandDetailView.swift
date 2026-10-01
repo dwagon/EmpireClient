@@ -19,12 +19,13 @@ struct LandDetailView: View {
                 Text("Land Unit \(unit.number)")
                 Text("\(unitType.name.capitalized)").bold()
                 Text("'\(unitType.abbrev)'")
-            }
+            }.font(.title2)
             HStack {
                 Text("Mobility: \(unit.mob)")
                 Text("Speed: \(unit.speed)")
                 Text("Visibility: \(unit.visibility)")
                 Text("Spy: \(unit.spy)")
+                Text("Tech: \(unit.tech)")
             }
             HStack {
                 Text(
