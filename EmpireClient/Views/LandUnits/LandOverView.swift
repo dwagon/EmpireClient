@@ -9,6 +9,8 @@ import SwiftUI
 
 enum LandViewMode {
     case overview
+    case march
+    case load
 }
 
 struct LandOverView: View {
@@ -59,6 +61,15 @@ struct LandOverView: View {
             switch viewMode {
             case .overview:
                 EmptyView()  // Should never occur
+            case .load:
+                LandLoadView(game: game, unit: unit, viewMode: $viewMode)
+            case .march:
+                MarchView(
+                    game: game,
+                    unit: unit,
+                    destination: $centerCoord,
+                    viewMode: $viewMode
+                )
             }
         }
     }

@@ -23,7 +23,7 @@ extension Game {
             log("ldump returned empty")
             return
         }
-        parse_cmd_ldump(result)
+        parse_cmd_ldump(result, trimMissing: false)
     }
 
     //    Mon Sep 14 17:29:40 2026

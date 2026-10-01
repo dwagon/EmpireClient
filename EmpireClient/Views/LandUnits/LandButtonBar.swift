@@ -13,16 +13,18 @@ struct LandButtonBar: View {
     @Binding var viewMode: LandViewMode
 
     var body: some View {
-            VStack {
-                refreshButton
+        VStack {
+            refreshButton
 
-                if selectedUnit != nil {
-                    if viewMode != .overview {
-                        backButton
-                    }
+            if selectedUnit != nil {
+                if viewMode != .overview {
+                    backButton
                 }
+                loadButton
+                marchButton
             }
         }
+    }
 
     var backButton: some View {
         return Button("Back") {
@@ -37,6 +39,20 @@ struct LandButtonBar: View {
                     await game.cmd_map()
                     await game.cmd_ldump()
                 }
+            }
+    }
+
+    var loadButton: some View {
+        return
+            Button("Load") {
+                viewMode = .load
+            }
+    }
+
+    var marchButton: some View {
+        return
+            Button("March") {
+                viewMode = .march
             }
     }
 }
