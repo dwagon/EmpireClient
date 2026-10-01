@@ -18,7 +18,7 @@ struct ShipDetailView: View {
                 Text("Ship \(ship.number)")
                 Text("\(shipType.name.capitalized)").bold()
                 Text("'\(shipType.abbrev)'")
-            }
+            }.font(.title2)
             HStack {
                 Text("Defense: \(ship.defense)")
                 Text("Speed: \(ship.speed)")
