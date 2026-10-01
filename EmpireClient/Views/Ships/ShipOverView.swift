@@ -15,6 +15,7 @@ enum ShipViewMode {
     case name
     case fleetAdd
     case tend
+    case upgrade
 }
 
 struct ShipOverView: View {
@@ -98,6 +99,8 @@ struct ShipOverView: View {
                 )
             case .tend:
                 TendShipView(game: game, ship: ship, viewMode: $viewMode)
+            case .upgrade:
+                ShipUpgradeView(game: game, ship: ship, viewMode: $viewMode)
             }
         }
     }

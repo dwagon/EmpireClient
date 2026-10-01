@@ -1,5 +1,5 @@
 //
-//  LandUpgradeView.swift
+//  ShipUpgradeView.swift
 //  EmpireClient
 //
 //  Created by Dougal Scott on 2/10/2026.
@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct LandUpgradeView: View {
+struct ShipUpgradeView: View {
     var game: Game
-    var unit: LandUnit
-    @Binding var viewMode: LandViewMode
+    var ship: Ship
+    @Binding var viewMode: ShipViewMode
 
     var body: some View {
         VStack {
             Label(
-                "Upgrade Land Unit",
+                "Upgrade Ship",
                 systemImage: "suv.side.arrowtriangle.up"
             )
             .font(
@@ -27,7 +27,7 @@ struct LandUpgradeView: View {
                 }
                 OkButton("Upgrade") {
                     Task {
-                        upgradeLand(unit: unit)
+                        upgradeShip(ship: ship)
                     }
                     viewMode = .overview
                 }
@@ -35,11 +35,11 @@ struct LandUpgradeView: View {
         }.padding()
     }
 
-    func upgradeLand(unit: LandUnit) {
+    func upgradeShip(ship: Ship) {
         Task {
-            await game.cmd_upgrade(unit: unit)
-            await game.cmd_ldump(unit)
-            await game.cmd_dump(unit.coords)
+            await game.cmd_upgrade(ship: ship)
+            await game.cmd_sdump(ship)
+            await game.cmd_dump(ship.coords)
         }
     }
 }

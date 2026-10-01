@@ -27,6 +27,11 @@ struct ShipButtonBar: View {
                     nameButton
                     fleetAddButton
                     tendButton
+                    if let selectedShip, let ship = game.ships[selectedShip], let sector = game.gameMap[ship.coords] {
+                        if sector.desig.desig == .harbor {
+                            upgradeButton
+                        }
+                    }
                 }
             }
         }
@@ -86,6 +91,12 @@ struct ShipButtonBar: View {
     var tendButton: some View {
         Button("Tend") {
             viewMode = .tend
+        }
+    }
+
+    var upgradeButton: some View {
+        Button("Upgrade") {
+            viewMode = .upgrade
         }
     }
 }
