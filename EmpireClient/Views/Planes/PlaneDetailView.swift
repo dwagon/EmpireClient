@@ -9,78 +9,22 @@ import SwiftUI
 
 struct PlaneDetailView: View {
     @State var game: Game
-    @Binding var centerCoord: MapCoord
-    @State private var selectedPlane: Plane.ID?
+    var plane: Plane
 
     var body: some View {
-        HStack {
-            VStack {
-                Table(game.planeTable, selection: $selectedPlane) {
-                    TableColumn("Plane #") { val in
-                        Text("\(val.number)")
-                    }
-                    .standardWidth()
-                    TableColumn("Type") { val in
-                        Text(
-                            "\(game.planeTypes[val.abbrev]!.name) (\(val.abbrev))"
-                        )
-                    }
-                    TableColumn("Coord") { val in
-                        Text("\(val.coords.toString(), default: "unknown")")
-                    }.standardWidth()
-
-                    TableColumn("Wing") { val in Text("\(val.wing)") }.standardWidth()
-
-                    TableColumn("Mob") { val in Text("\(val.mob)") }.standardWidth()
-                    TableColumn("Eff") { val in Text("\(val.eff)%") }.standardWidth()
-                    TableColumn("Notes") { val in
-                        Text("")
-                    }
-                }
-                .onChange(of: selectedPlane) {
-                    centerCoord = game.planes[selectedPlane!]!.coords
-                }
-                if let planeNum = selectedPlane {
-                    if let _ = game.planes[planeNum] {
-                        Divider()
-                        planeDetails
-                    }
-                    else {
-                        Divider()
-                        Text("Plane doesn't exist")
-                    }
-                }
-            }
-            planeButtonBar
-        }
-        .navigationSplitViewColumnWidth(min: 400, ideal: 800)
-    }
-
-    var planeButtonBar: some View {
-        VStack {
-            refreshButton
-
-            if selectedPlane != nil {
-                // TODO
-            }
-        }
-    }
-
-    var planeDetails: some View {
-        let planeNum = selectedPlane!
-        let plane = game.planes[planeNum]!
         let planeType = game.planeTypes[plane.abbrev]!
 
-        return VStack(alignment: .leading) {
+        VStack(alignment: .leading) {
             HStack {
-                Text("Plane \(planeNum)")
+                Text("Plane \(plane.number)")
                 Text("\(planeType.name.capitalized)").bold()
                 Text("'\(planeType.abbrev)'")
-            }
+            }.font(.title2)
             HStack {
                 Text("Range: \(plane.range)")
                 Text("React: \(plane.react)")
                 Text("Fuel: \(plane.fuel)")
+                Text("Tech: \(plane.tech)")
             }
             HStack {
                 Text("Attack: \(plane.attack)")
@@ -92,24 +36,4 @@ struct PlaneDetailView: View {
         }.padding()
             .border(.blue)
     }
-
-    var refreshButton: some View {
-        return
-            Button("Refresh") {
-                Task {
-                    await game.cmd_map()
-                    await game.cmd_pdump()
-                }
-            }
-    }
-
-}
-
-#Preview {
-    @Previewable @State var game = DataLoader.loadSampleGame(
-        name: "Game_ShipView"
-    )
-    @Previewable @State var centerCoord = MapCoord(x: 0, y: 0)
-    PlaneDetailView(game: game, centerCoord: $centerCoord)
-
 }
