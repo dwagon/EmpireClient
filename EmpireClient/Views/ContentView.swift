@@ -24,12 +24,6 @@ struct ContentView: View {
                 GeometryReader { geom in
                     HStack {
                         displayMapView
-//                            .simultaneousGesture(
-//                                TapGesture()
-//                                    .onEnded {
-//                                        tabSelection = .sector
-//                                    }
-//                            )
                             .frame(width: geom.size.width * 0.45)
                         TabbedDetailView(
                             game: game,
@@ -75,7 +69,7 @@ struct ContentView: View {
                     await game.get_data()
                     await game.get_radar()
                 }
-                isLoggedIn = game.nationReport.count >= 0
+                isLoggedIn = game.nationReport.count > 0
             }
         }
     }

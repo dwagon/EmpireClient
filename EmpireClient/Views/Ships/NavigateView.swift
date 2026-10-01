@@ -12,7 +12,20 @@ struct NavigateView: View {
     var ship: Ship
     @Binding var destination: MapCoord
     @Binding var viewMode: ShipViewMode
-    @State var origLocation: MapCoord = MapCoord(x: 0, y: 0)
+    @State var origLocation: MapCoord
+
+    init(
+        game: Game,
+        ship: Ship,
+        destination: Binding<MapCoord>,
+        viewMode: Binding<ShipViewMode>
+    ) {
+        self.game = game
+        self.ship = ship
+        self._destination = destination
+        self._viewMode = viewMode
+        self._origLocation = State(initialValue: destination.wrappedValue)
+    }
 
     var body: some View {
         VStack {
