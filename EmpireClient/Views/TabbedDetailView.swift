@@ -36,7 +36,7 @@ struct TabbedDetailView: View {
                 LandOverView(game: game, centerCoord: $centerCoord)
             }.disabled(game.landUnits.isEmpty)
             Tab("Planes", systemImage: "airplane.up.right", value: .plane) {
-                PlaneDetailView(game: game, centerCoord: $centerCoord)
+                PlaneOverView(game: game, centerCoord: $centerCoord)
             }.disabled(game.planes.isEmpty)
             Tab("Nukes", systemImage: "sun.max.trianglebadge.exclamationmark", value: .nuke) {
                 NukeDetailView(game: game, centerCoord: $centerCoord)
