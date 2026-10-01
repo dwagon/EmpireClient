@@ -31,7 +31,7 @@ struct NavigateView: View {
                 Button("Navigate") {
                     navigateToLocation(destination, ship: ship)
                     viewMode = .overview
-                }.disabled(destination != origLocation)
+                }.disabled(destination == origLocation)
             }
         }.padding()
             .onAppear {
