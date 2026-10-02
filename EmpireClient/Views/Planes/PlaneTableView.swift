@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlaneTableView: View {
-    @State var game: Game
+    var game: Game
     @Binding var centerCoord: MapCoord
     @Binding var selectedPlane: Plane.ID?
 
@@ -48,10 +48,10 @@ struct PlaneTableView: View {
                     }
                 }
                 .onChange(of: selectedPlane) {
-                    centerCoord = game.planes[selectedPlane!]!.coords
+                    guard let selectedPlane, let plane=game.planes[selectedPlane] else { return }
+                    centerCoord = plane.coords
                 }
             }
         }
     }
-
 }

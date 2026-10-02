@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NukeDetailView: View {
-    @State var game: Game
+    var game: Game
     @Binding var centerCoord: MapCoord
     @State private var selectedNuke: Nuke.ID?
 

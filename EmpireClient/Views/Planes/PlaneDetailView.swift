@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlaneDetailView: View {
-    @State var game: Game
+    var game: Game
     var plane: Plane
 
     var body: some View {
