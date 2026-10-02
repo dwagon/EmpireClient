@@ -10,6 +10,7 @@ import SwiftUI
 enum PlaneViewMode {
     case overview
     case upgrade
+    case wingadd
 }
 
 struct PlaneOverView: View {
@@ -62,6 +63,8 @@ struct PlaneOverView: View {
                 EmptyView()  // Should never occur
             case .upgrade:
                 PlaneUpgradeView(game: game, plane: plane, viewMode: $viewMode)
+            case .wingadd:
+                WingAddView(game: game, plane: plane, viewMode: $viewMode)
             }
         }
     }
