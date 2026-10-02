@@ -41,7 +41,7 @@ struct NavigateView: View {
                     viewMode = .overview
                     destination = origLocation
                 }
-                Button("Navigate") {
+                Button("Navigate to \(destination.toString())") {
                     navigateToLocation(destination, ship: ship)
                     viewMode = .overview
                 }.disabled(destination == origLocation)

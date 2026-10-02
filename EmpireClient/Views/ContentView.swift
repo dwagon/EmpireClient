@@ -9,7 +9,7 @@ import HexGrid
 import SwiftUI
 
 struct ContentView: View {
-    @State var game: Game
+    var game: Game
     @State var centerCoord: MapCoord
     @State private var isLoggedIn: Bool = false
     @State var tabSelection: TabChosen = .sector
@@ -25,6 +25,9 @@ struct ContentView: View {
                     HStack {
                         displayMapView
                             .frame(width: geom.size.width * 0.45)
+                            .simultaneousGesture(
+                                TapGesture().onEnded { tabSelection = .sector }
+                            )
                         TabbedDetailView(
                             game: game,
                             selectedTab: $tabSelection,
@@ -52,7 +55,6 @@ struct ContentView: View {
             planes: game.planes,
             nukes: game.nukes
         )
-        .navigationSplitViewColumnWidth(min: 300, ideal: 400)
     }
 
     var loginButton: some View {
