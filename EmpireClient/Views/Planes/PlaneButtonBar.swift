@@ -20,6 +20,9 @@ struct PlaneButtonBar: View {
                 if viewMode != .overview {
                     backButton
                 }
+
+                wingButton
+
                 if let selectedPlane, let plane = game.planes[selectedPlane],
                     let sector = game.gameMap[plane.coords]
                 {
@@ -50,6 +53,12 @@ struct PlaneButtonBar: View {
     var upgradeButton: some View {
         Button("Upgrade") {
             viewMode = .upgrade
+        }
+    }
+
+    var wingButton: some View {
+        Button("Add to Wing") {
+            viewMode = .wingadd
         }
     }
 }
