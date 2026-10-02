@@ -37,7 +37,14 @@ struct PlaneTableView: View {
                     TableColumn("Eff") { val in Text("\(val.eff)%") }
                         .standardWidth()
                     TableColumn("Notes") { val in
-                        Text("")
+                        HStack {
+                            if val.launched == "Y" {
+                                Text("Launched")
+                            }
+                            if val.orbit == "Y" {
+                                Text("In Orbit")
+                            }
+                        }
                     }
                 }
                 .onChange(of: selectedPlane) {
