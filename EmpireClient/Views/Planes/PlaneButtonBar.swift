@@ -13,21 +13,23 @@ struct PlaneButtonBar: View {
     @Binding var viewMode: PlaneViewMode
 
     var body: some View {
-            VStack {
-                refreshButton
+        VStack {
+            refreshButton
 
-                if selectedPlane != nil {
-                    if viewMode != .overview {
-                        backButton
-                    }
-                    if let selectedPlane, let plane = game.planes[selectedPlane], let sector = game.gameMap[plane.coords] {
-                        if sector.desig.desig == .airfield {
-//                            upgradeButton
-                        }
+            if selectedPlane != nil {
+                if viewMode != .overview {
+                    backButton
+                }
+                if let selectedPlane, let plane = game.planes[selectedPlane],
+                    let sector = game.gameMap[plane.coords]
+                {
+                    if sector.desig.desig == .airfield {
+                        upgradeButton
                     }
                 }
             }
         }
+    }
 
     var backButton: some View {
         return Button("Back") {
@@ -43,5 +45,11 @@ struct PlaneButtonBar: View {
                     await game.cmd_pdump()
                 }
             }
+    }
+
+    var upgradeButton: some View {
+        Button("Upgrade") {
+            viewMode = .upgrade
+        }
     }
 }
