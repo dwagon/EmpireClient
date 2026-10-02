@@ -14,8 +14,8 @@ extension Game {
     }
 
     func cmd_pdump(plane: Plane) async {
-        let result = await runCmd("pdump \(plane.number)")
-        parse_cmd_pdump(result)
+        let result = await runCmd("pdump \(plane.number)", suppressLog: true)
+        parse_cmd_pdump(result, trimMissing: false)
     }
 
     //    Mon Sep 14 11:49:53 2026
@@ -23,23 +23,23 @@ extension Game {
     //    id type x y wing eff mob tech att def acc react range load fuel hard ship land laun orb nuke grd
     //    0 zep  2 4 ~ 100 60 110 0 -1 52 20 20 2 3 4 -1 -1 N N N/A G
     //    1 plane
-    func parse_cmd_pdump(_ input: [String]) {
-        var plane: Plane
+    func parse_cmd_pdump(_ input: [String], trimMissing: Bool = true) {
         var exists: Set<PlaneNum> = []
 
         for line in input {
             let bits = line.split(separator: " ")
-            if bits[1].starts(with:"plane") {
-                break
-            }
-            if bits[0] == "DUMP" || bits[0] == "id" || bits.count != 22 {   // Headers
+            guard bits.count == 22 else { continue }
+
+            var plane: Plane
+
+            guard let planeNum = PlaneNum(bits[0]) else {
                 continue
             }
-            let planeNum = PlaneNum(bits[0])!
-            if planes[planeNum] == nil {
-                plane = Plane(abbrev: String(bits[1]))
+
+            if let existingPlane = planes[planeNum] {
+                plane = existingPlane
             } else {
-                plane = planes[planeNum]!
+                plane = Plane(abbrev: String(bits[1]))
             }
             plane.number = planeNum
             plane.abbrev = String(bits[1])
@@ -67,8 +67,9 @@ extension Game {
         }
 
         // Remove planes that weren't in the dump
-        for planeNum in planes.keys {
-            if !exists.contains(planeNum) {
+        let planeNums = Array(planes.keys)
+        for planeNum in planeNums {
+            if !exists.contains(planeNum) && trimMissing {
                 planes.removeValue(forKey: planeNum)
             }
         }
