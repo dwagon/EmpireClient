@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct EmpireClientApp: App {
-    var game = Game()
+    @State var game = Game()
     @Environment(\.openWindow) private var openWindow
 
     var body: some Scene {
