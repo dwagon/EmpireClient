@@ -21,6 +21,7 @@ struct LandButtonBar: View {
                     backButton
                 }
                 loadButton
+                fortifyButton
                 marchButton
                 if let selectedUnit, let unit = game.landUnits[selectedUnit], let sector = game.gameMap[unit.coords] {
                     if sector.desig.desig == .headquarters {
@@ -51,6 +52,13 @@ struct LandButtonBar: View {
         return
             Button("Load") {
                 viewMode = .load
+            }
+    }
+
+    var fortifyButton: some View {
+        return
+            Button("Fortify") {
+                viewMode = .fortify
             }
     }
 
