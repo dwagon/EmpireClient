@@ -23,13 +23,17 @@ struct LandOverView: View {
 
     var body: some View {
         VStack {
-            if let selectedUnit, let unit = game.landUnits[selectedUnit] {
-                LandDetailView(game: game, unit: unit)
-                Divider()
-                Spacer()
-            } else {
-                Text("Unit not selected")
-            }
+            Spacer()
+            Group {
+                if let selectedUnit, let unit = game.landUnits[selectedUnit] {
+                    LandDetailView(game: game, unit: unit)
+                    Divider()
+                    Spacer()
+                } else {
+                    Text("Unit not selected").padding()
+                }
+            }.border(.blue)
+
             HStack(alignment: .center) {
                 Spacer()
                 if viewMode == .overview {

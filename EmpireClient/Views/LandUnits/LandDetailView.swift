@@ -63,6 +63,5 @@ struct LandDetailView: View {
             }
             Text(unit.ship < 0 ? "" : "Loaded on to Ship \(unit.ship)")
         }.padding()
-            .border(.blue)
     }
 }

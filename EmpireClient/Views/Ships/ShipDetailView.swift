@@ -83,6 +83,5 @@ struct ShipDetailView: View {
             }
         }
         .padding()
-        .border(.blue)
     }
 }

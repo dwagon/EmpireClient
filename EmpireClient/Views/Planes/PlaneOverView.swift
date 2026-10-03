@@ -21,13 +21,16 @@ struct PlaneOverView: View {
 
     var body: some View {
         VStack {
-            if let selectedPlane, let plane = game.planes[selectedPlane] {
-                PlaneDetailView(game: game, plane: plane)
-                Divider()
-                Spacer()
-            } else {
-                Text("Plane not selected")
-            }
+            Spacer()
+            Group {
+                if let selectedPlane, let plane = game.planes[selectedPlane] {
+                    PlaneDetailView(game: game, plane: plane)
+                    Divider()
+                    Spacer()
+                } else {
+                    Text("Plane not selected").padding()
+                }
+            }.border(.blue)
             HStack(alignment: .center) {
                 Spacer()
                 if viewMode == .overview {

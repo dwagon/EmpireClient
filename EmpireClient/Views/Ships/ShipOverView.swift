@@ -26,13 +26,16 @@ struct ShipOverView: View {
 
     var body: some View {
         VStack {
-            if let selectedShip, let ship = game.ships[selectedShip] {
-                ShipDetailView(game: game, ship: ship)
-                Divider()
-                Spacer()
-            } else {
-                Text("Ship not selected")
-            }
+            Spacer()
+            Group {
+                if let selectedShip, let ship = game.ships[selectedShip] {
+                    ShipDetailView(game: game, ship: ship)
+                    Divider()
+                    Spacer()
+                } else {
+                    Text("Ship not selected").padding()
+                }
+            }.border(.blue)
             HStack(alignment: .center) {
                 Spacer()
                 if viewMode == .overview {
