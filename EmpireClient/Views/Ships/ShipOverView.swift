@@ -21,6 +21,7 @@ enum ShipViewMode {
 struct ShipOverView: View {
     var game: Game
     @Binding var centerCoord: MapCoord
+    @Binding var sectorSelect: Bool
     @State var viewMode: ShipViewMode = .overview
     @State private var selectedShip: Ship.ID?
 
@@ -74,7 +75,8 @@ struct ShipOverView: View {
                     game: game,
                     ship: ship,
                     destination: $centerCoord,
-                    viewMode: $viewMode
+                    viewMode: $viewMode,
+                    sectorSelect: $sectorSelect
                 )
             case .load:
                 LoadShipView(

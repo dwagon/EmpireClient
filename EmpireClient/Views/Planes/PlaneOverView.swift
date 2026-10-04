@@ -16,6 +16,7 @@ enum PlaneViewMode {
 struct PlaneOverView: View {
     var game: Game
     @Binding var centerCoord: MapCoord
+    @Binding var sectorSelect: Bool
     @State var viewMode: PlaneViewMode = .overview
     @State private var selectedPlane: Plane.ID?
 

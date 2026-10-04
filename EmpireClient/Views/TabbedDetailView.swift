@@ -19,6 +19,7 @@ struct TabbedDetailView: View {
     var game: Game
     @Binding var selectedTab: TabChosen
     @Binding var centerCoord: MapCoord
+    @Binding var sectorSelect: Bool
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -26,17 +27,17 @@ struct TabbedDetailView: View {
                 SectorDetailView(game: game, centerCoord: centerCoord)
             }
             Tab("Ships", systemImage: "sailboat", value: .ship) {
-                ShipOverView(game: game, centerCoord: $centerCoord)
+                ShipOverView(game: game, centerCoord: $centerCoord, sectorSelect: $sectorSelect)
             }.disabled(game.ships.isEmpty)
             Tab(
                 "Land Units",
                 systemImage: "car.rear.road.lane.distance.5",
                 value: .land
             ) {
-                LandOverView(game: game, centerCoord: $centerCoord)
+                LandOverView(game: game, centerCoord: $centerCoord, sectorSelect: $sectorSelect)
             }.disabled(game.landUnits.isEmpty)
             Tab("Planes", systemImage: "airplane.up.right", value: .plane) {
-                PlaneOverView(game: game, centerCoord: $centerCoord)
+                PlaneOverView(game: game, centerCoord: $centerCoord, sectorSelect: $sectorSelect)
             }.disabled(game.planes.isEmpty)
             Tab("Nukes", systemImage: "sun.max.trianglebadge.exclamationmark", value: .nuke) {
                 NukeDetailView(game: game, centerCoord: $centerCoord)

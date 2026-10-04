@@ -18,6 +18,8 @@ enum LandViewMode {
 struct LandOverView: View {
     var game: Game
     @Binding var centerCoord: MapCoord
+    @Binding var sectorSelect: Bool
+
     @State private var selectedUnit: LandUnit.ID?
     @State var viewMode: LandViewMode = .overview
 
@@ -74,7 +76,8 @@ struct LandOverView: View {
                     game: game,
                     unit: unit,
                     destination: $centerCoord,
-                    viewMode: $viewMode
+                    viewMode: $viewMode,
+                    sectorSelect: $sectorSelect
                 )
             case .upgrade:
                 LandUpgradeView(game: game, unit: unit, viewMode: $viewMode)
