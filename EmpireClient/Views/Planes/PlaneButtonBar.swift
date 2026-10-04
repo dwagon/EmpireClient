@@ -22,6 +22,7 @@ struct PlaneButtonBar: View {
                 }
 
                 wingButton
+                launchButton
 
                 if let selectedPlane, let plane = game.planes[selectedPlane],
                     let sector = game.gameMap[plane.coords]
@@ -59,6 +60,12 @@ struct PlaneButtonBar: View {
     var wingButton: some View {
         Button("Add to Wing") {
             viewMode = .wingadd
+        }
+    }
+
+    var launchButton: some View {
+        Button("Launch") {
+            viewMode = .launch
         }
     }
 }

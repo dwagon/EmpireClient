@@ -42,7 +42,7 @@ struct PlaneTableView: View {
                                 Text("Launched")
                             }
                             if val.orbit == "Y" {
-                                Text("In Orbit")
+                                Text("GeoOrbit")
                             }
                         }
                     }

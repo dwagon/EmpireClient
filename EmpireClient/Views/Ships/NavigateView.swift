@@ -13,7 +13,6 @@ struct NavigateView: View {
     @Binding var destination: MapCoord
     @Binding var viewMode: ShipViewMode
     @Binding var sectorSelect: Bool
-    
     @State var origLocation: MapCoord
 
     init(

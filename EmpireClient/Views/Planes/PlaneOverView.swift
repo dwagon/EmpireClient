@@ -11,6 +11,7 @@ enum PlaneViewMode {
     case overview
     case upgrade
     case wingadd
+    case launch
 }
 
 struct PlaneOverView: View {
@@ -69,6 +70,8 @@ struct PlaneOverView: View {
                 PlaneUpgradeView(game: game, plane: plane, viewMode: $viewMode)
             case .wingadd:
                 WingAddView(game: game, plane: plane, viewMode: $viewMode)
+            case .launch:
+                LaunchView(game: game, plane: plane, destination: $centerCoord, viewMode: $viewMode, sectorSelect: $sectorSelect)
             }
         }
     }
