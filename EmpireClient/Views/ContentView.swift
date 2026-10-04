@@ -13,6 +13,7 @@ struct ContentView: View {
     @State var centerCoord: MapCoord
     @State private var isLoggedIn: Bool = false
     @State var tabSelection: TabChosen = .sector
+    @State var sectorSelect: Bool = true       // Click on a sector to view the sector
 
     var profile = loadSettings()
 
@@ -26,12 +27,15 @@ struct ContentView: View {
                         displayMapView
                             .frame(width: geom.size.width * 0.45)
                             .simultaneousGesture(
-                                TapGesture().onEnded { tabSelection = .sector }
+                                TapGesture().onEnded { tabSelection = .sector },
+                                isEnabled: sectorSelect
                             )
+
                         TabbedDetailView(
                             game: game,
                             selectedTab: $tabSelection,
-                            centerCoord: $centerCoord
+                            centerCoord: $centerCoord,
+                            sectorSelect: $sectorSelect
                         )
                         .frame(width: geom.size.width * 0.55)
                     }

@@ -21,18 +21,22 @@ enum ShipViewMode {
 struct ShipOverView: View {
     var game: Game
     @Binding var centerCoord: MapCoord
+    @Binding var sectorSelect: Bool
     @State var viewMode: ShipViewMode = .overview
     @State private var selectedShip: Ship.ID?
 
     var body: some View {
         VStack {
-            if let selectedShip, let ship = game.ships[selectedShip] {
-                ShipDetailView(game: game, ship: ship)
-                Divider()
-                Spacer()
-            } else {
-                Text("Ship not selected")
-            }
+            Spacer()
+            Group {
+                if let selectedShip, let ship = game.ships[selectedShip] {
+                    ShipDetailView(game: game, ship: ship)
+                    Divider()
+                    Spacer()
+                } else {
+                    Text("Ship not selected").padding()
+                }
+            }.border(.blue)
             HStack(alignment: .center) {
                 Spacer()
                 if viewMode == .overview {
@@ -71,7 +75,8 @@ struct ShipOverView: View {
                     game: game,
                     ship: ship,
                     destination: $centerCoord,
-                    viewMode: $viewMode
+                    viewMode: $viewMode,
+                    sectorSelect: $sectorSelect
                 )
             case .load:
                 LoadShipView(

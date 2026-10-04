@@ -34,6 +34,5 @@ struct PlaneDetailView: View {
             Text("Capabilities: \(planeType.capabilities)")
             Divider()
         }.padding()
-            .border(.blue)
     }
 }

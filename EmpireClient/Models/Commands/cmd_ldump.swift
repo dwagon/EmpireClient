@@ -39,37 +39,54 @@ extension Game {
         var lunit: LandUnit
         var exists: Set<LandNum> = []
 
+        let expectedFieldCount = 42
+
         for line in input {
-            let bits = line.split(separator: " ")
-            if bits[0] == "id" || bits[0] == "DUMP" || bits.count == 5 {   // Header
+            let bits = line.split(whereSeparator: \.isWhitespace)
+            guard !bits.isEmpty else {
                 continue
             }
-            if bits[1].starts(with: "unit") {
-                break
+            guard bits.count == expectedFieldCount else {
+                continue
             }
-            let lunitNum = LandNum(bits[0])!
-            if landUnits[lunitNum] == nil {
-                lunit = LandUnit(abbrev: String(bits[1]))
+
+            if bits[0] == "id" { continue } // header
+
+            guard let lunitNum = LandNum(bits[0]) else {
+                print("Unknown line: \(line)")
+                continue
+            }
+
+            if let existing = landUnits[lunitNum] {
+                lunit = existing
             } else {
-                lunit = landUnits[lunitNum]!
+                lunit = LandUnit(abbrev: String(bits[1]))
             }
+
+            guard let x = Int(bits[2]), let y = Int(bits[3]),
+                let eff = Int(bits[5]), let fortification = Int(bits[7]), let mob = Int(bits[8]), let tech = Int(bits[11]), let retreat = Int(bits[12]), let react = Int(bits[13]), let xl = Int(bits[14]), let nland = Int(bits[15]), let land = LandNum(bits[16]), let ship = Int(bits[17]), let attack = Float(bits[28]), let defense = Float(bits[29]), let vulnerability = Int(bits[30]), let speed = Int(bits[31])
+            else {
+                print("Bad line: \(line)")
+                continue
+            }
+
             lunit.number = lunitNum
             lunit.abbrev = String(bits[1])
-            lunit.coords = MapCoord(x: Int(bits[2])!, y: Int(bits[3])!)
+            lunit.coords = MapCoord(x: x, y: y)
             lunit.army = String(bits[4])
-            lunit.eff = Int(bits[5])!
+            lunit.eff = eff
             lunit.cargo[.mil] = Int(bits[6])
-            lunit.fortification = Int(bits[7])!
-            lunit.mob = Int(bits[8])!
+            lunit.fortification = fortification
+            lunit.mob = mob
             lunit.cargo[.food] = Int(bits[9])
             // ship.fuel = Int(bits[10])!   // Obsolete
-            lunit.tech = Int(bits[11])!
-            lunit.retreat = Int(bits[12])!
-            lunit.react = Int(bits[13])!
-            lunit.xl = Int(bits[14])!
-            lunit.nland = Int(bits[15])!
-            lunit.land = LandNum(bits[16])!
-            lunit.ship = Int(bits[17])!
+            lunit.tech = tech
+            lunit.retreat = retreat
+            lunit.react = react
+            lunit.xl = xl
+            lunit.nland = nland
+            lunit.land = land
+            lunit.ship = ship
             lunit.cargo[.shells] = Int(bits[18])
             lunit.cargo[.guns] = Int(bits[19])
             lunit.cargo[.petrol] = Int(bits[20])
@@ -80,10 +97,10 @@ extension Game {
             lunit.cargo[.lcm] = Int(bits[25])
             lunit.cargo[.hcm] = Int(bits[26])
             lunit.cargo[.radioactives] = Int(bits[27])
-            lunit.attack = Float(bits[28])!
-            lunit.defense = Float(bits[29])!
-            lunit.vulnerability = Int(bits[30])!
-            lunit.speed = Int(bits[31])!
+            lunit.attack = attack
+            lunit.defense = defense
+            lunit.vulnerability = vulnerability
+            lunit.speed = speed
             lunit.visibility = Int(bits[32])!
             lunit.spy = Int(bits[33])!
             lunit.radius = Int(bits[34])!
@@ -100,7 +117,7 @@ extension Game {
         }
 
         // Remove units that weren't in the dump
-        for lunit in landUnits.keys {
+        for lunit in Array(landUnits.keys) {
             if !exists.contains(lunit) && trimMissing {
                 landUnits.removeValue(forKey: lunit)
             }

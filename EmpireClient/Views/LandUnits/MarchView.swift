@@ -12,6 +12,8 @@ struct MarchView: View {
     var unit: LandUnit
     @Binding var destination: MapCoord
     @Binding var viewMode: LandViewMode
+    @Binding var sectorSelect: Bool
+
     @State var origLocation: MapCoord = MapCoord(x: 0, y: 0)
 
     var body: some View {
@@ -24,18 +26,21 @@ struct MarchView: View {
                 .title
             )
             HStack {
-                Button("Cancel") {
+                CancelButton() {
                     viewMode = .overview
                     destination = origLocation
+                    sectorSelect = true
                 }
-                Button("March") {
+                OkButton("March to \(destination.toString())", disabled: destination == origLocation) {
                     marchToLocation(destination, unit: unit)
                     viewMode = .overview
-                }.disabled(destination == origLocation)
+                    sectorSelect = true
+                }
             }
         }.padding()
             .onAppear {
                 origLocation = destination
+                sectorSelect = false
             }
     }
 

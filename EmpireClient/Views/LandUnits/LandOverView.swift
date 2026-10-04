@@ -18,18 +18,24 @@ enum LandViewMode {
 struct LandOverView: View {
     var game: Game
     @Binding var centerCoord: MapCoord
+    @Binding var sectorSelect: Bool
+
     @State private var selectedUnit: LandUnit.ID?
     @State var viewMode: LandViewMode = .overview
 
     var body: some View {
         VStack {
-            if let selectedUnit, let unit = game.landUnits[selectedUnit] {
-                LandDetailView(game: game, unit: unit)
-                Divider()
-                Spacer()
-            } else {
-                Text("Unit not selected")
-            }
+            Spacer()
+            Group {
+                if let selectedUnit, let unit = game.landUnits[selectedUnit] {
+                    LandDetailView(game: game, unit: unit)
+                    Divider()
+                    Spacer()
+                } else {
+                    Text("Unit not selected").padding()
+                }
+            }.border(.blue)
+
             HStack(alignment: .center) {
                 Spacer()
                 if viewMode == .overview {
@@ -70,7 +76,8 @@ struct LandOverView: View {
                     game: game,
                     unit: unit,
                     destination: $centerCoord,
-                    viewMode: $viewMode
+                    viewMode: $viewMode,
+                    sectorSelect: $sectorSelect
                 )
             case .upgrade:
                 LandUpgradeView(game: game, unit: unit, viewMode: $viewMode)

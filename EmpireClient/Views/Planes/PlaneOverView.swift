@@ -11,23 +11,28 @@ enum PlaneViewMode {
     case overview
     case upgrade
     case wingadd
+    case launch
 }
 
 struct PlaneOverView: View {
     var game: Game
     @Binding var centerCoord: MapCoord
+    @Binding var sectorSelect: Bool
     @State var viewMode: PlaneViewMode = .overview
     @State private var selectedPlane: Plane.ID?
 
     var body: some View {
         VStack {
-            if let selectedPlane, let plane = game.planes[selectedPlane] {
-                PlaneDetailView(game: game, plane: plane)
-                Divider()
-                Spacer()
-            } else {
-                Text("Plane not selected")
-            }
+            Spacer()
+            Group {
+                if let selectedPlane, let plane = game.planes[selectedPlane] {
+                    PlaneDetailView(game: game, plane: plane)
+                    Divider()
+                    Spacer()
+                } else {
+                    Text("Plane not selected").padding()
+                }
+            }.border(.blue)
             HStack(alignment: .center) {
                 Spacer()
                 if viewMode == .overview {
@@ -65,6 +70,8 @@ struct PlaneOverView: View {
                 PlaneUpgradeView(game: game, plane: plane, viewMode: $viewMode)
             case .wingadd:
                 WingAddView(game: game, plane: plane, viewMode: $viewMode)
+            case .launch:
+                LaunchView(game: game, plane: plane, destination: $centerCoord, viewMode: $viewMode, sectorSelect: $sectorSelect)
             }
         }
     }

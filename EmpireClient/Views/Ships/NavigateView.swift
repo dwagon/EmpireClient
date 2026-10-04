@@ -12,19 +12,22 @@ struct NavigateView: View {
     var ship: Ship
     @Binding var destination: MapCoord
     @Binding var viewMode: ShipViewMode
+    @Binding var sectorSelect: Bool
     @State var origLocation: MapCoord
 
     init(
         game: Game,
         ship: Ship,
         destination: Binding<MapCoord>,
-        viewMode: Binding<ShipViewMode>
+        viewMode: Binding<ShipViewMode>,
+        sectorSelect: Binding<Bool>
     ) {
         self.game = game
         self.ship = ship
         self._destination = destination
         self._viewMode = viewMode
         self._origLocation = State(initialValue: destination.wrappedValue)
+        self._sectorSelect = sectorSelect
     }
 
     var body: some View {
@@ -37,18 +40,21 @@ struct NavigateView: View {
                 .title
             )
             HStack {
-                Button("Cancel") {
+                CancelButton() {
                     viewMode = .overview
+                    sectorSelect = true
                     destination = origLocation
                 }
-                Button("Navigate to \(destination.toString())") {
+                OkButton("Navigate to \(destination.toString())", disabled: destination == origLocation) {
                     navigateToLocation(destination, ship: ship)
                     viewMode = .overview
-                }.disabled(destination == origLocation)
+                    sectorSelect = true
+                }
             }
         }.padding()
             .onAppear {
                 origLocation = destination
+                sectorSelect = false
             }
     }
 
