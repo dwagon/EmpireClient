@@ -81,6 +81,7 @@ struct MapView: View {
                 radius: radius,
                 cellText: cellText,
                 cellFillColour: cellColour,
+                cellEdgeColour: cellEdge,
                 cellOpacity: cellOpacity,
                 hexGesture: hexGesture
             )
@@ -154,6 +155,19 @@ struct MapView: View {
         let ships = game.ships.filter({ $0.value.coords == coord })
         if ships.count > 1 { return "F" }
         if ships.count == 1 { return Array(ships.values)[0].abbrev }
+        return nil
+    }
+
+    func cellEdge(_ cell: Cell) -> GraphicsContext.Shading? {
+        let mapCoord = screenToMapCoord(
+            cell.coordinates,
+            centerCoord: centerCoord
+        )
+        if let sector = game.gameMap[mapCoord] {
+            if !sector.problems.isEmpty {
+                return .color(.red)
+            }
+        }
         return nil
     }
 

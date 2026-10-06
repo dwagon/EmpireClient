@@ -18,7 +18,7 @@ class Game: Decodable {
     var budgetReport: [String] = []
     var powerReport: [String] = []
     var logs: [Log] = []
-    var realms: [RealmNum:Realm] = [:]
+    var realms: [RealmNum: Realm] = [:]
     var telegrams: [Telegram] = []
 
     var shipTypes: [String: ShipType] = [:]
@@ -72,7 +72,7 @@ class Game: Decodable {
 
     func landUnitsAt(_ coord: MapCoord?) -> [LandUnit] {
         if let coord {
-            return  Array(landUnits.values).filter {
+            return Array(landUnits.values).filter {
                 $0.coords == coord
             }
         }
@@ -81,7 +81,7 @@ class Game: Decodable {
 
     func shipsAt(_ coord: MapCoord?) -> [Ship] {
         if let coord {
-            return  Array(ships.values).filter {
+            return Array(ships.values).filter {
                 $0.coords == coord
             }
         }
@@ -152,6 +152,13 @@ class Game: Decodable {
         await cmd_pdump()
         await cmd_ndump()
         await cmd_read()
+        if let lastTelegram = telegrams.last {
+            for problem in lastTelegram.getProblems() {
+                if let sector = gameMap[problem.key] {
+                    sector.problems = problem.value
+                }
+            }
+        }
     }
 
     enum CodingKeys: String, CodingKey {
@@ -161,6 +168,8 @@ class Game: Decodable {
         case budgetReport
         // case powerReport
         // case logs
+        // case realms
+        // case telegrams
         case shipTypes
         case ships
         // case treasury
