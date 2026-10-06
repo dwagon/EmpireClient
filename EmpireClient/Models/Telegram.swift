@@ -25,8 +25,8 @@ class Telegram: Identifiable {
             input.remove(at: 0)
         }
         if let match = try? regex.firstMatch(in: input[0]) {
-            from = String(match.1)
-            date = String(match.2)
+            from = String(match.1).trimmingCharacters(in: .whitespacesAndNewlines)
+            date = String(match.2).trimmingCharacters(in: .whitespacesAndNewlines)
             content = Array(input.dropFirst())
         } else {
             return nil
