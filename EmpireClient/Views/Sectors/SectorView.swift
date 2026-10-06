@@ -276,6 +276,18 @@ struct SectorView: View {
                 }
             }
 
+            if !sector.problems.isEmpty {
+                HStack {
+                    Label("Problems", systemImage: "exclamationmark.triangle").tint(.red)
+                        .labelStyle(.iconOnly).padding()
+                    VStack(alignment: .leading) {
+                        ForEach(sector.problems, id: \.self) { problem in
+                            Text("\(problem)")
+                        }
+                    }.padding()
+                }.border(.red, width: 2)
+            }
+
             //
             Section("Overview") {
                 overviewSection

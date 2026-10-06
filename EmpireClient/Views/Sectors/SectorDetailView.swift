@@ -19,9 +19,9 @@ struct SectorDetailView: View {
     @State private var showBuildPopup: Bool = false
     @State private var showOptimizePopup: Bool = false
 
-
     var body: some View {
         let realms = game.inWhichRealm(coord: centerCoord)
+        
         HStack {
             VStack {
                 if let sector = game[centerCoord] {
@@ -29,9 +29,14 @@ struct SectorDetailView: View {
                         "\(centerCoord.x), \(centerCoord.y): \(sector.desig.name)"
                     )
                     .font(.title)
-                    SectorView(coord: centerCoord, sector: sector, realms: realms)
-                        .focusable(true)
-                        .focused($focused)
+                    SectorView(
+                        coord: centerCoord,
+                        sector: sector,
+                        realms: realms
+                    )
+                    .focusable(true)
+                    .focused($focused)
+            
                 } else {
                     Text("\(centerCoord.x), \(centerCoord.y)").font(.title)
                 }
@@ -102,7 +107,7 @@ struct SectorDetailView: View {
     var radarButton: some View {
         Button("Radar") {
             Task {
-                if let _ = game[centerCoord] {
+                if game[centerCoord] != nil {
                     await game.cmd_radar(centerCoord, suppressLog: false)
                 }
             }

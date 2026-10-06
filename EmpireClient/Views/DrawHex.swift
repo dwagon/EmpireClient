@@ -14,7 +14,7 @@ struct DrawHex: View {
     var cellText: ((Cell) -> String)?
     var cellImage: ((Cell) -> Image)?
     var cellFillColour: ((Cell) -> GraphicsContext.Shading)?
-    var cellEdgeColour: ((Cell) -> GraphicsContext.Shading)?
+    var cellEdgeColour: ((Cell) -> GraphicsContext.Shading?)?
     var cellOpacity: ((Cell) -> Double)?
     var hexGesture: ((CGPoint) -> Void)?
 
@@ -24,7 +24,7 @@ struct DrawHex: View {
         cellText: ((Cell) -> String)? = nil,
         cellImage: ((Cell) -> Image)? = nil,
         cellFillColour: ((Cell) -> GraphicsContext.Shading)? = nil,
-        cellEdgeColour: ((Cell) -> GraphicsContext.Shading)? = nil,
+        cellEdgeColour: ((Cell) -> GraphicsContext.Shading?)? = nil,
         cellOpacity: ((Cell) -> Double)? = nil,
         hexGesture: ((CGPoint) -> Void)? = nil
     ) {
@@ -64,11 +64,6 @@ struct DrawHex: View {
                 if let cellOpacity {
                     context.opacity = cellOpacity(cell)
                 }
-                context.stroke(
-                    path,
-                    with: cellStrokeColour(cell: cell),
-                    lineWidth: 2
-                )
                 if let cellFillColour {
                     context.fill(path, with: cellFillColour(cell))
                 }
@@ -84,14 +79,32 @@ struct DrawHex: View {
                     context.draw(cellImage(cell), at: center.cgPoint)
                 }
             }
+            // Draw the edges after the hexes so they are always visible
+            for cell in try! hexmap.filledRing(from: center, in: radius) {
+                let path = cellPath(
+                    cell: cell,
+                    corners: hexmap.polygonCorners(for: cell)
+                )
+                context.stroke(
+                    path,
+                    with: cellStrokeColour(cell: cell),
+                    lineWidth: 1
+                )
+            }
         }
+
     }
 
     func cellStrokeColour(cell: Cell) -> GraphicsContext.Shading {
         if let cellEdgeColour {
-            return cellEdgeColour(cell)
+            if let color = cellEdgeColour(cell) {
+                return color
+            }
+            else {
+                return .color(red: 0.65, green: 0.9, blue: 1.0, opacity: 0.1)
+            }
         }
-        return .color(red: 0.65, green: 0.9, blue: 1.0)
+        return .color(red: 0.65, green: 0.9, blue: 1.0, opacity: 1.0)
     }
 
     func cellPath(cell: Cell, corners: [Point]) -> Path {
