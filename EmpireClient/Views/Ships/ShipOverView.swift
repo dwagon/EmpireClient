@@ -53,6 +53,11 @@ struct ShipOverView: View {
             }
             Spacer()
         }
+        .onAppear {
+            if let selectedShip, let ship = game.ships[selectedShip] {
+                centerCoord = ship.coords
+            }
+        }
     }
 
     @ViewBuilder
