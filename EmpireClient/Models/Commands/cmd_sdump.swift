@@ -27,20 +27,36 @@ extension Game {
     // 4 ships
     func parse_cmd_sdump(_ input: [String], trimMissing: Bool = true) {
         var ship: Ship
-        let quotesRegex = /"(.*)"/
+        let nameRegex = /"([^"]*)"/
         var exists: Set<ShipNum> = []
+        let expectedFieldCount = 34
 
-        for line in input[3..<input.count] {
-            let bits = line.split(separator: " ")
-            if bits[1].starts(with:"ship") {  // Last line
-                break
+        for line in input {
+            guard let nameMatch = line.firstMatch(of: nameRegex) else {
+                continue
             }
-            let shipNum = ShipNum(bits[0])!
-            if ships[shipNum] == nil {
-                ship = Ship(abbrev: String(bits[1]))
+
+            // Everything before the quoted name.
+            let bits = line[..<nameMatch.range.lowerBound]
+                .split(whereSeparator: \.isWhitespace)
+
+            guard bits.count == expectedFieldCount else {
+                continue
+            }
+
+            if bits[0] == "id" { continue }  // header
+
+            guard let shipNum = ShipNum(bits[0]) else {
+                print("Unknown line: \(line)")
+                continue
+            }
+
+            if let existing = ships[shipNum] {
+                ship = existing
             } else {
-                ship = ships[shipNum]!
+                ship = Ship(abbrev: String(bits[1]))
             }
+
             ship.number = shipNum
             ship.abbrev = String(bits[1])
             ship.coords = MapCoord(x: Int(bits[2])!, y: Int(bits[3])!)
@@ -74,7 +90,7 @@ extension Game {
             ship.fire = Int(bits[31])!
             // Orig_x = bits[32]
             // Orig_y = bits[33]
-            if let match = line.firstMatch(of: quotesRegex) {
+            if let match = line.firstMatch(of: nameRegex) {
                 ship.name = String(match.1)
             }
             ships[shipNum] = ship

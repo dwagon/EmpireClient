@@ -49,6 +49,11 @@ struct PlaneOverView: View {
             }
             Spacer()
         }
+        .onAppear {
+            if let selectedPlane, let plane = game.planes[selectedPlane] {
+                centerCoord = plane.coords
+            }
+        }
     }
 
     @ViewBuilder

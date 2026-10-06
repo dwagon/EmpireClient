@@ -51,6 +51,10 @@ struct LandOverView: View {
                 )
             }
             Spacer()
+        }.onAppear {
+            if let selectedUnit, let unit = game.landUnits[selectedUnit] {
+                centerCoord = unit.coords
+            }
         }
     }
 

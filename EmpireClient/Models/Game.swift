@@ -152,11 +152,15 @@ class Game: Decodable {
         await cmd_pdump()
         await cmd_ndump()
         await cmd_read()
-        if let lastTelegram = telegrams.last {
-            for problem in lastTelegram.getProblems() {
-                if let sector = gameMap[problem.key] {
-                    sector.problems = problem.value
+        // Should do this till the last "Production Report"
+        for telegram in telegrams.reversed() {
+            if telegram.from == "Production Report" {
+                for problem in telegram.getProblems() {
+                    if let sector = gameMap[problem.key] {
+                        sector.problems = problem.value
+                    }
                 }
+                break
             }
         }
     }
