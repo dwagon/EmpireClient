@@ -9,152 +9,92 @@ import SwiftUI
 
 struct SectorDetailView: View {
     var game: Game
-    var centerCoord: MapCoord
-    @FocusState private var focused: Bool
+    var sector: Sector?
 
-    @State private var showExplorePopup: Bool = false
-    @State private var showDesignatePopup: Bool = false
-    @State private var showDistributePopup: Bool = false
-    @State private var showThresholdPopup: Bool = false
-    @State private var showBuildPopup: Bool = false
-    @State private var showOptimizePopup: Bool = false
-
-    var body: some View {
-        let realms = game.inWhichRealm(coord: centerCoord)
-        
-        HStack {
-            VStack {
-                if let sector = game[centerCoord] {
-                    Text(
-                        "\(centerCoord.x), \(centerCoord.y): \(sector.desig.name)"
-                    )
-                    .font(.title)
-                    SectorView(
-                        coord: centerCoord,
-                        sector: sector,
-                        realms: realms
-                    )
-                    .focusable(true)
-                    .focused($focused)
-            
-                } else {
-                    Text("\(centerCoord.x), \(centerCoord.y)").font(.title)
-                }
+    var desigStr: String {
+        var ans: String = "Unknown Sector"
+        if let sector {
+            ans =
+                "Desig: \(sector.desig.name) (Eff: \(sector[.eff], default: "??")%)"
+            if sector.sdes.desig != .unknown {
+                ans += " Redesignated to: \(sector.sdes.name)"
             }
-            sectorButtonBar
         }
-        .navigationSplitViewColumnWidth(min: 400, ideal: 800)
-        .build(
-            isPresented: $showBuildPopup,
-            game: game,
-            centerCoord: centerCoord
-        )
-        .explore(
-            isPresented: $showExplorePopup,
-            game: game,
-            centerCoord: centerCoord
-        )
-        .designate(
-            isPresented: $showDesignatePopup,
-            game: game,
-            centerCoord: centerCoord
-        )
-        .distribute(
-            isPresented: $showDistributePopup,
-            game: game,
-            centerCoord: centerCoord
-        )
-        .threshold(
-            isPresented: $showThresholdPopup,
-            game: game,
-            centerCoord: centerCoord
-        )
-        .optimize(
-            isPresented: $showOptimizePopup,
-            game: game,
-            centerCoord: centerCoord
-        )
+        return ans
     }
 
-    var sectorButtonBar: some View {
-        VStack {
-            refreshButton
-            if let sector = game[centerCoord] {
-                if sector.owned {
-                    buildButton
-                    designateButton
-                    distributeButton
-                    exploreButton
-                    thresholdButton
-                    optimizeButton
-                    if sector.desig.desig == .radar {
-                        radarButton
+    var realms: [RealmNum] {
+        if let sector {
+            return game.inWhichRealm(coord: sector.coords)
+        }
+        return []
+    }
+
+    func resource(_ item: Item) -> some View {
+        return Group {
+            if let sector {
+                if sector.cargo[item] != 0 {
+                    Text("\(item.rawValue.uppercased()): \(sector.cargo[item], default: "?")")
+                }
+            }
+        }
+    }
+
+    var body: some View {
+        HStack {
+            VStack {
+                if let sector {
+                    Text(
+                        "\(sector.coords.toString()): \(sector.desig.name)"
+                    )
+                    .font(.title)
+                    //
+                    Text(desigStr)
+                    HStack {
+                        if let distX = sector[.distX],
+                            let distY = sector[.distY]
+                        {
+                            if MapCoord(x: distX, y: distY) != sector.coords {
+                                Text(
+                                    "Distribute to \(sector[.distX], default: "?"), \(sector[.distY], default: "?")"
+                                ).padding(.horizontal)
+                            } else {
+                                Text("No distribution set").padding(
+                                    .horizontal
+                                )
+                            }
+                        }
+                        Text("Mobility: \(sector[.mob], default: "?")")
+                            .padding(
+                                .horizontal
+                            )
+                        Text(
+                            "Available Work: \(sector[.avail], default: "?")"
+                        )
+                        .padding(.horizontal)
+                        Text(
+                            realms.isEmpty
+                                ? "" : "Realm: \(realms[0], default: "?")"
+                        ).padding(.horizontal)
+                    }
+                    HStack {
+                        resource(.civ)
+                        resource(.mil)
+                        resource(.uw)
+                        resource(.food)
+                        resource(.shells)
+                        resource(.guns)
+                        resource(.petrol)
+                        resource(.ironOre)
+                        resource(.goldDust)
+                        resource(.goldBars)
+                        resource(.oil)
+                        resource(.lcm)
+                        resource(.hcm)
+                        resource(.radioactives)
                     }
                 }
             }
         }
     }
-
-    var refreshButton: some View {
-        return
-            Button("Refresh") {
-                Task {
-                    await game.get_data()
-                }
-            }
-    }
-
-    var radarButton: some View {
-        Button("Radar") {
-            Task {
-                if game[centerCoord] != nil {
-                    await game.cmd_radar(centerCoord, suppressLog: false)
-                }
-            }
-        }
-    }
-
-    var buildButton: some View {
-        Button("Build") {
-            showBuildPopup = true
-        }
-    }
-
-    var thresholdButton: some View {
-        Button("Threshold") {
-            showThresholdPopup = true
-        }
-    }
-
-    var distributeButton: some View {
-        Button("Distribute") {
-            showDistributePopup = true
-        }
-    }
-
-    var exploreButton: some View {
-        Button("Explore") {
-            showExplorePopup = true
-        }
-    }
-
-    var designateButton: some View {
-        Button("Designate") {
-            showDesignatePopup = true
-        }
-    }
-
-    var optimizeButton: some View {
-        Button("Optimize") {
-            showOptimizePopup = true
-        }
-    }
-}
-
-#Preview {
-    @Previewable @State var game = DataLoader.loadSampleGame(
-        name: "Game_ShipView"
-    )
-    @Previewable @State var centerCoord = MapCoord(x: 0, y: 0)
-    SectorDetailView(game: game, centerCoord: centerCoord)
 }

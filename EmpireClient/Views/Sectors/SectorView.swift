@@ -9,23 +9,12 @@ import HexGrid
 import SwiftUI
 
 struct SectorView: View {
-    var coord: MapCoord
     var sector: Sector
-    var realms: [RealmNum] = []
 
     @State var resourceCollapse: Bool = false
     @State var naturalResourceCollapse: Bool = false
     @State var populationCollapse: Bool = false
     @State var productionCollapse: Bool = false
-
-    var desigStr: String {
-        var ans =
-            "Desig: \(sector.desig.name) (Eff: \(sector[.eff], default: "??")%)"
-        if sector.sdes.desig != .unknown {
-            ans += " Redesignated to: \(sector.sdes.name)"
-        }
-        return ans
-    }
 
     var naturalResourceSection: some View {
         Grid {
@@ -250,42 +239,23 @@ struct SectorView: View {
     }
 
     var body: some View {
+        Spacer()
         List {
-            //
-            Section("Sector Details") {
-                Text(desigStr)
-                HStack {
-                    if let distX = sector[.distX], let distY = sector[.distY] {
-                        if MapCoord(x: distX, y: distY) != coord {
-                            Text(
-                                "Distribute to \(sector[.distX], default: "?"), \(sector[.distY], default: "?")"
-                            ).padding(.horizontal)
-                        } else {
-                            Text("No distribution set").padding(.horizontal)
-                        }
-                    }
-                    Text("Mobility: \(sector[.mob], default: "?")").padding(
-                        .horizontal
-                    )
-                    Text("Available Work: \(sector[.avail], default: "?")")
-                        .padding(.horizontal)
-                    Text(
-                        realms.isEmpty
-                            ? "" : "Realm: \(realms[0], default: "?")"
-                    ).padding(.horizontal)
-                }
-            }
-
             if !sector.problems.isEmpty {
-                HStack {
-                    Label("Problems", systemImage: "exclamationmark.triangle").tint(.red)
-                        .labelStyle(.iconOnly).padding()
-                    VStack(alignment: .leading) {
-                        ForEach(sector.problems, id: \.self) { problem in
-                            Text("\(problem)")
-                        }
-                    }.padding()
-                }.border(.red, width: 2)
+                Section("Problems") {
+                    HStack {
+                        Label(
+                            "Problems",
+                            systemImage: "exclamationmark.triangle"
+                        ).tint(.red)
+                            .labelStyle(.iconOnly).padding()
+                        VStack(alignment: .leading) {
+                            ForEach(sector.problems, id: \.self) { problem in
+                                Text("\(problem)")
+                            }
+                        }.padding()
+                    }.border(.red, width: 2)
+                }
             }
 
             //
@@ -293,6 +263,7 @@ struct SectorView: View {
                 overviewSection
             }
             Spacer()
+
             //
             Section(isExpanded: $populationCollapse) {
                 populationSection
