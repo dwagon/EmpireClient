@@ -23,7 +23,7 @@ struct SectorOverView: View {
     @State var viewMode: SectorViewMode = .overview
 
     var body: some View {
-        VStack() {
+        VStack {
             Group {
                 SectorDetailView(game: game, sector: game.gameMap[centerCoord])
                 Divider()
@@ -68,8 +68,7 @@ struct SectorOverView: View {
                 EmptyView()
             //                ExploreView(game: <#T##Game#>, coord: <#T##MapCoord#>, item: <#T##Binding<Item>#>, number: <#T##Binding<Int>#>, destination: <#T##Binding<String?>#>, onButton: <#T##() -> Void#>)
             case .designate:
-                EmptyView()
-            //                DesignateView(sector: <#T##Sector#>, designation: <#T##Binding<String>#>, onButton: <#T##() -> Void#>)
+                DesignateView(game: game, sector: sector, viewMode: $viewMode)
             case .optimize:
                 EmptyView()
             //                OptimizeView(sector: <#T##Sector#>, optimizeType: <#T##Binding<OptimizeType>#>, onButton: <#T##() -> Void#>)

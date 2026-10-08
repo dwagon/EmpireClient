@@ -40,19 +40,19 @@ struct SectorButtonBar: View {
     var thresholdButton: some View {
         return Button("Threshold") {
             viewMode = .threshold
-        }
+        }.disabled(true)
     }
 
     var distributeButton: some View {
         return Button("Distribute") {
             viewMode = .distribute
-        }
+        }.disabled(true)
     }
 
     var exploreButton: some View {
         return Button("Explore") {
             viewMode = .explore
-        }
+        }.disabled(true)
     }
 
     var designateButton: some View {
@@ -64,7 +64,7 @@ struct SectorButtonBar: View {
     var optimizeButton: some View {
         return Button("Optimize") {
             viewMode = .optimize
-        }
+        }.disabled(true)
     }
 
     var refreshButton: some View {
