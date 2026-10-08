@@ -9,18 +9,27 @@ import SwiftUI
 
 struct BuildView: View {
     let game: Game
-    let coord: MapCoord
-    let buildType: BuildType
-    let maxUnits = 20
-    @Binding var deviceType: String
-    @Binding var number: Int
-    @Environment(\.dismiss) var dismiss
-    var onButton: () -> Void
+    let sector: Sector
+    @Binding var viewMode: SectorViewMode
+
+    @State var buildType: BuildType
+    @State var maxUnits = 20
+    @State var deviceType: String
+    @State var number: Int
+
+    init(game: Game, sector: Sector, viewMode: Binding<SectorViewMode>) {
+        self.game = game
+        self.sector = sector
+        self._viewMode = viewMode
+        self.buildType = getBuildType(sector.desig.desig)
+        self.deviceType = ""
+        self.number = 1
+    }
 
     var body: some View {
         VStack {
             Label(
-                "Build at \(coord.toString())",
+                "Build at \(sector.coords.toString())",
                 systemImage: "wrench.and.screwdriver"
             ).font(.title)
             HStack {
@@ -35,11 +44,11 @@ struct BuildView: View {
             }.padding()
             HStack {
                 CancelButton() {
-                    dismiss()
+                    viewMode = .overview
                 }
                 OkButton("Build") {
-                    onButton()
-                    dismiss()
+                    buildThing(game: game, number: number, device: buildType, type: deviceType, sector: sector)
+                    viewMode = .overview
                 }
             }
         }
@@ -57,9 +66,9 @@ struct BuildView: View {
                 }
                 GridRow {
                     Text("Available")
-                    Text("\(game[coord]!.cargo[.lcm], default: "?")")
-                    Text("\(game[coord]!.cargo[.hcm], default: "?")")
-                    Text("\(game[coord]![.avail], default: "?")")
+                    Text("\(sector.cargo[.lcm], default: "?")")
+                    Text("\(sector.cargo[.hcm], default: "?")")
+                    Text("\(sector[.avail], default: "?")")
                     Text("$\(game.treasury)")
                 }
                 GridRow {
@@ -102,7 +111,7 @@ struct BuildView: View {
                         )
                     }
                 }.pickerStyle(.menu)
-                Spacer()
+                    .padding()
                 Picker("Number to Build", selection: $number) {
                     ForEach(0...maxUnits, id: \.self) { number in
                         Text("\(number)").tag(number)
@@ -125,10 +134,10 @@ struct BuildView: View {
                 }
                 GridRow {
                     Text("Available")
-                    Text("\(game[coord]!.cargo[.lcm], default: "?")")
-                    Text("\(game[coord]!.cargo[.hcm], default: "?")")
-                    Text("\(game[coord]!.cargo[.mil], default: "?")")
-                    Text("\(game[coord]![.avail], default: "?")")
+                    Text("\(sector.cargo[.lcm], default: "?")")
+                    Text("\(sector.cargo[.hcm], default: "?")")
+                    Text("\(sector.cargo[.mil], default: "?")")
+                    Text("\(sector[.avail], default: "?")")
                     Text("$\(game.treasury)")
                 }
                 GridRow {
@@ -171,9 +180,8 @@ struct BuildView: View {
                             planeType
                         )
                     }
-                }.pickerStyle(.menu)
-                Spacer()
-                Picker("Number to Build", selection: $number) {
+                }.pickerStyle(.menu).padding()
+                            Picker("Number to Build", selection: $number) {
                     ForEach(0...maxUnits, id: \.self) { number in
                         Text("\(number)").tag(number)
                     }
@@ -196,11 +204,11 @@ struct BuildView: View {
                 }
                 GridRow {
                     Text("Available")
-                    Text("\(game[coord]!.cargo[.lcm], default: "?")")
-                    Text("\(game[coord]!.cargo[.hcm], default: "?")")
-                    Text("\(game[coord]!.cargo[.oil], default: "?")")
-                    Text("\(game[coord]!.cargo[.radioactives], default: "?")")
-                    Text("\(game[coord]![.avail], default: "?")")
+                    Text("\(sector.cargo[.lcm], default: "?")")
+                    Text("\(sector.cargo[.hcm], default: "?")")
+                    Text("\(sector.cargo[.oil], default: "?")")
+                    Text("\(sector.cargo[.radioactives], default: "?")")
+                    Text("\(sector[.avail], default: "?")")
                     Text("$\(game.treasury)")
                 }
                 GridRow {
@@ -247,8 +255,7 @@ struct BuildView: View {
                             nukeType
                         )
                     }
-                }.pickerStyle(.menu)
-                Spacer()
+                }.pickerStyle(.menu).padding()
                 Picker("Number to Build", selection: $number) {
                     ForEach(0...maxUnits, id: \.self) { number in
                         Text("\(number)").tag(number)
@@ -271,10 +278,10 @@ struct BuildView: View {
                 }
                 GridRow {
                     Text("Available")
-                    Text("\(game[coord]!.cargo[.lcm], default: "?")")
-                    Text("\(game[coord]!.cargo[.hcm], default: "?")")
-                    Text("\(game[coord]!.cargo[.guns], default: "?")")
-                    Text("\(game[coord]![.avail], default: "?")")
+                    Text("\(sector.cargo[.lcm], default: "?")")
+                    Text("\(sector.cargo[.hcm], default: "?")")
+                    Text("\(sector.cargo[.guns], default: "?")")
+                    Text("\(sector[.avail], default: "?")")
                     Text("$\(game.treasury)")
                 }
                 GridRow {
@@ -316,8 +323,7 @@ struct BuildView: View {
                             unitType
                         )
                     }
-                }.pickerStyle(.menu)
-                Spacer()
+                }.pickerStyle(.menu).padding()
                 Picker("Number to Build", selection: $number) {
                     ForEach(0...maxUnits, id: \.self) { number in
                         Text("\(number)").tag(number)
@@ -326,7 +332,6 @@ struct BuildView: View {
             }
         }
     }
-
 }
 
 /// Call out to build the thing
@@ -335,14 +340,14 @@ func buildThing(
     number: Int,
     device: BuildType,
     type: String,
-    coord: MapCoord
+    sector: Sector
 ) {
     Task {
         if number != 0 && type != "" {
             await game.cmd_build(
                 device: device,
                 type: type,
-                sector: coord,
+                sector: sector.coords,
                 number: number
             )
             switch device {
@@ -358,7 +363,7 @@ func buildThing(
                 break
             }
         }
-        await game.cmd_dump(coord)
+        await game.cmd_dump(sector.coords)
     }
 }
 
@@ -379,71 +384,3 @@ func getBuildType(_ desigType: DesigType) -> BuildType {
     }
     return buildType
 }
-
-struct BuildSheet: ViewModifier {
-    @Binding var isPresented: Bool
-    var game: Game
-    var coord: MapCoord
-    @State var type: String = ""
-    @State var number: Int = 1
-
-    @ViewBuilder
-    func body(content: Content) -> some View {
-        content
-            .sheet(
-                isPresented: $isPresented
-            ) {
-                let buildType = getBuildType(game[coord]!.desig.desig)
-                BuildView(
-                    game: game,
-                    coord: coord,
-                    buildType: buildType,
-                    deviceType: $type,
-                    number: $number
-                ) {
-                    buildThing(
-                        game: game,
-                        number: number,
-                        device: buildType,
-                        type: type,
-                        coord: coord
-                    )
-                }
-                .onAppear {
-                    type = ""
-                    number = 1
-                }
-            }
-    }
-}
-
-extension View {
-    func build(
-        isPresented: Binding<Bool>,
-        game: Game,
-        centerCoord: MapCoord
-    ) -> some View {
-        modifier(
-            BuildSheet(
-                isPresented: isPresented,
-                game: game,
-                coord: centerCoord
-            )
-        )
-    }
-}
-
-// #Preview("Ship") {
-//
-//    @Previewable @State var deviceType: String = ""
-//    @Previewable @State var number: Int = 1
-//    let game = Game()
-//    let coord = MapCoord(x: 0, y: 0)
-//    BuildView(
-//        game: game,
-//        coord: coord,
-//        buildType: .ship,
-//        deviceType: $deviceType,
-//        number: $number
-//    )
-// }

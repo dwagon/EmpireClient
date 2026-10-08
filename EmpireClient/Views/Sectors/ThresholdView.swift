@@ -15,19 +15,16 @@ enum ThresholdType: Hashable {
 
 struct ThresholdView: View {
     var game: Game
-    var coord: MapCoord
-    @Binding var item: Item
-    @Binding var level: Double
-    @Binding var threshType: ThresholdType
-    var onButton: () -> Void
+    var sector: Sector
+    @Binding var viewMode: SectorViewMode
 
-    @Environment(\.dismiss) var dismiss
+    @State var item: Item = .none
+    @State var level: Double = 0.0
+    @State var threshType: ThresholdType = .individual
 
     var currentLevel: Int {
-        if let sector = game[coord] {
-            if let amount = sector.distribute[item] {
-                return amount
-            }
+        if let amount = sector.distribute[item] {
+            return amount
         }
         return 0
     }
@@ -44,7 +41,7 @@ struct ThresholdView: View {
             switch threshType {
             case .individual:
                 Text(
-                    "Set threshold of \(item.displayName) at \(coord.toString()) to \(Int(level))"
+                    "Set threshold of \(item.displayName) at \(sector.coords.toString()) to \(Int(level))"
                 )
             case .global:
                 Text(
@@ -61,12 +58,12 @@ struct ThresholdView: View {
                     : "Current Threshold of \(item.displayName) is \(currentLevel)"
             )
             HStack {
-                CancelButton() {
-                    dismiss()
+                CancelButton {
+                    viewMode = .overview
                 }
                 OkButton("Set Threshold", disabled: item == .none) {
-                    onButton()
-                    dismiss()
+                    doThreshold(game: game, threshType: threshType, coord: sector.coords, item: item, level: Int(level))
+                    viewMode = .overview
                 }
             }
         }
@@ -79,11 +76,11 @@ struct ThresholdView: View {
                 selection: $threshType,
                 content: {
                     Text("Global").tag(ThresholdType.global)
-                    Text("Just \(coord.toString())").tag(
+                    Text("Just \(sector.coords.toString())").tag(
                         ThresholdType.individual
                     )
-                    Text("All \(game.gameMap[coord]!.desig.name)").tag(
-                        ThresholdType.desig(game.gameMap[coord]!.desig)
+                    Text("All \(sector.desig.name)").tag(
+                        ThresholdType.desig(sector.desig)
                     )
                 }
             ).pickerStyle(.segmented)
@@ -129,78 +126,5 @@ func doThreshold(
             )
         }
         await game.cmd_dump()
-    }
-}
-
-struct ThresholdSheet: ViewModifier {
-    @Binding var isPresented: Bool
-    var game: Game
-    var centerCoord: MapCoord
-    @State private var item: Item = .none
-    @State private var level = 0.0
-    @State private var threshType: ThresholdType = .global
-
-    func body(content: Content) -> some View {
-        content
-            .sheet(
-                isPresented: $isPresented
-            ) {
-                ThresholdView(
-                    game: game,
-                    coord: centerCoord,
-                    item: $item,
-                    level: $level,
-                    threshType: $threshType
-                ) {
-                    if item != .none {
-                        doThreshold(
-                            game: game,
-                            threshType: threshType,
-                            coord: centerCoord,
-                            item: item,
-                            level: Int(level)
-                        )
-                    }
-                }
-            }
-            .onAppear {
-                item = .none
-                level = 0
-                threshType = .global
-            }
-    }
-}
-
-extension View {
-    func threshold(
-        isPresented: Binding<Bool>,
-        game: Game,
-        centerCoord: MapCoord
-    ) -> some View {
-        modifier(
-            ThresholdSheet(
-                isPresented: isPresented,
-                game: game,
-                centerCoord: centerCoord
-            )
-        )
-    }
-}
-
-#Preview {
-    @Previewable var game = Game()
-    @Previewable var coord = MapCoord(x: 0, y: 0)
-    @Previewable @State var item: Item = .none
-    @Previewable @State var level: Double = 0.0
-    @Previewable @State var threshType: ThresholdType = .global
-
-    ThresholdView(
-        game: game,
-        coord: coord,
-        item: $item,
-        level: $level,
-        threshType: $threshType
-    ) {
-        print("Threshold \(item) to \(level)")
     }
 }

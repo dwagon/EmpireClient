@@ -9,6 +9,12 @@ import SwiftUI
 
 enum SectorViewMode {
     case overview
+    case build
+    case threshold
+    case distribute
+    case explore
+    case designate
+    case optimize
 }
 
 struct SectorOverView: View {
@@ -17,8 +23,7 @@ struct SectorOverView: View {
     @State var viewMode: SectorViewMode = .overview
 
     var body: some View {
-        VStack {
-            Spacer()
+        VStack() {
             Group {
                 SectorDetailView(game: game, sector: game.gameMap[centerCoord])
                 Divider()
@@ -31,16 +36,15 @@ struct SectorOverView: View {
                     if let sector = game.gameMap[centerCoord] {
                         SectorView(sector: sector)
                     }
-                }
-                else {
+                } else {
                     operationView
                 }
                 Spacer()
-                    SectorButtonBar(
-                        game: game,
-                        sector: game.gameMap[centerCoord],
-                        viewMode: $viewMode
-                    )
+                SectorButtonBar(
+                    game: game,
+                    sector: game.gameMap[centerCoord],
+                    viewMode: $viewMode
+                )
 
             }
             Spacer()
@@ -53,6 +57,22 @@ struct SectorOverView: View {
             switch viewMode {
             case .overview:
                 EmptyView()  // Should never occur
+            case .build:
+                BuildView(game: game, sector: sector, viewMode: $viewMode)
+            case .threshold:
+                ThresholdView(game: game, sector: sector, viewMode: $viewMode)
+            case .distribute:
+                EmptyView()
+            //                DistributeView(coord: <#T##MapCoord#>, warehouses: <#T##[Sector]#>, source: <#T##Binding<DistributeSource>#>, destination: <#T##Binding<MapCoord?>#>, onButton: <#T##() -> Void#>)
+            case .explore:
+                EmptyView()
+            //                ExploreView(game: <#T##Game#>, coord: <#T##MapCoord#>, item: <#T##Binding<Item>#>, number: <#T##Binding<Int>#>, destination: <#T##Binding<String?>#>, onButton: <#T##() -> Void#>)
+            case .designate:
+                EmptyView()
+            //                DesignateView(sector: <#T##Sector#>, designation: <#T##Binding<String>#>, onButton: <#T##() -> Void#>)
+            case .optimize:
+                EmptyView()
+            //                OptimizeView(sector: <#T##Sector#>, optimizeType: <#T##Binding<OptimizeType>#>, onButton: <#T##() -> Void#>)
             }
         }
     }
