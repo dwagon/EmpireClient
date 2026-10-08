@@ -46,7 +46,7 @@ struct SectorButtonBar: View {
     var distributeButton: some View {
         return Button("Distribute") {
             viewMode = .distribute
-        }.disabled(true)
+        }
     }
 
     var exploreButton: some View {

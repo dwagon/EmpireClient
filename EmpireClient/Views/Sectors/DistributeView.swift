@@ -8,17 +8,28 @@
 import SwiftUI
 
 enum DistributeSource: Hashable {
+    case none
     case global
     case sector(MapCoord)
 }
 
 struct DistributeView: View {
-    var coord: MapCoord
-    var warehouses: [Sector]  // Warehouse sectors
-    @Binding var source: DistributeSource
-    @Binding var destination: MapCoord?
-    var onButton: () -> Void
-    @Environment(\.dismiss) var dismiss
+    var game: Game
+    var sector: Sector
+    @Binding var viewMode: SectorViewMode
+
+    @State var warehouses: [Sector]  // Warehouse sectors
+    @State var source: DistributeSource
+    @State var destination: MapCoord?
+
+    init(game: Game, sector: Sector, viewMode: Binding<SectorViewMode>) {
+        self.game = game
+        self.sector = sector
+        self._viewMode = viewMode
+        self.warehouses = game.gameMap.instances(.warehouse)
+        self.source = .none
+        print("whouses=\(self.warehouses) wh=\(game.gameMap.instances(.warehouse))")
+    }
 
     var body: some View {
         VStack {
@@ -35,14 +46,13 @@ struct DistributeView: View {
                         selection: $source
                     ) {
                         Text("Everywhere").tag(DistributeSource.global)
-                        Text("Just \(coord.toString())").tag(
-                            DistributeSource.sector(coord)
+                        Text("Just \(sector.coords.toString())").tag(
+                            DistributeSource.sector(sector.coords)
                         )
                     } label: {
                         Text("")
                     }
                     .pickerStyle(.radioGroup)
-
                 }
 
                 VStack {
@@ -63,16 +73,22 @@ struct DistributeView: View {
                     .pickerStyle(.radioGroup)
                 }
             }
+            HStack {
+                CancelButton {
+                    viewMode = .overview
+                }
+                OkButton("Distribute") {
+                    doDistribute(
+                        game: game,
+                        coord: sector.coords,
+                        source: source,
+                        destination: destination
+                    )
+                    viewMode = .overview
+                }.disabled(source == .none)
+            }
         }.padding()
-        HStack {
-            CancelButton() {
-                dismiss()
-            }
-            OkButton("Distribute") {
-                onButton()
-                dismiss()
-            }
-        }
+
     }
 }
 
@@ -84,6 +100,8 @@ func doDistribute(
 ) {
     if let destination {
         switch source {
+        case .none:
+            break
         case .global:
             Task {
                 await game.cmd_distribute(destination: destination)
@@ -100,6 +118,8 @@ func doDistribute(
         }
     } else {
         switch source {
+        case .none:
+            break
         case .global:
             Task {
                 await game.cmd_distribute(destination: ".")
@@ -111,75 +131,5 @@ func doDistribute(
                 await game.cmd_dump(sector)
             }
         }
-    }
-}
-
-struct DistributeSheet: ViewModifier {
-    @Binding var isPresented: Bool
-    var game: Game
-    var centerCoord: MapCoord
-    @State var source: DistributeSource = .global
-    @State var destination: MapCoord?
-
-    func body(content: Content) -> some View {
-        let warehouses = game.gameMap.instances(.warehouse)
-
-        return
-            content
-            .sheet(
-                isPresented: $isPresented
-            ) {
-                DistributeView(
-                    coord: centerCoord,
-                    warehouses: warehouses,
-                    source: $source,
-                    destination: $destination
-                ) {
-                    doDistribute(
-                        game: game,
-                        coord: centerCoord,
-                        source: source,
-                        destination: destination
-                    )
-                    source = .global
-                    destination = nil
-                }
-            }
-    }
-}
-
-extension View {
-    func distribute(
-        isPresented: Binding<Bool>,
-        game: Game,
-        centerCoord: MapCoord
-    ) -> some View {
-        modifier(
-            DistributeSheet(
-                isPresented: isPresented,
-                game: game,
-                centerCoord: centerCoord
-            )
-        )
-    }
-}
-
-// MARK: Preview
-#Preview {
-    @Previewable var sectors = [
-        Sector(coords: MapCoord(x: 1, y: 1)),
-        Sector(coords: MapCoord(x: -1, y: -1)),
-    ]
-    @Previewable var coord = MapCoord(x: 0, y: 0)
-    @Previewable @State var source = DistributeSource.global
-    @Previewable @State var destination: MapCoord?
-
-    DistributeView(
-        coord: coord,
-        warehouses: sectors,
-        source: $source,
-        destination: $destination
-    ) {
-        print("Set \(source) to \(destination, default: "nowhere")")
     }
 }

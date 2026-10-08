@@ -62,8 +62,7 @@ struct SectorOverView: View {
             case .threshold:
                 ThresholdView(game: game, sector: sector, viewMode: $viewMode)
             case .distribute:
-                EmptyView()
-            //                DistributeView(coord: <#T##MapCoord#>, warehouses: <#T##[Sector]#>, source: <#T##Binding<DistributeSource>#>, destination: <#T##Binding<MapCoord?>#>, onButton: <#T##() -> Void#>)
+                DistributeView(game: game, sector: sector, viewMode: $viewMode)
             case .explore:
                 EmptyView()
             //                ExploreView(game: <#T##Game#>, coord: <#T##MapCoord#>, item: <#T##Binding<Item>#>, number: <#T##Binding<Int>#>, destination: <#T##Binding<String?>#>, onButton: <#T##() -> Void#>)
