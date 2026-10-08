@@ -21,6 +21,7 @@ struct SectorButtonBar: View {
             distributeButton
             exploreButton
             designateButton
+            moveButton
             optimizeButton
         }
     }
@@ -64,6 +65,12 @@ struct SectorButtonBar: View {
     var optimizeButton: some View {
         return Button("Optimize") {
             viewMode = .optimize
+        }
+    }
+
+    var moveButton: some View {
+        return Button("Move") {
+            viewMode = .move
         }
     }
 

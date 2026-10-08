@@ -11,6 +11,7 @@ import SwiftUI
 struct ExploreView: View {
     var game: Game
     var sector: Sector
+    @Binding var sectorSelect: Bool
     @Binding var viewMode: SectorViewMode
 
     @State var item: Item
@@ -18,9 +19,10 @@ struct ExploreView: View {
     @State var destination: String?
     @State var destinationCell: Cell?
 
-    init(game: Game, sector: Sector, viewMode: Binding<SectorViewMode>) {
+    init(game: Game, sector: Sector, sectorSelect: Binding<Bool>, viewMode: Binding<SectorViewMode>) {
         self.game = game
         self.sector = sector
+        self._sectorSelect = sectorSelect
         self._viewMode = viewMode
         self.item = .mil
         self.number = 1
@@ -50,11 +52,13 @@ struct ExploreView: View {
             HStack {
                 CancelButton() {
                     viewMode = .overview
+                    sectorSelect = false
                 }
                 OkButton("Explore", disabled:destination == nil || number == 0) {
                     if let destination {
                         doExplore(game: game, item: item, centerCoord: sector.coords, number: number, destination: destination)
                         viewMode = .overview
+                        sectorSelect = false
                     }
                 }
             }

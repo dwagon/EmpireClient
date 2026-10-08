@@ -15,11 +15,13 @@ enum SectorViewMode {
     case explore
     case designate
     case optimize
+    case move
 }
 
 struct SectorOverView: View {
     var game: Game
     @Binding var centerCoord: MapCoord
+    @Binding var sectorSelect: Bool
     @State var viewMode: SectorViewMode = .overview
 
     var body: some View {
@@ -64,11 +66,13 @@ struct SectorOverView: View {
             case .distribute:
                 DistributeView(game: game, sector: sector, viewMode: $viewMode)
             case .explore:
-                ExploreView(game: game, sector: sector, viewMode: $viewMode)
+                ExploreView(game: game, sector: sector, sectorSelect: $sectorSelect, viewMode: $viewMode, )
             case .designate:
                 DesignateView(game: game, sector: sector, viewMode: $viewMode)
             case .optimize:
                 OptimizeView(game: game, sector: sector, viewMode: $viewMode)
+            case .move:
+                MoveView(game: game, sector: sector, destination: $centerCoord, sectorSelect: $sectorSelect, viewMode: $viewMode, )
             }
         }
     }

@@ -24,7 +24,7 @@ struct TabbedDetailView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             Tab("Sectors", systemImage: "info", value: .sector) {
-                SectorOverView(game: game, centerCoord: $centerCoord)
+                SectorOverView(game: game, centerCoord: $centerCoord, sectorSelect: $sectorSelect)
             }
             Tab("Ships", systemImage: "sailboat", value: .ship) {
                 ShipOverView(
