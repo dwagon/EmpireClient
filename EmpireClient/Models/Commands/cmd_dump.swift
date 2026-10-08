@@ -135,7 +135,7 @@ extension Game {
             sector[.rail] = MapKeyValue(bits[71])
             sector[.defence] = MapKeyValue(bits[72])
             sector[.fallout] = MapKeyValue(bits[73])
-            sector[.coast] = MapKeyValue(bits[74])
+            sector.coast = (bits[74] == "1")
             sector.deliver[.civ] = String(bits[75])
             sector.deliver[.mil] = String(bits[76])
             sector.cutoff[.civ] = Int(bits[77])

@@ -17,6 +17,7 @@ class Sector: Identifiable, Hashable {
     var distribute: [Item: Int] = [:]   // How much to maintain in sector via warehouse
     var cutoff: [Item: Int] = [:]       // How much to use for delivery
     var deliver: [Item: String] = [:]   // Direction to deliver resource in
+    var coast: Bool = false
     var problems: [String] = []
 
     init(coords: MapCoord) {
