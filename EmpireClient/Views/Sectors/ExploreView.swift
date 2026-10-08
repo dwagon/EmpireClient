@@ -10,15 +10,22 @@ import SwiftUI
 
 struct ExploreView: View {
     var game: Game
-    var coord: MapCoord
-    @Binding var item: Item
-    @Binding var number: Int
-    @Binding var destination: String?
+    var sector: Sector
+    @Binding var viewMode: SectorViewMode
+
+    @State var item: Item
+    @State var number: Int
+    @State var destination: String?
     @State var destinationCell: Cell?
-    var onButton: () -> Void
 
-    @Environment(\.dismiss) var dismiss
-
+    init(game: Game, sector: Sector, viewMode: Binding<SectorViewMode>) {
+        self.game = game
+        self.sector = sector
+        self._viewMode = viewMode
+        self.item = .mil
+        self.number = 1
+    }
+    
     var hexmap = HexGrid(
         shape: .hexagon(4),
         orientation: MapConfig.orientation,
@@ -42,11 +49,13 @@ struct ExploreView: View {
             }
             HStack {
                 CancelButton() {
-                    dismiss()
+                    viewMode = .overview
                 }
                 OkButton("Explore", disabled:destination == nil || number == 0) {
-                    onButton()
-                    dismiss()
+                    if let destination {
+                        doExplore(game: game, item: item, centerCoord: sector.coords, number: number, destination: destination)
+                        viewMode = .overview
+                    }
                 }
             }
         }
@@ -58,10 +67,10 @@ struct ExploreView: View {
                 "Use",
                 selection: $item,
                 content: {
-                    Text("Military (\(game[coord]!.cargo[.mil] ?? 0))").tag(
+                    Text("Military (\(sector.cargo[.mil] ?? 0))").tag(
                         Item.mil
                     )
-                    Text("Civilians (\(game[coord]!.cargo[.civ] ?? 0))").tag(
+                    Text("Civilians (\(sector.cargo[.civ] ?? 0))").tag(
                         Item.civ
                     )
                 }
@@ -71,7 +80,7 @@ struct ExploreView: View {
             let str =
                 "Send \(number) "
                 + ((item == Item.mil) ? "military" : "civilians")
-            let max = max(1, game[coord]!.cargo[item] ?? 1)
+            let max = max(1, sector.cargo[item] ?? 1)
 
             Stepper(
                 str,
@@ -93,7 +102,7 @@ struct ExploreView: View {
     func cellText(_ cell: Cell) -> String {
         let mapCoord = screenToMapCoord(
             cell.coordinates,
-            centerCoord: coord
+            centerCoord: sector.coords
         )
         if let sector = game.gameMap[mapCoord] {
             return sector.symbol
@@ -112,86 +121,20 @@ struct ExploreView: View {
             cell: cell,
             gameMap: game.gameMap,
             hexmap: hexmap,
-            center: coord
+            center: sector.coords
         )
     }
 }
 
-struct ExploreSheet: ViewModifier {
-    @Binding var isPresented: Bool
-    var game: Game
-    var centerCoord: MapCoord
-    @State private var item: Item = .mil
-    @State private var number: Int = 1
-    @State private var destination: String?
-
-    func body(content: Content) -> some View {
-        content
-            .sheet(
-                isPresented: $isPresented
-            ) {
-                ExploreView(
-                    game: game,
-                    coord: centerCoord,
-                    item: $item,
-                    number: $number,
-                    destination: $destination
-                ) {
-                    if let destination {
-                        if number > 0 {
-                            Task {
-                                await game.cmd_explo(
-                                    item: item,
-                                    sector: centerCoord,
-                                    number: number,
-                                    destination: destination
-                                )
-                                await game.cmd_dump()
-                                await game.cmd_map()
-                            }
-                        }
-                    }
-                }
-                .onAppear {
-                    number = 1
-                    item = game[centerCoord]!.cargo[.mil] != 0 ? .mil : .civ
-                }
-            }
-    }
-}
-
-extension View {
-    func explore(
-        isPresented: Binding<Bool>,
-        game: Game,
-        centerCoord: MapCoord
-    ) -> some View {
-        modifier(
-            ExploreSheet(
-                isPresented: isPresented,
-                game: game,
-                centerCoord: centerCoord
-            )
+func doExplore(game: Game, item: Item, centerCoord: MapCoord, number: Int, destination: String) {
+    Task {
+        await game.cmd_explo(
+            item: item,
+            sector: centerCoord,
+            number: number,
+            destination: destination
         )
-    }
-}
-
-#Preview {
-    @Previewable var game = DataLoader.loadSampleGame(name: "Game_ShipView")
-    @Previewable var coord = MapCoord(x: 0, y: 0)
-    @Previewable @State var item: Item = .mil
-    @Previewable @State var number: Int = 1
-    @Previewable @State var destination: String?
-
-    ExploreView(
-        game: game,
-        coord: coord,
-        item: $item,
-        number: $number,
-        destination: $destination
-    ) {
-        print(
-            "Explore \(item) x \(number) to \(destination, default: "unknown")"
-        )
+        await game.cmd_dump()
+        await game.cmd_map()
     }
 }

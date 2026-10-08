@@ -64,8 +64,7 @@ struct SectorOverView: View {
             case .distribute:
                 DistributeView(game: game, sector: sector, viewMode: $viewMode)
             case .explore:
-                EmptyView()
-            //                ExploreView(game: <#T##Game#>, coord: <#T##MapCoord#>, item: <#T##Binding<Item>#>, number: <#T##Binding<Int>#>, destination: <#T##Binding<String?>#>, onButton: <#T##() -> Void#>)
+                ExploreView(game: game, sector: sector, viewMode: $viewMode)
             case .designate:
                 DesignateView(game: game, sector: sector, viewMode: $viewMode)
             case .optimize:
