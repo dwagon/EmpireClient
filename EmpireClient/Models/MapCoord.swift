@@ -66,6 +66,10 @@ struct MapCoord: Hashable, Equatable, Codable {
         lhs.x += rhs.x
         lhs.y += rhs.y
     }
+
+    static func - (lhs: MapCoord, rhs: MapCoord) -> MapCoord {
+        return MapCoord(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
+    }
 }
 
 func doubleWidthToCube(from: MapCoord) throws

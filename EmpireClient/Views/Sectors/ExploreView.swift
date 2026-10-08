@@ -11,57 +11,71 @@ import SwiftUI
 struct ExploreView: View {
     var game: Game
     var sector: Sector
+    @Binding var destination: MapCoord
     @Binding var sectorSelect: Bool
     @Binding var viewMode: SectorViewMode
 
     @State var item: Item
     @State var number: Int
-    @State var destination: String?
+    @State var origLocation: MapCoord
     @State var destinationCell: Cell?
+    @State var error: String = ""
+    @State var destStr: String?
 
-    init(game: Game, sector: Sector, sectorSelect: Binding<Bool>, viewMode: Binding<SectorViewMode>) {
+    init(
+        game: Game,
+        sector: Sector,
+        destination: Binding<MapCoord>,
+        sectorSelect: Binding<Bool>,
+        viewMode: Binding<SectorViewMode>
+    ) {
         self.game = game
         self.sector = sector
+        self._destination = destination
         self._sectorSelect = sectorSelect
         self._viewMode = viewMode
+        self._origLocation = State(initialValue: destination.wrappedValue)
         self.item = .mil
         self.number = 1
     }
-    
-    var hexmap = HexGrid(
-        shape: .hexagon(4),
-        orientation: MapConfig.orientation,
-        offsetLayout: MapConfig.offsetLayout,
-        hexSize: MapConfig.hexSize
-    )
 
     var body: some View {
         VStack {
             Label("Explore new territory", systemImage: "map.fill").font(.title)
+            exploreDetails.padding()
             HStack {
-                DrawHex(
-                    hexmap: hexmap,
-                    radius: 4,
-                    cellText: cellText,
-                    cellFillColour: cellColour,
-                    hexGesture: hexGesture
-                ).scaledToFit()
-                exploreDetails.padding()
-                Spacer()
-            }
-            HStack {
-                CancelButton() {
+                CancelButton {
                     viewMode = .overview
-                    sectorSelect = false
+                    sectorSelect = true
                 }
-                OkButton("Explore", disabled:destination == nil || number == 0) {
-                    if let destination {
-                        doExplore(game: game, item: item, centerCoord: sector.coords, number: number, destination: destination)
+                OkButton(
+                    "Explore to \(destination.toString())",
+                    disabled: destination == origLocation || number == 0 || destStr == nil
+                ) {
+                    if let destStr {
+                        doExplore(
+                            game: game,
+                            item: item,
+                            centerCoord: sector.coords,
+                            number: number,
+                            destination: destStr
+                        )
                         viewMode = .overview
-                        sectorSelect = false
+                        sectorSelect = true
                     }
                 }
             }
+        }
+        .padding()
+        .onAppear {
+            sectorSelect = false
+            origLocation = destination
+        }
+        .onChange(of: destination) {
+            destStr = directionString(destination - origLocation)
+            if destStr == nil {
+               error = "Can only explore to adjacent hex"
+           }
         }
     }
 
@@ -81,56 +95,27 @@ struct ExploreView: View {
             )
             .pickerStyle(.inline)
             .padding()
-            let str =
-                "Send \(number) "
-                + ((item == Item.mil) ? "military" : "civilians")
-            let max = max(1, sector.cargo[item] ?? 1)
 
             Stepper(
-                str,
+                "Send \(number) "
+                    + ((item == Item.mil) ? "military" : "civilians"),
                 value: $number,
-                in: 1...max
+                in: 1...max(1, sector.cargo[item] ?? 1)
             )
-        }
-    }
-
-    func hexGesture(location: CGPoint) {
-        if let cell = try? hexmap.cellAt(location.hexPoint) {
-            destination = directionString(cell)
-            destinationCell = cell
-        } else {
-            print("no cell at \(location.hexPoint)")
-        }
-    }
-
-    func cellText(_ cell: Cell) -> String {
-        let mapCoord = screenToMapCoord(
-            cell.coordinates,
-            centerCoord: sector.coords
-        )
-        if let sector = game.gameMap[mapCoord] {
-            return sector.symbol
-        } else {
-            return "\(mapCoord.toString())"
-        }
-    }
-
-    func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
-        if let destinationCell {
-            if cell == destinationCell {
-                return .color(Color.red)
+            if !error.isEmpty {
+                Text(error).foregroundStyle(.red)
             }
         }
-        return mapCellColour(
-            cell: cell,
-            gameMap: game.gameMap,
-            hexmap: hexmap,
-            center: sector.coords
-        )
     }
 }
 
-func doExplore(game: Game, item: Item, centerCoord: MapCoord, number: Int, destination: String) {
+func doExplore(
+    game: Game,
+    item: Item,
+    centerCoord: MapCoord,
+    number: Int,
+    destination: String
+) {
     Task {
         await game.cmd_explo(
             item: item,

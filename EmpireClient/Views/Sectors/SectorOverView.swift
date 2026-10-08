@@ -47,7 +47,6 @@ struct SectorOverView: View {
                     sector: game.gameMap[centerCoord],
                     viewMode: $viewMode
                 )
-
             }
             Spacer()
         }
@@ -66,13 +65,13 @@ struct SectorOverView: View {
             case .distribute:
                 DistributeView(game: game, sector: sector, viewMode: $viewMode)
             case .explore:
-                ExploreView(game: game, sector: sector, sectorSelect: $sectorSelect, viewMode: $viewMode, )
+                ExploreView(game: game, sector: sector, destination: $centerCoord, sectorSelect: $sectorSelect, viewMode: $viewMode, )
             case .designate:
                 DesignateView(game: game, sector: sector, viewMode: $viewMode)
             case .optimize:
                 OptimizeView(game: game, sector: sector, viewMode: $viewMode)
             case .move:
-                MoveView(game: game, sector: sector, destination: $centerCoord, sectorSelect: $sectorSelect, viewMode: $viewMode, )
+                MoveView(game: game, sector: sector, destination: $centerCoord, sectorSelect: $sectorSelect, viewMode: $viewMode)
             }
         }
     }

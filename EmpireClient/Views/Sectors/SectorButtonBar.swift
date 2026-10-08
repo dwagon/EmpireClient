@@ -53,7 +53,7 @@ struct SectorButtonBar: View {
     var exploreButton: some View {
         return Button("Explore") {
             viewMode = .explore
-        }.disabled(true)
+        }
     }
 
     var designateButton: some View {
