@@ -70,8 +70,7 @@ struct SectorOverView: View {
             case .designate:
                 DesignateView(game: game, sector: sector, viewMode: $viewMode)
             case .optimize:
-                EmptyView()
-            //                OptimizeView(sector: <#T##Sector#>, optimizeType: <#T##Binding<OptimizeType>#>, onButton: <#T##() -> Void#>)
+                OptimizeView(game: game, sector: sector, viewMode: $viewMode)
             }
         }
     }

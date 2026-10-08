@@ -64,7 +64,7 @@ struct SectorButtonBar: View {
     var optimizeButton: some View {
         return Button("Optimize") {
             viewMode = .optimize
-        }.disabled(true)
+        }
     }
 
     var refreshButton: some View {
