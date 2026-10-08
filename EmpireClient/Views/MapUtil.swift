@@ -8,22 +8,21 @@
 import HexGrid
 import SwiftUI
 
-func directionString(_ cell: Cell) -> String? {
-    let coord = cell.coordinates
-    switch (coord.x, coord.y) {
-    case (1, 0):
-        return "u"
+func directionString(_ delta: MapCoord) -> String? {
+    switch (delta.x, delta.y) {
     case (1, -1):
+        return "u"
+    case (2, 0):
         return "j"
-    case (0, -1):
+    case (1, 1):
         return "n"
     case (0, 0):
         return "h"
-    case (0, 1):
+    case (-1, -1):
         return "y"
-    case (-1, 1):
+    case (-2, 0):
         return "g"
-    case (-1, 0):
+    case (-1, 1):
         return "b"
     default:
         return nil

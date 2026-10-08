@@ -1,0 +1,78 @@
+//
+//  SectorOvewView.swift
+//  EmpireClient
+//
+//  Created by Dougal Scott on 7/10/2026.
+//
+
+import SwiftUI
+
+enum SectorViewMode {
+    case overview
+    case build
+    case threshold
+    case distribute
+    case explore
+    case designate
+    case optimize
+    case move
+}
+
+struct SectorOverView: View {
+    var game: Game
+    @Binding var centerCoord: MapCoord
+    @Binding var sectorSelect: Bool
+    @State var viewMode: SectorViewMode = .overview
+
+    var body: some View {
+        VStack {
+            Group {
+                SectorDetailView(game: game, sector: game.gameMap[centerCoord])
+                Divider()
+                Spacer()
+
+            }.border(.blue)
+            HStack(alignment: .center) {
+                Spacer()
+                if viewMode == .overview {
+                    if let sector = game.gameMap[centerCoord] {
+                        SectorView(sector: sector)
+                    }
+                } else {
+                    operationView
+                }
+                Spacer()
+                SectorButtonBar(
+                    game: game,
+                    sector: game.gameMap[centerCoord],
+                    viewMode: $viewMode
+                )
+            }
+            Spacer()
+        }
+    }
+
+    @ViewBuilder
+    var operationView: some View {
+        if let sector = game.gameMap[centerCoord] {
+            switch viewMode {
+            case .overview:
+                EmptyView()  // Should never occur
+            case .build:
+                BuildView(game: game, sector: sector, viewMode: $viewMode)
+            case .threshold:
+                ThresholdView(game: game, sector: sector, viewMode: $viewMode)
+            case .distribute:
+                DistributeView(game: game, sector: sector, viewMode: $viewMode)
+            case .explore:
+                ExploreView(game: game, sector: sector, destination: $centerCoord, sectorSelect: $sectorSelect, viewMode: $viewMode, )
+            case .designate:
+                DesignateView(game: game, sector: sector, viewMode: $viewMode)
+            case .optimize:
+                OptimizeView(game: game, sector: sector, viewMode: $viewMode)
+            case .move:
+                MoveView(game: game, sector: sector, destination: $centerCoord, sectorSelect: $sectorSelect, viewMode: $viewMode)
+            }
+        }
+    }
+}

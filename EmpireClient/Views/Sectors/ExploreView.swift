@@ -10,45 +10,72 @@ import SwiftUI
 
 struct ExploreView: View {
     var game: Game
-    var coord: MapCoord
-    @Binding var item: Item
-    @Binding var number: Int
-    @Binding var destination: String?
+    var sector: Sector
+    @Binding var destination: MapCoord
+    @Binding var sectorSelect: Bool
+    @Binding var viewMode: SectorViewMode
+
+    @State var item: Item
+    @State var number: Int
+    @State var origLocation: MapCoord
     @State var destinationCell: Cell?
-    var onButton: () -> Void
+    @State var error: String = ""
+    @State var destStr: String?
 
-    @Environment(\.dismiss) var dismiss
-
-    var hexmap = HexGrid(
-        shape: .hexagon(4),
-        orientation: MapConfig.orientation,
-        offsetLayout: MapConfig.offsetLayout,
-        hexSize: MapConfig.hexSize
-    )
+    init(
+        game: Game,
+        sector: Sector,
+        destination: Binding<MapCoord>,
+        sectorSelect: Binding<Bool>,
+        viewMode: Binding<SectorViewMode>
+    ) {
+        self.game = game
+        self.sector = sector
+        self._destination = destination
+        self._sectorSelect = sectorSelect
+        self._viewMode = viewMode
+        self._origLocation = State(initialValue: destination.wrappedValue)
+        self.item = .mil
+        self.number = 1
+    }
 
     var body: some View {
         VStack {
             Label("Explore new territory", systemImage: "map.fill").font(.title)
+            exploreDetails.padding()
             HStack {
-                DrawHex(
-                    hexmap: hexmap,
-                    radius: 4,
-                    cellText: cellText,
-                    cellFillColour: cellColour,
-                    hexGesture: hexGesture
-                ).scaledToFit()
-                exploreDetails.padding()
-                Spacer()
-            }
-            HStack {
-                CancelButton() {
-                    dismiss()
+                CancelButton {
+                    viewMode = .overview
+                    sectorSelect = true
                 }
-                OkButton("Explore", disabled:destination == nil || number == 0) {
-                    onButton()
-                    dismiss()
+                OkButton(
+                    "Explore to \(destination.toString())",
+                    disabled: destination == origLocation || number == 0 || destStr == nil
+                ) {
+                    if let destStr {
+                        doExplore(
+                            game: game,
+                            item: item,
+                            centerCoord: sector.coords,
+                            number: number,
+                            destination: destStr
+                        )
+                        viewMode = .overview
+                        sectorSelect = true
+                    }
                 }
             }
+        }
+        .padding()
+        .onAppear {
+            sectorSelect = false
+            origLocation = destination
+        }
+        .onChange(of: destination) {
+            destStr = directionString(destination - origLocation)
+            if destStr == nil {
+               error = "Can only explore to adjacent hex"
+           }
         }
     }
 
@@ -58,140 +85,45 @@ struct ExploreView: View {
                 "Use",
                 selection: $item,
                 content: {
-                    Text("Military (\(game[coord]!.cargo[.mil] ?? 0))").tag(
+                    Text("Military (\(sector.cargo[.mil] ?? 0))").tag(
                         Item.mil
                     )
-                    Text("Civilians (\(game[coord]!.cargo[.civ] ?? 0))").tag(
+                    Text("Civilians (\(sector.cargo[.civ] ?? 0))").tag(
                         Item.civ
                     )
                 }
             )
             .pickerStyle(.inline)
             .padding()
-            let str =
-                "Send \(number) "
-                + ((item == Item.mil) ? "military" : "civilians")
-            let max = max(1, game[coord]!.cargo[item] ?? 1)
 
             Stepper(
-                str,
+                "Send \(number) "
+                    + ((item == Item.mil) ? "military" : "civilians"),
                 value: $number,
-                in: 1...max
+                in: 1...max(1, sector.cargo[item] ?? 1)
             )
-        }
-    }
-
-    func hexGesture(location: CGPoint) {
-        if let cell = try? hexmap.cellAt(location.hexPoint) {
-            destination = directionString(cell)
-            destinationCell = cell
-        } else {
-            print("no cell at \(location.hexPoint)")
-        }
-    }
-
-    func cellText(_ cell: Cell) -> String {
-        let mapCoord = screenToMapCoord(
-            cell.coordinates,
-            centerCoord: coord
-        )
-        if let sector = game.gameMap[mapCoord] {
-            return sector.symbol
-        } else {
-            return "\(mapCoord.toString())"
-        }
-    }
-
-    func cellColour(_ cell: Cell) -> GraphicsContext.Shading {
-        if let destinationCell {
-            if cell == destinationCell {
-                return .color(Color.red)
+            if !error.isEmpty {
+                Text(error).foregroundStyle(.red)
             }
         }
-        return mapCellColour(
-            cell: cell,
-            gameMap: game.gameMap,
-            hexmap: hexmap,
-            center: coord
-        )
     }
 }
 
-struct ExploreSheet: ViewModifier {
-    @Binding var isPresented: Bool
-    var game: Game
-    var centerCoord: MapCoord
-    @State private var item: Item = .mil
-    @State private var number: Int = 1
-    @State private var destination: String?
-
-    func body(content: Content) -> some View {
-        content
-            .sheet(
-                isPresented: $isPresented
-            ) {
-                ExploreView(
-                    game: game,
-                    coord: centerCoord,
-                    item: $item,
-                    number: $number,
-                    destination: $destination
-                ) {
-                    if let destination {
-                        if number > 0 {
-                            Task {
-                                await game.cmd_explo(
-                                    item: item,
-                                    sector: centerCoord,
-                                    number: number,
-                                    destination: destination
-                                )
-                                await game.cmd_dump()
-                                await game.cmd_map()
-                            }
-                        }
-                    }
-                }
-                .onAppear {
-                    number = 1
-                    item = game[centerCoord]!.cargo[.mil] != 0 ? .mil : .civ
-                }
-            }
-    }
-}
-
-extension View {
-    func explore(
-        isPresented: Binding<Bool>,
-        game: Game,
-        centerCoord: MapCoord
-    ) -> some View {
-        modifier(
-            ExploreSheet(
-                isPresented: isPresented,
-                game: game,
-                centerCoord: centerCoord
-            )
+func doExplore(
+    game: Game,
+    item: Item,
+    centerCoord: MapCoord,
+    number: Int,
+    destination: String
+) {
+    Task {
+        await game.cmd_explo(
+            item: item,
+            sector: centerCoord,
+            number: number,
+            destination: destination
         )
-    }
-}
-
-#Preview {
-    @Previewable var game = DataLoader.loadSampleGame(name: "Game_ShipView")
-    @Previewable var coord = MapCoord(x: 0, y: 0)
-    @Previewable @State var item: Item = .mil
-    @Previewable @State var number: Int = 1
-    @Previewable @State var destination: String?
-
-    ExploreView(
-        game: game,
-        coord: coord,
-        item: $item,
-        number: $number,
-        destination: $destination
-    ) {
-        print(
-            "Explore \(item) x \(number) to \(destination, default: "unknown")"
-        )
+        await game.cmd_dump()
+        await game.cmd_map()
     }
 }

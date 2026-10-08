@@ -23,23 +23,39 @@ struct TabbedDetailView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            Tab("Sector Details", systemImage: "info", value: .sector) {
-                SectorDetailView(game: game, centerCoord: centerCoord)
+            Tab("Sectors", systemImage: "info", value: .sector) {
+                SectorOverView(game: game, centerCoord: $centerCoord, sectorSelect: $sectorSelect)
             }
             Tab("Ships", systemImage: "sailboat", value: .ship) {
-                ShipOverView(game: game, centerCoord: $centerCoord, sectorSelect: $sectorSelect)
+                ShipOverView(
+                    game: game,
+                    centerCoord: $centerCoord,
+                    sectorSelect: $sectorSelect
+                )
             }.disabled(game.ships.isEmpty)
             Tab(
                 "Land Units",
                 systemImage: "car.rear.road.lane.distance.5",
                 value: .land
             ) {
-                LandOverView(game: game, centerCoord: $centerCoord, sectorSelect: $sectorSelect)
+                LandOverView(
+                    game: game,
+                    centerCoord: $centerCoord,
+                    sectorSelect: $sectorSelect
+                )
             }.disabled(game.landUnits.isEmpty)
             Tab("Planes", systemImage: "airplane.up.right", value: .plane) {
-                PlaneOverView(game: game, centerCoord: $centerCoord, sectorSelect: $sectorSelect)
+                PlaneOverView(
+                    game: game,
+                    centerCoord: $centerCoord,
+                    sectorSelect: $sectorSelect
+                )
             }.disabled(game.planes.isEmpty)
-            Tab("Nukes", systemImage: "sun.max.trianglebadge.exclamationmark", value: .nuke) {
+            Tab(
+                "Nukes",
+                systemImage: "sun.max.trianglebadge.exclamationmark",
+                value: .nuke
+            ) {
                 NukeDetailView(game: game, centerCoord: $centerCoord)
             }.disabled(game.nukes.isEmpty)
         }

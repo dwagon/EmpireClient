@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct DesignateView: View {
+    var game: Game
     var sector: Sector
-    @Binding var designation: String
-    var onButton: () -> Void
+    @Binding var viewMode: SectorViewMode
 
-    @Environment(\.dismiss) var dismiss
+    @State var designation: String = ""
 
     var body: some View {
         VStack {
             Label(
-                "Designate \(sector.coords.x), \(sector.coords.y)",
+                "Designate \(sector.coords.toString())",
                 systemImage: "pin"
             ).font(.title)
             HStack {
@@ -27,11 +27,11 @@ struct DesignateView: View {
             }
             HStack {
                 CancelButton() {
-                    dismiss()
+                    viewMode = .overview
                 }
                 OkButton("Designate", disabled: designation.isEmpty) {
-                    onButton()
-                    dismiss()
+                    doDesignate(game: game, sector: sector, designation: designation)
+                    viewMode = .overview
                 }
             }
         }
@@ -78,61 +78,13 @@ struct DesignateView: View {
 
 }
 
-struct DesignateSheet: ViewModifier {
-    @Binding var isPresented: Bool
-    var game: Game
-    var centerCoord: MapCoord
-    @State private var designation: String = ""
-
-    func body(content: Content) -> some View {
-        content
-            .sheet(
-                isPresented: $isPresented
-            ) {
-                if let sector = game[centerCoord] {
-                    DesignateView(sector: sector, designation: $designation) {
-                        if designation != "" {
-                            Task {
-                                await game.cmd_designate(
-                                    coord: centerCoord,
-                                    designation: designation
-                                )
-                                await game.cmd_dump(centerCoord)
-                            }
-                        }
-                    }
-                    .onAppear {
-                        designation = ""
-                    }
-                }
-            }
-    }
-}
-
-extension View {
-    func designate(
-        isPresented: Binding<Bool>,
-        game: Game,
-        centerCoord: MapCoord
-    ) -> some View {
-        modifier(
-            DesignateSheet(
-                isPresented: isPresented,
-                game: game,
-                centerCoord: centerCoord
-            )
+func doDesignate(game: Game, sector: Sector, designation: String) {
+    Task {
+        await game.cmd_designate(
+            coord: sector.coords,
+            designation: designation
         )
+        await game.cmd_dump(sector.coords)
     }
 }
 
-#Preview {
-    @Previewable @State var sector = Sector(coords: MapCoord(x: 0, y: 0))
-    @Previewable @State var designation: String = ""
-
-    DesignateView(
-        sector: sector,
-        designation: $designation
-    ) {
-        print("Designate sector \(sector) to \(designation)")
-    }
-}
