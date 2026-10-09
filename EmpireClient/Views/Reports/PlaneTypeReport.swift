@@ -8,30 +8,30 @@
 import SwiftUI
 
 struct PlaneTypeReport: View {
-    let planeTypes: [PlaneType]
+    @State var planeTypes: [PlaneType]
     let currTech: Float
-
     @Environment(\.dismiss) private var dismiss
     @State private var selectedUnit: PlaneType.ID?
+    @State private var sortOrder = [KeyPathComparator(\PlaneType.abbrev)]
 
     var body: some View {
         VStack {
-            Table(planeTypes, selection: $selectedUnit) {
-                TableColumn("Abbrev") { details in
+            Table(planeTypes, selection: $selectedUnit, sortOrder: $sortOrder) {
+                TableColumn("Abbrev", value: \.abbrev) { details in
                     Text("\(details.abbrev)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)
                     )
 
                 }.width(min: 30, ideal: 50, max: 60)
 
-                TableColumn("Name") { details in
+                TableColumn("Name", value: \.name) { details in
                     Text("\(details.name)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)
                     )
                 }
                 .width(min: 60, ideal: 100, max: 120)
 
-                TableColumn("Tech") { details in
+                TableColumn("Tech", value: \.tech) { details in
                     Text("\(details.tech)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)
                     )
@@ -45,6 +45,9 @@ struct PlaneTypeReport: View {
                     )
 
                 }
+            }
+            .onChange(of: sortOrder) { _, sortOrder in
+                planeTypes.sort(using: sortOrder)
             }
             .tableStyle(.bordered)
             .border(.blue)
