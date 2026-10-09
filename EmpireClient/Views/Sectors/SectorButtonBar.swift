@@ -41,7 +41,7 @@ struct SectorButtonBar: View {
     var thresholdButton: some View {
         return Button("Threshold") {
             viewMode = .threshold
-        }.disabled(true)
+        }
     }
 
     var distributeButton: some View {
