@@ -8,9 +8,6 @@
 import Foundation
 
 enum MapKey: String {
-    case desig  // Dump output
-    case sdes
-    case eff
     case mob
     case min
     case gold
@@ -26,7 +23,6 @@ enum MapKey: String {
     case rail
     case defence
     case fallout
-    case coast
     case terr1
     case terr2
     case terr3

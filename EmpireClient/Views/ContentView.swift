@@ -71,8 +71,8 @@ struct ContentView: View {
                         country: profile.country,
                         password: profile.password
                     )
-                    await game.get_initial_data()
                     await game.get_data()
+                    await game.get_initial_data()
                     await game.get_radar()
                 }
                 isLoggedIn = true

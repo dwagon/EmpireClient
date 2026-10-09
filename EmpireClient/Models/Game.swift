@@ -133,6 +133,7 @@ class Game: Decodable {
         landTypes = await cmd_show_land()
         planeTypes = await cmd_show_plane()
         nukeTypes = await cmd_show_nuke()
+        await cmd_neweff()
     }
 
     /// Run the radar for all radar sectors to fill the bmap

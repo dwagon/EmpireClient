@@ -11,6 +11,8 @@ class Sector: Identifiable, Hashable {
     var coords: MapCoord
     var desig: Desig
     var sdes: Desig
+    var eff: Int?
+    var neweff: Int?
     var owned: Bool = false
     var data: [MapKey: MapKeyValue] = [:]
     var cargo: [Item: Int] = [:]

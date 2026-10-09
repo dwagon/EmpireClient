@@ -267,8 +267,8 @@ struct MapView: View {
                 return .color(Color.mint)
             }
             do {
-                if let val = sector[.eff] {
-                    let valRatio = try (val.toDouble() / 100.0)
+                if let val = sector.eff {
+                    let valRatio = (Double(val) / 100.0)
                     return .color(
                         .sRGB,
                         red: valRatio,
@@ -276,8 +276,6 @@ struct MapView: View {
                         blue: valRatio
                     )
                 }
-            } catch {
-                return .color(Color.clear)
             }
         }
         return .color(.clear)
