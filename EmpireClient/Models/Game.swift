@@ -46,12 +46,6 @@ class Game: Decodable {
         }
     }
 
-    var shipTable: [Ship] {
-        return Array(ships.values).sorted {
-            $0.number < $1.number
-        }
-    }
-
     var planeTable: [Plane] {
         return Array(planes.values).sorted {
             $0.number < $1.number

@@ -11,34 +11,51 @@ struct ShipTableView: View {
     var game: Game
     @Binding var centerCoord: MapCoord
     @Binding var selectedShip: Ship.ID?
+    @State private var sortOrder = [KeyPathComparator(\Ship.number)]
+    @State private var ships: [Ship]
+
+    init(
+        game: Game,
+        centerCoord: Binding<MapCoord>,
+        selectedShip: Binding<Ship.ID?>
+    ) {
+        self.game = game
+        self._centerCoord = centerCoord
+        self._selectedShip = selectedShip
+        self.ships = Array(game.ships.values)
+    }
 
     var body: some View {
-        Table(game.shipTable, selection: $selectedShip) {
-            TableColumn("Ship #") { val in Text("\(val.number)") }
+        Table(ships, selection: $selectedShip, sortOrder: $sortOrder) {
+            TableColumn("Ship #", value: \.number) { val in Text("\(val.number)") }
                 .standardWidth()
 
-            TableColumn("Name") { val in
+            TableColumn("Name", value: \.name) { val in
                 Text("\(val.name)")
             }
 
-            TableColumn("Type") { val in
-                Text(
-                    "\(game.shipTypes[val.abbrev]!.name) (\(val.abbrev))"
-                )
+            TableColumn("Type", value: \.abbrev) { val in
+                if let type = game.shipTypes[val.abbrev] {
+                    Text(
+                        "\(type.name) (\(val.abbrev))"
+                    )
+                } else {
+                    Text("\(val.abbrev)")
+                }
             }
 
-            TableColumn("Coord") { val in
+            TableColumn("Coord", value: \.coords) { val in
                 Text("\(val.coords.toString(), default: "unknown")")
             }.standardWidth()
 
-            TableColumn("Fleet") { val in
+            TableColumn("Fleet", value: \.fleet) { val in
                 Text("\(val.fleet)")
             }.standardWidth()
 
-            TableColumn("Mob") { val in Text("\(val.mob)") }
+            TableColumn("Mob", value: \.mob) { val in Text("\(val.mob)") }
                 .standardWidth()
 
-            TableColumn("Eff") { val in Text("\(val.eff)%") }
+            TableColumn("Eff", value: \.eff) { val in Text("\(val.eff)%") }
                 .standardWidth()
 
             TableColumn("Notes") { val in
@@ -46,7 +63,13 @@ struct ShipTableView: View {
             }
         }
         .onChange(of: selectedShip) {
-            centerCoord = game.ships[selectedShip!]!.coords
+            guard let selectedShip, let ship = game.ships[selectedShip] else {
+                return
+            }
+            centerCoord = ship.coords
+        }
+        .onChange(of: sortOrder) { _, sortOrder in
+            ships.sort(using: sortOrder)
         }
     }
 }

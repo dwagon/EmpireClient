@@ -17,14 +17,14 @@ struct ShipTypeReport: View {
     var body: some View {
         VStack {
             Table(shipTypes, selection: $selectedShip, sortOrder: $sortOrder) {
-                TableColumn("Abbrev") { details in
+                TableColumn("Abbrev", value: \.abbrev) { details in
                     Text("\(details.abbrev)")
                         .buildableHighlight(
                             details.isBuildable(techlevel: currTech)
                         )
                 }.width(min: 30, ideal: 50, max: 60)
 
-                TableColumn("Name") { details in
+                TableColumn("Name", value: \.name) { details in
                     Text("\(details.name)")
                         .buildableHighlight(
                             details.isBuildable(techlevel: currTech)
@@ -32,7 +32,7 @@ struct ShipTypeReport: View {
 
                 }
 
-                TableColumn("Speed") { details in
+                TableColumn("Speed", value: \.speed) { details in
                     Text("\(details.speed)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)
                     )
@@ -40,7 +40,7 @@ struct ShipTypeReport: View {
                 }
                 .width(min: 40, ideal: 50, max: 60)
 
-                TableColumn("Tech") { details in
+                TableColumn("Tech", value:\.tech) { details in
                     Text("\(details.tech)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)
                     )
@@ -48,7 +48,7 @@ struct ShipTypeReport: View {
                 }
                 .width(min: 40, ideal: 50, max: 60)
 
-                TableColumn("LCM") { details in
+                TableColumn("LCM", value: \.lcmCost) { details in
                     Text("\(details.lcmCost)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)
                     )
@@ -56,7 +56,7 @@ struct ShipTypeReport: View {
                 }
                 .width(min: 40, ideal: 50, max: 60)
 
-                TableColumn("HCM") { details in
+                TableColumn("HCM", value: \.hcmCost) { details in
                     Text("\(details.hcmCost)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)
                     )
@@ -73,16 +73,13 @@ struct ShipTypeReport: View {
 
                 }
             }
-            .onChange(of: sortOrder) { oldSortOrder, sortOrder in
-                let _ = print(
-                    "oldSortOrder=\(oldSortOrder) sortOrder=\(sortOrder)"
-                )
+            .onChange(of: sortOrder) { _, sortOrder in
                 shipTypes.sort(using: sortOrder)
             }
             .tableStyle(.bordered)
             .border(.blue)
+            Spacer()
             if let selectedShip {
-                Spacer()
                 if let ship = shipTypes.first(where: { $0.id == selectedShip })
                 {
                     ShipTypeView(
