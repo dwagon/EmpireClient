@@ -15,7 +15,7 @@ struct SectorDetailView: View {
         var ans: String = "Unknown Sector"
         if let sector {
             ans =
-                "Desig: \(sector.desig.name) (Eff: \(sector[.eff], default: "??")%)"
+            "Desig: \(sector.desig.name) (Eff: \(sector.eff, default: "?")% -> Est. Eff: \(sector.neweff, default: "?")%)"
             if sector.sdes.desig != .unknown {
                 ans += " Redesignated to: \(sector.sdes.name)"
             }

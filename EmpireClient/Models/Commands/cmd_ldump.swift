@@ -1,10 +1,8 @@
 //
-//  cmd_ldump.swift
-//  EmpireClient
+//  cmd_ldump.swift //  EmpireClient
 //
 //  Created by Dougal Scott on 14/9/2026.
 //  See https://www.empire.cx/infopages/ldump.html
-
 import Foundation
 
 extension Game {

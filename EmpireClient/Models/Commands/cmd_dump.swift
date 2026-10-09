@@ -19,7 +19,7 @@
 // 2 sectors
 
 import Foundation
-import HexGrid
+//import HexGrid
 
 extension Game {
     func cmd_dump(_ location: String = "*") async {
@@ -67,7 +67,7 @@ extension Game {
             sector.owned = true
             sector.desig = Desig(String(bits[2]))
             sector.sdes = Desig(String(bits[3]))
-            sector[.eff] = MapKeyValue(bits[4])
+            sector.eff = Int(bits[4])
             sector[.mob] = MapKeyValue(bits[5])
             sector[.min] = MapKeyValue(bits[8])
             sector[.gold] = MapKeyValue(bits[9])
