@@ -46,12 +46,6 @@ class Game: Decodable {
         }
     }
 
-    var planeTable: [Plane] {
-        return Array(planes.values).sorted {
-            $0.number < $1.number
-        }
-    }
-
     var landTable: [LandUnit] {
         return Array(landUnits.values).sorted {
             $0.number < $1.number
