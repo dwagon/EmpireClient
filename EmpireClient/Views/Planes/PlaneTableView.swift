@@ -26,64 +26,59 @@ struct PlaneTableView: View {
     }
 
     var body: some View {
-        HStack {
-            VStack {
-                Table(
-                    planes,
-                    selection: $selectedPlane,
-                    sortOrder: $sortOrder
-                ) {
-                    TableColumn("Plane #", value: \.number) { val in
-                        Text("\(val.number)")
-                    }
-                    .standardWidth()
-                    TableColumn("Type", value: \.abbrev) { val in
-                        if let type = game.planeTypes[val.abbrev] {
-                            Text(
-                                "\(type.name) (\(val.abbrev))"
-                            )
-                        }
-                        else {
-                            Text("\(val.abbrev)")
-                        }
-                    }
-                    TableColumn("Coord", value: \.coords) { val in
-                        Text("\(val.coords.toString(), default: "unknown")")
-                    }.standardWidth()
-
-                    TableColumn("Wing", value: \.wing) { val in
-                        Text("\(val.wing)")
-                    }
-                    .standardWidth()
-
-                    TableColumn("Mob", value: \.mob) { val in Text("\(val.mob)")
-                    }
-                    .standardWidth()
-                    TableColumn("Eff", value: \.eff) { val in
-                        Text("\(val.eff)%")
-                    }
-                    .standardWidth()
-                    TableColumn("Notes") { val in
-                        HStack {
-                            if val.launched == "Y" {
-                                Text("Launched")
-                            }
-                            if val.orbit == "Y" {
-                                Text("GeoOrbit")
-                            }
-                        }
-                    }
-                }
-                .onChange(of: selectedPlane) {
-                    guard let selectedPlane,
-                        let plane = game.planes[selectedPlane]
-                    else { return }
-                    centerCoord = plane.coords
-                }
-                .onChange(of: sortOrder) { _, sortOrder in
-                    planes.sort(using: sortOrder)
+        Table(
+            planes,
+            selection: $selectedPlane,
+            sortOrder: $sortOrder
+        ) {
+            TableColumn("Plane #", value: \.number) { val in
+                Text("\(val.number)")
+            }
+            .standardWidth()
+            TableColumn("Type", value: \.abbrev) { val in
+                if let type = game.planeTypes[val.abbrev] {
+                    Text(
+                        "\(type.name) (\(val.abbrev))"
+                    )
+                } else {
+                    Text("\(val.abbrev)")
                 }
             }
+            TableColumn("Coord", value: \.coords) { val in
+                Text("\(val.coords.toString(), default: "unknown")")
+            }.standardWidth()
+
+            TableColumn("Wing", value: \.wing) { val in
+                Text("\(val.wing)")
+            }
+            .standardWidth()
+
+            TableColumn("Mob", value: \.mob) { val in Text("\(val.mob)")
+            }
+            .standardWidth()
+            TableColumn("Eff", value: \.eff) { val in
+                Text("\(val.eff)%")
+            }
+            .standardWidth()
+            TableColumn("Notes") { val in
+                HStack {
+                    if val.launched == "Y" {
+                        Text("Launched")
+                    }
+                    if val.orbit == "Y" {
+                        Text("GeoOrbit")
+                    }
+                }
+            }
+        }
+        .onChange(of: selectedPlane) {
+            guard let selectedPlane,
+                let plane = game.planes[selectedPlane]
+            else { return }
+            centerCoord = plane.coords
+        }
+        .onChange(of: sortOrder) { _, sortOrder in
+            planes.sort(using: sortOrder)
         }
     }
 }
