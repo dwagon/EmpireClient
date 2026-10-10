@@ -6,7 +6,7 @@
 //
 import HexGrid
 
-struct MapCoord: Hashable, Equatable, Codable {
+struct MapCoord: Hashable, Equatable, Codable, Comparable {
     var x: Int
     var y: Int
 
@@ -69,6 +69,11 @@ struct MapCoord: Hashable, Equatable, Codable {
 
     static func - (lhs: MapCoord, rhs: MapCoord) -> MapCoord {
         return MapCoord(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
+    }
+
+    /// Not superuseful - but allows sorting
+    static func < (lhs: MapCoord, rhs: MapCoord) -> Bool {
+        return lhs.x < rhs.x && lhs.y < rhs.y
     }
 }
 

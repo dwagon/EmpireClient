@@ -15,7 +15,7 @@ struct SectorDetailView: View {
         var ans: String = "Unknown Sector"
         if let sector {
             ans =
-            "Desig: \(sector.desig.name) (Eff: \(sector.eff, default: "?")% -> Est. Eff: \(sector.neweff, default: "?")%)"
+                "Eff: \(sector.eff, default: "?")% -> Est. Eff: \(sector.neweff, default: "?")%"
             if sector.sdes.desig != .unknown {
                 ans += " Redesignated to: \(sector.sdes.name)"
             }
@@ -33,8 +33,10 @@ struct SectorDetailView: View {
     func resource(_ item: Item) -> some View {
         return Group {
             if let sector {
-                if sector.cargo[item] != 0 {
-                    Text("\(item.rawValue.uppercased()): \(sector.cargo[item], default: "?")")
+                if sector.cargo[item] != 0 && sector.cargo[item] != nil {
+                    Text(
+                        "\(item.rawValue.uppercased()): \(sector.cargo[item], default: "?")"
+                    )
                 }
             }
         }

@@ -8,37 +8,38 @@
 import SwiftUI
 
 struct LandTypeReport: View {
-    let landTypes: [LandType]
+    @State var landTypes: [LandType]
     let currTech: Float
+    @State private var sortOrder = [KeyPathComparator(\LandType.tech)]
 
     @Environment(\.dismiss) private var dismiss
     @State private var selectedUnit: LandType.ID?
 
     var body: some View {
         VStack {
-            Table(landTypes, selection: $selectedUnit) {
-                TableColumn("Abbrev") { details in
+            Table(landTypes, selection: $selectedUnit, sortOrder: $sortOrder) {
+                TableColumn("Abbrev", value: \.abbrev) { details in
                     Text("\(details.abbrev)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)
                     )
 
                 }
                 .width(min: 30, ideal: 50, max: 60)
-                TableColumn("Name") { details in
+                TableColumn("Name", value: \.name) { details in
                     Text("\(details.name)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)
                     )
 
                 }
                 .width(min: 60, ideal: 100, max: 120)
-                TableColumn("Speed") { details in
+                TableColumn("Speed", value: \.speed) { details in
                     Text("\(details.speed)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)
                     )
 
                 }
                 .width(min: 40, ideal: 50, max: 60)
-                TableColumn("Tech") { details in
+                TableColumn("Tech", value: \.tech) { details in
                     Text("\(details.tech)").buildableHighlight(
                         details.isBuildable(techlevel: currTech)
                     )
@@ -51,6 +52,9 @@ struct LandTypeReport: View {
                     )
                 }
             }
+            .onChange(of: sortOrder) { _, sortOrder in
+                landTypes.sort(using: sortOrder)
+            }
             .tableStyle(.bordered)
             .border(.blue)
             if let selectedUnit {
@@ -62,7 +66,7 @@ struct LandTypeReport: View {
                 }
             }
             HStack {
-                OkButton() {
+                OkButton {
                     dismiss()
                 }
             }

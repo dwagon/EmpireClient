@@ -19,7 +19,6 @@
 // 2 sectors
 
 import Foundation
-//import HexGrid
 
 extension Game {
     func cmd_dump(_ location: String = "*") async {

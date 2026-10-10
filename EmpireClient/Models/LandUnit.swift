@@ -72,4 +72,9 @@ struct LandUnit: Identifiable, Codable, Hashable, CargoCarrying {
         return self.number
     }
 
+    // So it can be used in table sorting more easily
+    var numMil: Int {
+        return cargo[.mil] ?? 0
+    }
+
 }

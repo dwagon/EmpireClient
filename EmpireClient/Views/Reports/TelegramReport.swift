@@ -13,24 +13,31 @@ struct TelegramReport: View {
     @State private var selected: Telegram.ID?
 
     var body: some View {
-        NavigationSplitView {
-            List(telegrams, selection: $selected) { telegram in
-                VStack(alignment: .leading) {
-                    Text("\(telegram.from)")
-                    Text("\(telegram.date)").font(.caption)
+        VStack {
+            NavigationSplitView {
+                List(telegrams.reversed(), selection: $selected) { telegram in
+                    VStack(alignment: .leading) {
+                        Text("\(telegram.from)")
+                        Text("\(telegram.date)").font(.caption)
+                    }
+                }
+                .navigationSplitViewColumnWidth(250)
+            } detail: {
+                if let selected {
+                    if let telegram = telegrams.first(where: { $0.id == selected })
+                    {
+                        TelegramDetails(gram: telegram)
+                    }
+                }
+                else {
+                    ContentUnavailableView {
+                        Text("No Telegrams")
+                    }
                 }
             }
-            .navigationSplitViewColumnWidth(250)
-        } detail: {
-            if let selected {
-                if let telegram = telegrams.first(where: { $0.id == selected })
-                {
-                    TelegramDetails(gram: telegram)
-                }
+            OkButton() {
+                dismiss()
             }
-        }
-        OkButton() {
-            dismiss()
         }
     }
 }
